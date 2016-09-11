@@ -1,4 +1,8 @@
 <h1 align="center">
+<img src="/art/video.gif" width="280" height="498" alt="Video 1"/>
+<img src="/art/screenshot1.png" width="280" height="498" alt="Screenshot 1"/>
+<img src="/art/screenshot2.png" width="280" height="498" alt="Screenshot 2"/><br/>
+
     TapTargetView
 </h1>
 
@@ -9,12 +13,6 @@
 An implementation of tap targets from [Google's Material Design guidelines on feature discovery](https://material.google.com/growth-communications/feature-discovery.html#feature-discovery-design).
 
  **Min SDK:** 15
-
-## Overview
-
-<image> <gif> <image> 
-
-
 
 ## Installation
 
@@ -32,7 +30,25 @@ TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftwar
 
 ## Usage
 
-TODO
+TapTargetView utilizes a builder to configure how it looks and behaves. Here is the full list of options when using TapTargetView. The only required options are specifying a title, description and target.
+
+```java
+new TapTargetView.Builder(Activity) // The activity that hosts this view
+        .title(@StringRes int) // Specify the title text
+        .title(String)
+        .description(@StringRes int) // Specify the description text
+        .description(String)
+        .listener(Listener) // Specify a listener that can listen for clicks and long clicks
+        .outerCircleColor(@ColorRes int)  // Specify a color for the outer circle
+        .targetCircleColor(@ColorRes int) // Specify a color for the inner circle surrounding the target view 
+        .textColor(@ColorRes int) // Specify a color for the text
+        .textTypeface(Typeface) // Specify a custom typeface to use for the text
+        .dimColor(@ColorRes int) // If set, will dim behind the view with 30% opacity of the given color
+        .tintTarget(boolean) // Whether to tint the target view's color
+        .drawShadow(boolean) // Whether to draw the drop shadow
+        .cancelable(boolean) // Whether tapping outside the outer circle dismisses the view
+        .showFor(targetView);
+```
 
 ## License
 
