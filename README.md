@@ -6,7 +6,6 @@
     TapTargetView
 </h1>
 
-[![Build Status](https://travis-ci.org/KeepSafe/TapTargetView.svg?branch=master)](https://travis-ci.org/KeepSafe/TapTargetView)
 [![Download](https://api.bintray.com/packages/keepsafesoftware/Android/TapTargetView/images/download.svg) ](https://bintray.com/keepsafesoftware/Android/TapTargetView/_latestVersion)
 
 
