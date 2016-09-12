@@ -1,4 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+
+group = 'com.getkeepsafe.taptargetview'
+version = '1.0.0'
 
 android {
     compileSdkVersion 24
@@ -7,7 +11,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         versionCode 1
-        versionName "1.0"
+        versionName project.version
     }
     buildTypes {
         release {
@@ -18,4 +22,24 @@ android {
 
 dependencies {
     compile 'com.android.support:support-annotations:24.2.0'
+}
+
+bintray {
+    user = project.hasProperty('bintray.user') ? project.property('bintray.user') : ''
+    key = project.hasProperty('bintray.apikey') ? project.property('bintray.apikey') : ''
+    configurations = ['archives']
+    pkg {
+        repo = 'Android'
+        name = 'TapTargetView'
+        userOrg = 'keepsafesoftware'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/KeepSafe/TapTargetView.git'
+
+        version {
+            name = project.version
+            desc = 'An implementation of tap targets from the Material Design guidelines for feature discovery'
+            released = new Date()
+            vcsTag = project.version
+        }
+    }
 }
