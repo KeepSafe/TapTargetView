@@ -104,6 +104,8 @@ public class TapTargetView extends View {
     float lastTouchX;
     float lastTouchY;
 
+    int topBoundary;
+
     Bitmap tintedTarget;
 
     Listener listener;
@@ -302,6 +304,10 @@ public class TapTargetView extends View {
 
                 getLocationOnScreen(offset);
                 targetBounds.offset(-offset[0], -offset[1]);
+
+                final ViewGroup content = (ViewGroup) parent.findViewById(android.R.id.content);
+                content.getLocationOnScreen(offset);
+                topBoundary = offset[1];
 
                 drawTintedTarget();
                 calculateDimensions();
@@ -519,7 +525,7 @@ public class TapTargetView extends View {
 
         final int possibleTop = targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight;
         final int top;
-        if (possibleTop > 0) {
+        if (possibleTop > topBoundary) {
             top = possibleTop;
         } else {
             top = targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING;
