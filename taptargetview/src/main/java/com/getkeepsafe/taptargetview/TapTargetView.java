@@ -110,9 +110,18 @@ public class TapTargetView extends View {
 
     Listener listener;
 
-    public interface Listener {
-        void onTargetClick(TapTargetView view);
-        void onTargetLongClick(TapTargetView view);
+    public static class Listener {
+        public void onTargetClick(TapTargetView view) {
+            view.dismiss(true);
+        }
+
+        public void onTargetLongClick(TapTargetView view) {
+            view.dismiss(true);
+        }
+
+        public void onTargetCancel(TapTargetView view) {
+            view.dismiss(false);
+        }
     }
 
     private final FloatValueAnimatorBuilder.UpdateListener expandContractUpdateListener = new FloatValueAnimatorBuilder.UpdateListener() {
@@ -325,7 +334,7 @@ public class TapTargetView extends View {
                     listener.onTargetClick(TapTargetView.this);
                 } else if (cancelable && distance(outerCircleCenter[0], outerCircleCenter[1],
                         (int) lastTouchX, (int) lastTouchY) > outerCircleRadius) {
-                    dismiss(false);
+                    listener.onTargetCancel(TapTargetView.this);
                 }
             }
         });
@@ -679,6 +688,8 @@ public class TapTargetView extends View {
 
             if (listener != null) {
                 tapTargetView.setListener(listener);
+            } else {
+                tapTargetView.setListener(new Listener());
             }
 
             if (outerCircleColor != -1) {
