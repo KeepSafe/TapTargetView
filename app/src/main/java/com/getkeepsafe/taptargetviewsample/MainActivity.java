@@ -18,13 +18,14 @@ public class MainActivity extends AppCompatActivity {
                 .listener(new TapTargetView.Listener() {
                     @Override
                     public void onTargetClick(TapTargetView view) {
-                        view.dismiss(true);
+                        super.onTargetClick(view);
                         educateBackButton();
                     }
 
                     @Override
-                    public void onTargetLongClick(TapTargetView view) {
-                        view.dismiss(true);
+                    public void onTargetCancel(TapTargetView view) {
+                        super.onTargetCancel(view);
+                        educateBackButton();
                     }
                 }).showFor(findViewById(R.id.fab));
     }
@@ -36,13 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 .listener(new TapTargetView.Listener() {
                     @Override
                     public void onTargetClick(TapTargetView view) {
-                        view.dismiss(true);
+                        super.onTargetClick(view);
                         educateSearchButton();
-                    }
-
-                    @Override
-                    public void onTargetLongClick(TapTargetView view) {
-                        view.dismiss(true);
                     }
                 })
                 .showFor(findViewById(R.id.back));
@@ -59,13 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 .listener(new TapTargetView.Listener() {
                     @Override
                     public void onTargetClick(TapTargetView view) {
-                        view.dismiss(true);
+                        super.onTargetClick(view);
                         ((TextView) findViewById(R.id.educated)).setText("Congratulations! You're educated now!");
-                    }
-
-                    @Override
-                    public void onTargetLongClick(TapTargetView view) {
-                        view.dismiss(true);
                     }
                 })
                 .showFor(findViewById(R.id.search));
