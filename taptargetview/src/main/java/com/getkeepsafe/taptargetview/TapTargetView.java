@@ -31,7 +31,6 @@ import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
 import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -44,8 +43,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
  * TapTargetView implements a feature discovery paradigm following Google's Material Design
  * guidelines.
  * <p>
- * This class should not be instantiated directly. Instead, please use the {@link Builder} class
- * instead.
+ * This class should not be instantiated directly. Instead, please use the
+ * {@link #showFor(Activity, View, Options)} static factory method instead.
  * <p>
  * More information can be found here:
  * https://material.google.com/growth-communications/feature-discovery.html#feature-discovery-design
@@ -226,15 +225,11 @@ public class TapTargetView extends View {
     private ValueAnimator[] animators = new ValueAnimator[]
             {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
 
-    public TapTargetView(final ViewGroup parent, final View target, String title, String description) {
+    TapTargetView(final ViewGroup parent, final View target) {
         super(parent.getContext());
         if (target == null) throw new IllegalArgumentException("View cannot be null");
-        if (title == null) throw new IllegalArgumentException("Title cannot be null");
-        if (description == null) throw new IllegalArgumentException("Description cannot be null");
 
         this.target = target;
-        this.title = title;
-        this.description = description;
         this.parent = parent;
 
         final Context context = getContext();
@@ -579,109 +574,82 @@ public class TapTargetView extends View {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-    @SuppressWarnings("unused")
-    public static class Builder {
-        private final Activity activity;
+    public static class Options {
+        final View target;
+        final String title;
+        final String description;
 
-        private String title;
-        private String description;
-        private Typeface typeface;
-        private Listener listener;
-        @ColorRes
-        private int outerCircleColor = -1;
-        @ColorRes
-        private int targetCircleColor = -1;
-        @ColorRes
-        private int dimColor = -1;
-        @ColorRes
-        private int textColor = -1;
+        Typeface typeface;
+        Listener listener;
 
-        private boolean tintTarget = true;
-        private boolean drawShadow = true;
-        private boolean cancelable = true;
+        @ColorRes int outerCircleColor = -1;
+        @ColorRes int targetCircleColor = -1;
+        @ColorRes int dimColor = -1;
+        @ColorRes int textColor = -1;
 
-        public Builder(Activity activity) {
-            if (activity == null) throw new IllegalArgumentException("Activity is null");
-            this.activity = activity;
-        }
+        boolean tintTarget = true;
+        boolean drawShadow = true;
+        boolean cancelable = true;
 
-        public Builder title(@StringRes int titleId) {
-            return title(activity.getString(titleId));
-        }
+        public Options(View target, String title, String description) {
+            if (title == null || description == null || target == null) {
+                throw new IllegalStateException("Null target, title or description");
+            }
 
-        public Builder title(String title) {
-            if (title == null) throw new IllegalArgumentException("Null title");
+            this.target = target;
             this.title = title;
-            return this;
-        }
-
-        public Builder description(@StringRes int descriptionId) {
-            return description(activity.getString(descriptionId));
-        }
-
-        public Builder description(String description) {
-            if (description == null) throw new IllegalArgumentException("Null description");
             this.description = description;
-            return this;
         }
 
-        public Builder listener(Listener listener) {
+        public Options listener(Listener listener) {
             if (listener == null) throw new IllegalArgumentException("Null listener");
             this.listener = listener;
             return this;
         }
 
-        public Builder outerCircleColor(@ColorRes int color) {
+        public Options outerCircleColor(@ColorRes int color) {
             this.outerCircleColor = color;
             return this;
         }
 
-        public Builder targetCircleColor(@ColorRes int color) {
+        public Options targetCircleColor(@ColorRes int color) {
             this.targetCircleColor = color;
             return this;
         }
 
-        public Builder textColor(@ColorRes int color) {
+        public Options textColor(@ColorRes int color) {
             this.textColor = color;
             return this;
         }
 
-        public Builder textTypeface(Typeface typeface) {
+        public Options textTypeface(Typeface typeface) {
             this.typeface = typeface;
             return this;
         }
 
-        public Builder dimColor(@ColorRes int color) {
+        public Options dimColor(@ColorRes int color) {
             this.dimColor = color;
             return this;
         }
 
-        public Builder tintTarget(boolean tint) {
+        public Options tintTarget(boolean tint) {
             this.tintTarget = tint;
             return this;
         }
 
-        public Builder drawShadow(boolean draw) {
+        public Options drawShadow(boolean draw) {
             this.drawShadow = draw;
             return this;
         }
 
-        public Builder cancelable(boolean status) {
+        public Options cancelable(boolean status) {
             this.cancelable = status;
             return this;
         }
 
-        public TapTargetView showFor(View view) {
-            if (title == null || description == null) {
-                throw new IllegalStateException("Null title or description");
-            }
-
-            final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
-            final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final TapTargetView tapTargetView = new TapTargetView(decor, view, title, description);
-            decor.addView(tapTargetView, layoutParams);
-
+        void applyTo(Context context, TapTargetView tapTargetView) {
+            tapTargetView.title = title;
+            tapTargetView.description = description;
             tapTargetView.shouldTintTarget = tintTarget;
             tapTargetView.shouldDrawShadow = drawShadow;
             tapTargetView.cancelable = cancelable;
@@ -693,32 +661,43 @@ public class TapTargetView extends View {
             }
 
             if (outerCircleColor != -1) {
-                tapTargetView.outerCirclePaint.setColor(UiUtil.getColor(activity, outerCircleColor));
+                tapTargetView.outerCirclePaint.setColor(UiUtil.getColor(context, outerCircleColor));
             }
 
             if (targetCircleColor != -1) {
-                final int color = UiUtil.getColor(activity, targetCircleColor);
+                final int color = UiUtil.getColor(context, targetCircleColor);
                 tapTargetView.targetCirclePaint.setColor(color);
                 tapTargetView.targetCirclePulsePaint.setColor(color);
             }
 
             if (dimColor != -1) {
-                tapTargetView.dimColor = UiUtil.setAlpha(UiUtil.getColor(activity, dimColor), 0.3f);
+                tapTargetView.dimColor = UiUtil.setAlpha(UiUtil.getColor(context, dimColor), 0.3f);
             } else {
                 tapTargetView.dimColor = -1;
             }
 
             if (textColor != -1) {
-                tapTargetView.titlePaint.setColor(UiUtil.getColor(activity, textColor));
-                tapTargetView.descriptionPaint.setColor(UiUtil.getColor(activity, textColor));
+                tapTargetView.titlePaint.setColor(UiUtil.getColor(context, textColor));
+                tapTargetView.descriptionPaint.setColor(UiUtil.getColor(context, textColor));
             }
 
             if (typeface != null) {
                 tapTargetView.titlePaint.setTypeface(typeface);
                 tapTargetView.descriptionPaint.setTypeface(typeface);
             }
-
-            return tapTargetView;
         }
+    }
+
+    public static TapTargetView showFor(Activity activity, Options config) {
+        if (activity == null) throw new IllegalArgumentException("Activity is null");
+
+        final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
+        final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final TapTargetView tapTargetView = new TapTargetView(decor, config.target);
+        decor.addView(tapTargetView, layoutParams);
+        config.applyTo(activity, tapTargetView);
+
+        return tapTargetView;
     }
 }
