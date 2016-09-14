@@ -15,7 +15,7 @@ An implementation of tap targets from [Google's Material Design guidelines on fe
 
 ## Installation
 
-TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftware/Android/ReLinker/view).
+TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftware/Android/TapTargetView/view).
 
 ```groovy
    repositories { 
