@@ -120,10 +120,19 @@ public class TapTargetView extends View {
         if (activity == null) throw new IllegalArgumentException("Activity is null");
 
         final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
+
+        return showFor(decor, target, listener);
+    }
+
+    public static TapTargetView showFor(ViewGroup container, TapTarget target) {
+        return showFor(container, target, null);
+    }
+
+    public static TapTargetView showFor(ViewGroup container, TapTarget target, Listener listener) {
         final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        final TapTargetView tapTargetView = new TapTargetView(decor, target, listener);
-        decor.addView(tapTargetView, layoutParams);
+        final TapTargetView tapTargetView = new TapTargetView(container, target, listener);
+        container.addView(tapTargetView, layoutParams);
 
         return tapTargetView;
     }
@@ -315,7 +324,10 @@ public class TapTargetView extends View {
                         targetBounds.offset(-offset[0], -offset[1]);
 
                         final ViewGroup content = (ViewGroup) parent.findViewById(android.R.id.content);
-                        content.getLocationOnScreen(offset);
+                        if (content != null)
+                            content.getLocationOnScreen(offset);
+                        else
+                            parent.getLocationOnScreen(offset);
                         topBoundary = offset[1];
 
                         drawTintedTarget();
