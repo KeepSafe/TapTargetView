@@ -18,6 +18,7 @@ package com.getkeepsafe.taptargetview;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.view.View;
 
@@ -29,10 +30,14 @@ public class TapTarget {
     Drawable icon;
     Typeface typeface;
 
-    @ColorRes int outerCircleColor = -1;
-    @ColorRes int targetCircleColor = -1;
-    @ColorRes int dimColor = -1;
-    @ColorRes int textColor = -1;
+    @ColorInt int outerCircleColor = -1;
+    @ColorRes int outerCircleColorRes = -1;
+    @ColorInt int targetCircleColor = -1;
+    @ColorRes int targetCircleColorRes = -1;
+    @ColorInt int dimColor = -1;
+    @ColorRes int dimColorRes = -1;
+    @ColorInt int textColor = -1;
+    @ColorRes int textColorRes = -1;
 
     boolean drawShadow = true;
     boolean cancelable = true;
@@ -64,18 +69,33 @@ public class TapTarget {
         this.description = description;
     }
 
-    public TapTarget outerCircleColor(@ColorRes int color) {
+    public TapTarget outerCircleColor(@ColorInt int color) {
         this.outerCircleColor = color;
         return this;
     }
 
-    public TapTarget targetCircleColor(@ColorRes int color) {
+    public TapTarget outerCircleColorRes(@ColorRes int color) {
+        this.outerCircleColorRes = color;
+        return this;
+    }
+
+    public TapTarget targetCircleColor(@ColorInt int color) {
         this.targetCircleColor = color;
         return this;
     }
 
-    public TapTarget textColor(@ColorRes int color) {
+    public TapTarget targetCircleColorRes(@ColorRes int color) {
+        this.targetCircleColorRes = color;
+        return this;
+    }
+
+    public TapTarget textColor(@ColorInt int color) {
         this.textColor = color;
+        return this;
+    }
+
+    public TapTarget textColorRes(@ColorRes int color) {
+        this.textColorRes = color;
         return this;
     }
 
@@ -85,8 +105,13 @@ public class TapTarget {
         return this;
     }
 
-    public TapTarget dimColor(@ColorRes int color) {
+    public TapTarget dimColor(@ColorInt int color) {
         this.dimColor = color;
+        return this;
+    }
+
+    public TapTarget dimColorRes(@ColorRes int color) {
+        this.dimColorRes = color;
         return this;
     }
 
