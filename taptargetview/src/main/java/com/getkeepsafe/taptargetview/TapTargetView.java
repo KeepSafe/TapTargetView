@@ -314,8 +314,7 @@ public class TapTargetView extends View {
                 getLocationOnScreen(offset);
                 targetBounds.offset(-offset[0], -offset[1]);
 
-                final ViewGroup content = (ViewGroup) parent.findViewById(android.R.id.content);
-                content.getLocationOnScreen(offset);
+                parent.getLocationOnScreen(offset);
                 topBoundary = offset[1];
 
                 drawTintedTarget();
@@ -587,6 +586,8 @@ public class TapTargetView extends View {
         private String description;
         private Typeface typeface;
         private Listener listener;
+        private ViewGroup container;
+
         @ColorRes
         private int outerCircleColor = -1;
         @ColorRes
@@ -671,12 +672,24 @@ public class TapTargetView extends View {
             return this;
         }
 
+        public Builder container(ViewGroup container) {
+            this.container = container;
+            return this;
+        }
+
         public TapTargetView showFor(View view) {
             if (title == null || description == null) {
                 throw new IllegalStateException("Null title or description");
             }
 
-            final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
+            final ViewGroup decor;
+            if (container == null) {
+                decor = (ViewGroup) activity.getWindow().getDecorView();
+
+            } else {
+                decor = container;
+            }
+
             final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             final TapTargetView tapTargetView = new TapTargetView(decor, view, title, description);
