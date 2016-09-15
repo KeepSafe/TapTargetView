@@ -120,10 +120,19 @@ public class TapTargetView extends View {
         if (activity == null) throw new IllegalArgumentException("Activity is null");
 
         final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
+
+        return showFor(decor, target, listener);
+    }
+
+    public static TapTargetView showFor(ViewGroup container, TapTarget target) {
+        return showFor(container, target, null);
+    }
+
+    public static TapTargetView showFor(ViewGroup container, TapTarget target, Listener listener) {
         final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        final TapTargetView tapTargetView = new TapTargetView(decor, target, listener);
-        decor.addView(tapTargetView, layoutParams);
+        final TapTargetView tapTargetView = new TapTargetView(container, target, listener);
+        container.addView(tapTargetView, layoutParams);
 
         return tapTargetView;
     }
@@ -315,7 +324,10 @@ public class TapTargetView extends View {
                         targetBounds.offset(-offset[0], -offset[1]);
 
                         final ViewGroup content = (ViewGroup) parent.findViewById(android.R.id.content);
-                        content.getLocationOnScreen(offset);
+                        if (content != null)
+                            content.getLocationOnScreen(offset);
+                        else
+                            parent.getLocationOnScreen(offset);
                         topBoundary = offset[1];
 
                         drawTintedTarget();
@@ -371,7 +383,9 @@ public class TapTargetView extends View {
         isDark = UiUtil.themeIntAttr(context, "isLightTheme") == 0;
 
         if (target.outerCircleColor != UNSET_COLOR) {
-            outerCirclePaint.setColor(UiUtil.getColor(context, target.outerCircleColor));
+            outerCirclePaint.setColor(target.outerCircleColor);
+        } else if (target.outerCircleColorRes != UNSET_COLOR) {
+            outerCirclePaint.setColor(UiUtil.getColor(context, target.outerCircleColorRes));
         } else if (theme != null) {
             outerCirclePaint.setColor(UiUtil.themeIntAttr(context, "colorPrimary"));
         } else {
@@ -379,7 +393,9 @@ public class TapTargetView extends View {
         }
 
         if (target.targetCircleColor != UNSET_COLOR) {
-            targetCirclePaint.setColor(UiUtil.getColor(context, target.targetCircleColor));
+            targetCirclePaint.setColor(target.targetCircleColor);
+        } else if (target.targetCircleColorRes != UNSET_COLOR) {
+            targetCirclePaint.setColor(UiUtil.getColor(context, target.targetCircleColorRes));
         } else {
             targetCirclePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
         }
@@ -387,13 +403,17 @@ public class TapTargetView extends View {
         targetCirclePulsePaint.setColor(targetCirclePaint.getColor());
 
         if (target.dimColor != UNSET_COLOR) {
-            dimColor = UiUtil.setAlpha(UiUtil.getColor(context, target.dimColor), 0.3f);
+            dimColor = UiUtil.setAlpha(target.dimColor, 0.3f);
+        } else if (target.dimColorRes != UNSET_COLOR) {
+            dimColor = UiUtil.setAlpha(UiUtil.getColor(context, target.dimColorRes), 0.3f);
         } else {
             dimColor = -1;
         }
 
         if (target.textColor != UNSET_COLOR) {
-            titlePaint.setColor(UiUtil.getColor(context, target.textColor));
+            titlePaint.setColor(target.textColor);
+        } else if (target.textColorRes != UNSET_COLOR) {
+            titlePaint.setColor(UiUtil.getColor(context, target.textColorRes));
         } else {
             titlePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
         }

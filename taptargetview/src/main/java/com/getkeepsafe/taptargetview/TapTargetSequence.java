@@ -16,6 +16,7 @@
 package com.getkeepsafe.taptargetview;
 
 import android.app.Activity;
+import android.view.ViewGroup;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -25,6 +26,7 @@ import java.util.Queue;
 
 public class TapTargetSequence {
     private final Activity activity;
+    private final ViewGroup container;
     private final Queue<TapTarget> targets;
     private Listener listener;
     private boolean continueOnCancel;
@@ -38,6 +40,13 @@ public class TapTargetSequence {
     public TapTargetSequence(Activity activity) {
         if (activity == null) throw new IllegalArgumentException("Activity is null");
         this.activity = activity;
+        this.container = null;
+        this.targets = new LinkedList<>();
+    }
+
+    public TapTargetSequence(ViewGroup container) {
+        this.container = container;
+        this.activity = null;
         this.targets = new LinkedList<>();
     }
 
@@ -77,7 +86,10 @@ public class TapTargetSequence {
 
     private void showNext() {
         try {
-            TapTargetView.showFor(activity, targets.remove(), tapTargetListener);
+            if (activity != null)
+                TapTargetView.showFor(activity, targets.remove(), tapTargetListener);
+            else
+                TapTargetView.showFor(container, targets.remove(), tapTargetListener);
         } catch (NoSuchElementException e) {
             // No more targets
             if (listener != null) {
