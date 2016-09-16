@@ -303,7 +303,6 @@ public class TapTargetView extends View {
             @Override
             public void run() {
                 updateTextLayouts();
-
                 target.onReady(new Runnable() {
                     @Override
                     public void run() {
@@ -469,10 +468,13 @@ public class TapTargetView extends View {
 
         saveCount = c.save();
         {
-            c.translate(targetBounds.left, targetBounds.top);
             if (tintedTarget != null) {
+                c.translate(targetBounds.centerX() - tintedTarget.getWidth() / 2,
+                            targetBounds.centerY() - tintedTarget.getHeight() / 2);
                 c.drawBitmap(tintedTarget, 0, 0, targetCirclePaint);
             } else if (target.icon != null) {
+                c.translate(targetBounds.centerX() - target.icon.getBounds().width() / 2,
+                            targetBounds.centerY() - target.icon.getBounds().height() / 2);
                 target.icon.draw(c);
             }
         }
@@ -495,6 +497,11 @@ public class TapTargetView extends View {
         return true;
     }
 
+    /**
+     * Dismiss this view
+     * @param tappedTarget If the user tapped the target or not
+     *                     (results in different dismiss animations)
+     */
     public void dismiss(boolean tappedTarget) {
         pulseAnimation.cancel();
         expandAnimation.cancel();
@@ -505,6 +512,7 @@ public class TapTargetView extends View {
         }
     }
 
+    /** Specify whether to draw a wireframe around the view, useful for debugging **/
     public void setDrawDebug(boolean status) {
         if (debug != status) {
             debug = status;

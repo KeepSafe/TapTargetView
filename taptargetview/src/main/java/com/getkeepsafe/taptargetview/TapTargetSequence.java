@@ -23,6 +23,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+/**
+ * Displays a sequence of {@link TapTargetView}s.
+ * <p>
+ * Internally, a FIFO queue is held to dictate which {@link TapTarget} will be shown.
+ */
 public class TapTargetSequence {
     private final Activity activity;
     private final Queue<TapTarget> targets;
@@ -41,31 +46,37 @@ public class TapTargetSequence {
         this.targets = new LinkedList<>();
     }
 
+    /** Adds the given targets, in order, to the pending queue of {@link TapTarget}s */
     public TapTargetSequence targets(List<TapTarget> targets) {
         this.targets.addAll(targets);
         return this;
     }
 
+    /** Adds the given targets, in order, to the pending queue of {@link TapTarget}s */
     public TapTargetSequence targets(TapTarget... targets) {
         Collections.addAll(this.targets, targets);
         return this;
     }
 
+    /** Adds the given target to the pending queue of {@link TapTarget}s */
     public TapTargetSequence target(TapTarget target) {
         this.targets.add(target);
         return this;
     }
 
+    /** Whether or not to continue the sequence when a {@link TapTarget} is canceled **/
     public TapTargetSequence continueOnCancel(boolean status) {
         this.continueOnCancel = status;
         return this;
     }
 
+    /** Specify the listener for this sequence **/
     public TapTargetSequence listener(Listener listener) {
         this.listener = listener;
         return this;
     }
 
+    /** Immediately starts the sequence and displays the first target from the queue **/
     public void start() {
         if (targets.isEmpty() || started) {
             return;
