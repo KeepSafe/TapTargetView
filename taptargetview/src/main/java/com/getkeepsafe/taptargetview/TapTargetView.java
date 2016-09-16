@@ -466,8 +466,7 @@ public class TapTargetView extends View {
             descriptionLayout.draw(c);
         } c.restoreToCount(saveCount);
 
-        saveCount = c.save();
-        {
+        saveCount = c.save(); {
             if (tintedTarget != null) {
                 c.translate(targetBounds.centerX() - tintedTarget.getWidth() / 2,
                             targetBounds.centerY() - tintedTarget.getHeight() / 2);
