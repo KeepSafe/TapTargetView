@@ -32,6 +32,7 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -75,9 +76,9 @@ public class TapTargetView extends View {
     final Paint debugPaint;
 
     String title;
-    String description;
     StaticLayout titleLayout;
-    StaticLayout descriptionLayout;
+    @Nullable String description;
+    @Nullable StaticLayout descriptionLayout;
     boolean isDark;
     boolean debug;
     boolean shouldTintTarget;
@@ -461,9 +462,11 @@ public class TapTargetView extends View {
             titlePaint.setAlpha(textAlpha);
             titleLayout.draw(c);
 
-            c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
-            descriptionPaint.setAlpha((int) (0.54f * textAlpha));
-            descriptionLayout.draw(c);
+            if (descriptionLayout != null) {
+                c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
+                descriptionPaint.setAlpha((int) (0.54f * textAlpha));
+                descriptionLayout.draw(c);
+            }
         } c.restoreToCount(saveCount);
 
         saveCount = c.save(); {
@@ -539,8 +542,13 @@ public class TapTargetView extends View {
         final int textWidth = getMeasuredWidth() - TEXT_PADDING * 2;
         titleLayout = new StaticLayout(title, titlePaint, textWidth,
                 Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-        descriptionLayout = new StaticLayout(description, descriptionPaint, textWidth,
-                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        if (description != null) {
+            descriptionLayout = new StaticLayout(description, descriptionPaint, textWidth,
+                    Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        } else {
+            descriptionLayout = null;
+        }
     }
 
     float halfwayLerp(float lerp) {
@@ -584,8 +592,8 @@ public class TapTargetView extends View {
     }
 
     Rect getTextBounds() {
-        final int totalTextHeight = titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
-        final int totalTextWidth = Math.max(titleLayout.getWidth(), descriptionLayout.getWidth());
+        final int totalTextHeight = getTotalTextHeight();
+        final int totalTextWidth = getTotalTextWidth();
 
         final int possibleTop = targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight;
         final int top;
@@ -604,7 +612,7 @@ public class TapTargetView extends View {
         }
 
         final int targetRadius = Math.max(targetBounds.width(), targetBounds.height()) / 2 + TARGET_PADDING;
-        final int totalTextHeight = titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
+        final int totalTextHeight = getTotalTextHeight();
 
         final boolean onTop = targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight > 0;
 
@@ -616,6 +624,22 @@ public class TapTargetView extends View {
                 targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING + titleLayout.getHeight();
 
         return new int[] {(left + right) / 2, centerY};
+    }
+
+    int getTotalTextHeight() {
+        if (descriptionLayout == null) {
+            return titleLayout.getHeight() + TEXT_SPACING;
+        }
+
+        return titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
+    }
+
+    int getTotalTextWidth() {
+        if (descriptionLayout == null) {
+            return titleLayout.getWidth();
+        }
+
+        return Math.max(titleLayout.getWidth(), descriptionLayout.getWidth());
     }
 
     boolean inGutter(int y) {
