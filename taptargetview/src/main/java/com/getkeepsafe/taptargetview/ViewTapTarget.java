@@ -17,12 +17,13 @@ package com.getkeepsafe.taptargetview;
 
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 public class ViewTapTarget extends TapTarget {
     final View view;
 
-    protected ViewTapTarget(View view, String title, String description) {
+    protected ViewTapTarget(View view, String title, @Nullable String description) {
         super(title, description);
         this.view = view;
     }
