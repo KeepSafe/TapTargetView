@@ -142,7 +142,7 @@ public class TapTargetView extends View {
         }
     }
 
-    private final FloatValueAnimatorBuilder.UpdateListener expandContractUpdateListener = new FloatValueAnimatorBuilder.UpdateListener() {
+    final FloatValueAnimatorBuilder.UpdateListener expandContractUpdateListener = new FloatValueAnimatorBuilder.UpdateListener() {
         @Override
         public void onUpdate(float lerpTime) {
             final float targetAlpha = 0.96f * 255;
@@ -161,7 +161,7 @@ public class TapTargetView extends View {
         }
     };
 
-    private final ValueAnimator expandAnimation = new FloatValueAnimatorBuilder()
+    final ValueAnimator expandAnimation = new FloatValueAnimatorBuilder()
             .duration(250)
             .delayBy(250)
             .interpolator(new AccelerateDecelerateInterpolator())
@@ -179,7 +179,7 @@ public class TapTargetView extends View {
             })
             .build();
 
-    private final ValueAnimator pulseAnimation = new FloatValueAnimatorBuilder()
+    final ValueAnimator pulseAnimation = new FloatValueAnimatorBuilder()
             .duration(1000)
             .repeat(ValueAnimator.INFINITE)
             .interpolator(new AccelerateDecelerateInterpolator())
@@ -196,7 +196,7 @@ public class TapTargetView extends View {
             })
             .build();
 
-    private final ValueAnimator dismissAnimation = new FloatValueAnimatorBuilder(true)
+    final ValueAnimator dismissAnimation = new FloatValueAnimatorBuilder(true)
             .duration(250)
             .interpolator(new AccelerateDecelerateInterpolator())
             .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
@@ -411,7 +411,7 @@ public class TapTargetView extends View {
         onDismiss();
     }
 
-    private void onDismiss() {
+    void onDismiss() {
         for (final ValueAnimator animator : animators) {
             animator.cancel();
             animator.removeAllUpdateListeners();
@@ -519,7 +519,7 @@ public class TapTargetView extends View {
         }
     }
 
-    private void drawTintedTarget() {
+    void drawTintedTarget() {
         final Drawable icon = target.icon;
         if (!shouldTintTarget || icon == null) {
             tintedTarget = null;
@@ -535,7 +535,7 @@ public class TapTargetView extends View {
         icon.setColorFilter(null);
     }
 
-    private void updateTextLayouts() {
+    void updateTextLayouts() {
         final int textWidth = getMeasuredWidth() - TEXT_PADDING * 2;
         titleLayout = new StaticLayout(title, titlePaint, textWidth,
                 Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
@@ -543,7 +543,7 @@ public class TapTargetView extends View {
                 Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
     }
 
-    private float halfwayLerp(float lerp) {
+    float halfwayLerp(float lerp) {
         if (lerp < 0.5f) {
             return lerp / 0.5f;
         }
@@ -551,7 +551,7 @@ public class TapTargetView extends View {
         return (1.0f - lerp) / 0.5f;
     }
 
-    private float delayedLerp(float lerp, float threshold) {
+    float delayedLerp(float lerp, float threshold) {
         if (lerp < threshold) {
             return 0.0f;
         }
@@ -559,13 +559,13 @@ public class TapTargetView extends View {
         return (lerp - threshold) / (1.0f - threshold);
     }
 
-    private void calculateDimensions() {
+    void calculateDimensions() {
         textBounds = getTextBounds();
         outerCircleCenter = getOuterCircleCenterPoint();
         calculatedOuterCircleRadius = getOuterCircleRadius(outerCircleCenter[0], outerCircleCenter[1], textBounds, targetBounds);
     }
 
-    private void calculateDrawingBounds() {
+    void calculateDrawingBounds() {
         drawingBounds.left = (int) Math.max(0, outerCircleCenter[0] - outerCircleRadius);
         drawingBounds.top = (int) Math.min(0, outerCircleCenter[1] - outerCircleRadius);
         drawingBounds.right = (int) Math.min(getWidth(),
@@ -574,7 +574,7 @@ public class TapTargetView extends View {
                 outerCircleCenter[1] + outerCircleRadius + CIRCLE_PADDING);
     }
 
-    private int getOuterCircleRadius(int centerX, int centerY, Rect textBounds, Rect targetBounds) {
+    int getOuterCircleRadius(int centerX, int centerY, Rect textBounds, Rect targetBounds) {
         final Rect expandedBounds = new Rect(targetBounds);
         expandedBounds.inset(-TARGET_PADDING / 2, -TARGET_PADDING / 2);
 
@@ -583,7 +583,7 @@ public class TapTargetView extends View {
         return Math.max(textRadius, targetRadius) + CIRCLE_PADDING;
     }
 
-    private Rect getTextBounds() {
+    Rect getTextBounds() {
         final int totalTextHeight = titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
         final int totalTextWidth = Math.max(titleLayout.getWidth(), descriptionLayout.getWidth());
 
@@ -598,7 +598,7 @@ public class TapTargetView extends View {
         return new Rect(TEXT_PADDING, top, TEXT_PADDING + totalTextWidth, top + totalTextHeight);
     }
 
-    private int[] getOuterCircleCenterPoint() {
+    int[] getOuterCircleCenterPoint() {
         if (inGutter(targetBounds.centerY())) {
             return new int[] {targetBounds.centerX(), targetBounds.centerY()};
         }
@@ -618,11 +618,11 @@ public class TapTargetView extends View {
         return new int[] {(left + right) / 2, centerY};
     }
 
-    private boolean inGutter(int y) {
+    boolean inGutter(int y) {
         return y < GUTTER_DIM || y > getHeight() - GUTTER_DIM;
     }
 
-    private int maxDistanceToPoints(int x1, int y1, Rect bounds) {
+    int maxDistanceToPoints(int x1, int y1, Rect bounds) {
         final double tl = distance(x1, y1, bounds.left, bounds.top);
         final double tr = distance(x1, y1, bounds.right, bounds.top);
         final double bl = distance(x1, y1, bounds.left, bounds.bottom);
@@ -630,7 +630,7 @@ public class TapTargetView extends View {
         return (int) Math.max(tl, Math.max(tr, Math.max(bl, br)));
     }
 
-    private double distance(int x1, int y1, int x2, int y2) {
+    double distance(int x1, int y1, int x2, int y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 }

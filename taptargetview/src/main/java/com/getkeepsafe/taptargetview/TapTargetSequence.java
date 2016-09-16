@@ -31,9 +31,10 @@ import java.util.Queue;
 public class TapTargetSequence {
     private final Activity activity;
     private final Queue<TapTarget> targets;
-    private Listener listener;
-    private boolean continueOnCancel;
     private boolean started;
+
+    Listener listener;
+    boolean continueOnCancel;
 
     public interface Listener {
         void onSequenceFinish();
@@ -86,7 +87,7 @@ public class TapTargetSequence {
         showNext();
     }
 
-    private void showNext() {
+    void showNext() {
         try {
             TapTargetView.showFor(activity, targets.remove(), tapTargetListener);
         } catch (NoSuchElementException e) {
