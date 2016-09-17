@@ -323,10 +323,11 @@ public class TapTargetView extends View {
                         targetBounds.offset(-offset[0], -offset[1]);
 
                         final ViewGroup content = (ViewGroup) parent.findViewById(android.R.id.content);
-                        if (content != null)
+                        if (content != null) {
                             content.getLocationOnScreen(offset);
-                        else
+                        } else {
                             parent.getLocationOnScreen(offset);
+                        }
                         topBoundary = offset[1];
 
                         drawTintedTarget();
