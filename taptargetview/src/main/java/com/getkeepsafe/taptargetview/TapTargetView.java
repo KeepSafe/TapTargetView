@@ -75,9 +75,9 @@ public class TapTargetView extends View {
     final Paint targetCirclePulsePaint;
     final Paint debugPaint;
 
-    String title;
+    CharSequence title;
     StaticLayout titleLayout;
-    @Nullable String description;
+    @Nullable CharSequence description;
     @Nullable StaticLayout descriptionLayout;
     boolean isDark;
     boolean debug;

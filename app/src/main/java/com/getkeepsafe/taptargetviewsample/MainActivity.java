@@ -1,9 +1,14 @@
 package com.getkeepsafe.taptargetviewsample;
 
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.Display;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -28,11 +33,14 @@ public class MainActivity extends AppCompatActivity {
         // Using deprecated methods makes you look way cool
         droidTarget.offset(display.getWidth() / 2, display.getHeight() / 2);
 
+        final SpannableString sassyDesc = new SpannableString("It allows you to go back, sometimes");
+        sassyDesc.setSpan(new StyleSpan(Typeface.ITALIC), sassyDesc.length() - "somtimes".length(), sassyDesc.length(), 0);
+
         // We have a sequence of targets, so lets build it!
         final TapTargetSequence sequence = new TapTargetSequence(this)
                 .targets(
                         // This tap target will target the back button, we just need to pass its view
-                        TapTarget.forView(findViewById(R.id.back), "This is the back button", "It allows you to go back, sometimes"),
+                        TapTarget.forView(findViewById(R.id.back), "This is the back button", sassyDesc),
                         // Likewise, this tap target will target the search button
                         TapTarget.forView(findViewById(R.id.search), "This is a search icon", "As you can see, it has gotten pretty dark around here...")
                                 .dimColor(android.R.color.black)
@@ -59,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         // You don't always need a sequence, and for that there's a single time tap target
-        TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.fab), "Hello, world!", "This is the sample app for TapTargetView")
+        final SpannableString spannedDesc = new SpannableString("This is the sample app for TapTargetView");
+        spannedDesc.setSpan(new UnderlineSpan(), spannedDesc.length() - "TapTargetView".length(), spannedDesc.length(), 0);
+        TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.fab), "Hello, world!", spannedDesc)
                 .cancelable(false)
                 .tintTarget(false), new TapTargetView.Listener() {
             @Override

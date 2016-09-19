@@ -34,8 +34,8 @@ import android.view.View;
  * @see ViewTapTarget ViewTapTarget for targeting standard Android views
  */
 public class TapTarget {
-    final String title;
-    @Nullable final String description;
+    final CharSequence title;
+    @Nullable final CharSequence description;
 
     Rect bounds;
     Drawable icon;
@@ -51,35 +51,35 @@ public class TapTarget {
     boolean tintTarget = true;
 
     /** Return a tap target for the specified view **/
-    public static ViewTapTarget forView(View view, String title) {
+    public static ViewTapTarget forView(View view, CharSequence title) {
         return forView(view, title, null);
     }
 
     /** Return a tap target for the specified view **/
-    public static ViewTapTarget forView(View view, String title, @Nullable String description) {
+    public static ViewTapTarget forView(View view, CharSequence title, @Nullable CharSequence description) {
         return new ViewTapTarget(view, title, description);
     }
 
     /** Return a tap target for the specified bounds **/
-    public static TapTarget forBounds(Rect bounds, String title) {
+    public static TapTarget forBounds(Rect bounds, CharSequence title) {
         return forBounds(bounds, title, null);
     }
 
     /** Return a tap target for the specified bounds **/
-    public static TapTarget forBounds(Rect bounds, String title, @Nullable String description) {
+    public static TapTarget forBounds(Rect bounds, CharSequence title, @Nullable CharSequence description) {
         return new TapTarget(bounds, title, description);
     }
 
-    protected TapTarget(Rect bounds, String title, @Nullable String description) {
+    protected TapTarget(Rect bounds, CharSequence title, @Nullable CharSequence description) {
         this(title, description);
         if (bounds == null) {
-            throw new IllegalArgumentException("Cannot pass null bounds, title or description");
+            throw new IllegalArgumentException("Cannot pass null bounds or title");
         }
 
         this.bounds = bounds;
     }
 
-    protected TapTarget(String title, @Nullable String description) {
+    protected TapTarget(CharSequence title, @Nullable CharSequence description) {
         if (title == null) {
             throw new IllegalArgumentException("Cannot pass null title");
         }

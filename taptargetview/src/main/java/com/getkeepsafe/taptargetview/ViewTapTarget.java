@@ -23,7 +23,7 @@ import android.view.View;
 public class ViewTapTarget extends TapTarget {
     final View view;
 
-    protected ViewTapTarget(View view, String title, @Nullable String description) {
+    protected ViewTapTarget(View view, CharSequence title, @Nullable CharSequence description) {
         super(title, description);
         this.view = view;
     }
