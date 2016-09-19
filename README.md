@@ -27,6 +27,8 @@ TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftwar
    }
 ```
 
+If you wish to use a snapshot, please follow the instructions [here](https://jitpack.io/#KeepSafe/TapTargetView/-SNAPSHOT)
+
 ## Usage
 
 TapTargetView utilizes a builder to configure how it looks and behaves. Here is the full list of options when using TapTargetView. The only required options are specifying a title, description and target.
