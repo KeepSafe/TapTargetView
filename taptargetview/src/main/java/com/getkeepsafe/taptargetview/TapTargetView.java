@@ -85,6 +85,7 @@ public class TapTargetView extends View {
     boolean shouldTintTarget;
     boolean shouldDrawShadow;
     boolean cancelable;
+    boolean visible;
 
     // Drawing properties
     Rect drawingBounds;
@@ -322,6 +323,7 @@ public class TapTargetView extends View {
                         drawTintedTarget();
                         calculateDimensions();
                         expandAnimation.start();
+                        visible = true;
                     }
                 });
             }
@@ -427,6 +429,8 @@ public class TapTargetView extends View {
                 bitmap.recycle();
             }
         }
+
+        visible = false;
     }
 
     @Override
@@ -519,6 +523,11 @@ public class TapTargetView extends View {
             debug = status;
             postInvalidate();
         }
+    }
+
+    /** Returns whether this view is visible or not **/
+    public boolean isVisible() {
+        return visible;
     }
 
     void drawTintedTarget() {
