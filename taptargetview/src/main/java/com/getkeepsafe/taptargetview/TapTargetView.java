@@ -32,6 +32,7 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -361,7 +362,7 @@ public class TapTargetView extends View {
         this.shouldDrawShadow = target.drawShadow;
         this.cancelable = target.cancelable;
 
-        if (target.drawShadow) {
+        if (target.drawShadow || Build.VERSION.SDK_INT < 18) {
             setLayerType(LAYER_TYPE_SOFTWARE, null);
         } else {
             setLayerType(LAYER_TYPE_HARDWARE, null);
