@@ -90,6 +90,8 @@ new TapTargetSequence(this)
 
 A sequence is started via a call to `start()` on the `TapTargetSequence` instance
 
+For more examples of usage, please look at the included sample app.
+
 ## License
 
     Copyright 2016 Keepsafe Software Inc.
