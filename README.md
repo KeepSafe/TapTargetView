@@ -23,7 +23,7 @@ TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftwar
    }
    
    dependencies {
-         compile 'com.getkeepsafe.taptargetview:taptargetview:1.0.1'
+         compile 'com.getkeepsafe.taptargetview:taptargetview:1.2.0'
    }
 ```
 
@@ -31,25 +31,64 @@ If you wish to use a snapshot, please follow the instructions [here](https://jit
 
 ## Usage
 
-TapTargetView utilizes a builder to configure how it looks and behaves. Here is the full list of options when using TapTargetView. The only required options are specifying a title, description and target.
+### Simple usage
 
 ```java
-new TapTargetView.Builder(Activity) // The activity that hosts this view
-        .title(@StringRes int) // Specify the title text
-        .title(String)
-        .description(@StringRes int) // Specify the description text
-        .description(String)
-        .listener(Listener) // Specify a listener that can listen for clicks and long clicks
-        .outerCircleColor(@ColorRes int)  // Specify a color for the outer circle
-        .targetCircleColor(@ColorRes int) // Specify a color for the inner circle surrounding the target view 
-        .textColor(@ColorRes int) // Specify a color for the text
-        .textTypeface(Typeface) // Specify a custom typeface to use for the text
-        .dimColor(@ColorRes int) // If set, will dim behind the view with 30% opacity of the given color
-        .tintTarget(boolean) // Whether to tint the target view's color
-        .drawShadow(boolean) // Whether to draw the drop shadow
-        .cancelable(boolean) // Whether tapping outside the outer circle dismisses the view
-        .showFor(targetView);
+TapTargetView.showFor(this,                 // `this` is an Activity
+    TapTarget.forView(findViewById(R.id.target), "This is a target", "We have the best targets, believe me")
+        // All options below are optional
+        .outerCircleColor(R.color.red)      // Specify a color for the outer circle
+        .targetCircleColor(R.color.white)   // Specify a color for the target circle
+        .textColor(R.color.blue)            // Specify a color for text
+        .textTypeFace(Typeface.SANS_SERIF)  // Specify a typeface for the text
+        .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
+        .drawShadow(true)                   // Whether to draw a drop shadow or not
+        .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
+        .tintTarget(true)                   // Whether to tint the target view's color
+        .icon(Drawable),                    // Specify a custom drawable to draw as the target
+    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);      // This call is optional
+            doSomething();
+        }
+    });
 ```
+
+You may also choose to target your own custom `Rect` with `TapTarget.forBounds(Rect, ...)`
+
+### Sequences
+
+You can easily create a sequence of tap targets with `TapTargetSequence`:
+
+```java
+new TapTargetSequence(this)
+    .targets(
+        TapTarget.forView(findViewById(R.id.never), "Gonna"),
+        TapTarget.forView(findViewById(R.id.give), "You", "Up")
+                .dimColor(android.R.color.never)
+                .outerCircleColor(R.color.gonna)
+                .targetCircleColor(R.color.let)
+                .textColor(android.R.color.you),
+        TapTarget.forBounds(rickTarget, "Down", ":^)")
+                .cancelable(false)
+                .icon(rick))
+    .listener(new TapTargetSequence.Listener() {
+        // This listener will tell us when interesting(tm) events happen in regards
+        // to the sequence
+        @Override
+        public void onSequenceFinish() {
+            // Yay
+        }
+
+        @Override
+        public void onSequenceCanceled() {
+            // Boo
+        }
+    });
+```
+
+A sequence is started via a call to `start()` on the `TapTargetSequence` instance
 
 ## License
 
