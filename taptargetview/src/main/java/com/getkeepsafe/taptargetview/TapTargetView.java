@@ -158,7 +158,7 @@ public class TapTargetView extends View {
             textAlpha = (int) (delayedLerp(lerpTime, 0.7f) * 255);
 
             calculateDrawingBounds();
-            invalidate();
+            invalidate(drawingBounds);
         }
     };
 
@@ -192,7 +192,7 @@ public class TapTargetView extends View {
                     targetCirclePulseAlpha = (int) ((1.0f - pulseLerp) * 255);
                     targetCircleRadius = TARGET_RADIUS + halfwayLerp(lerpTime) * TARGET_PULSE_RADIUS;
                     calculateDrawingBounds();
-                    invalidate();
+                    invalidate(drawingBounds);
                 }
             })
             .build();
@@ -230,7 +230,7 @@ public class TapTargetView extends View {
                     targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
                     textAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
                     calculateDrawingBounds();
-                    invalidate();
+                    invalidate(drawingBounds);
                 }
             })
             .onEnd(new FloatValueAnimatorBuilder.EndListener() {
@@ -435,8 +435,6 @@ public class TapTargetView extends View {
         }
 
         int saveCount;
-        c.clipRect(drawingBounds);
-
         outerCirclePaint.setAlpha(outerCircleAlpha);
         if (shouldDrawShadow) {
             saveCount = c.save(); {
