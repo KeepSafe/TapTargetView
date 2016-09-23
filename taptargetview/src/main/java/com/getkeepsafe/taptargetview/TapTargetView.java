@@ -132,17 +132,26 @@ public class TapTargetView extends View {
     }
 
     public static class Listener {
+        /** Signals that the user has clicked inside of the target **/
         public void onTargetClick(TapTargetView view) {
             view.dismiss(true);
         }
 
+        /** Signals that the user has long clicked inside of the target **/
         public void onTargetLongClick(TapTargetView view) {
             onTargetClick(view);
         }
 
+        /** If cancelable, signals that the user has clicked outside of the outer circle **/
         public void onTargetCancel(TapTargetView view) {
             view.dismiss(false);
         }
+
+        /**
+         * Signals that the tap target has been dismissed
+         * @param userInitiated Whether the user caused this action
+         */
+        public void onTargetDismissed(TapTargetView view, boolean userInitiated) {}
     }
 
     final FloatValueAnimatorBuilder.UpdateListener expandContractUpdateListener = new FloatValueAnimatorBuilder.UpdateListener() {
@@ -412,10 +421,14 @@ public class TapTargetView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        onDismiss();
+        onDismiss(false);
     }
 
     void onDismiss() {
+        onDismiss(true);
+    }
+
+    void onDismiss(boolean userInitiated) {
         for (final ValueAnimator animator : animators) {
             animator.cancel();
             animator.removeAllUpdateListeners();
@@ -431,6 +444,10 @@ public class TapTargetView extends View {
         }
 
         visible = false;
+
+        if (listener != null) {
+            listener.onTargetDismissed(this, userInitiated);
+        }
     }
 
     @Override
