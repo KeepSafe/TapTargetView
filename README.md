@@ -11,7 +11,7 @@
 
 An implementation of tap targets from [Google's Material Design guidelines on feature discovery](https://material.google.com/growth-communications/feature-discovery.html#feature-discovery-design).
 
- **Min SDK:** 15
+**Min SDK:** 14
 
 ## Installation
 
