@@ -1,15 +1,20 @@
 package com.getkeepsafe.taptargetviewsample;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Display;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -62,7 +67,20 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onSequenceCanceled() {
-                        ((TextView) findViewById(R.id.educated)).setText("Uh oh! You canceled the sequence :(");
+                        final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Uh oh")
+                                .setMessage("You canceled the sequence")
+                                .setPositiveButton("Oops", null).show();
+                        TapTargetView.showFor(dialog,
+                                TapTarget.forView(dialog.getButton(DialogInterface.BUTTON_POSITIVE), "Uh oh!", "You canceled the sequence")
+                                        .cancelable(false)
+                                        .tintTarget(false), new TapTargetView.Listener() {
+                                    @Override
+                                    public void onTargetClick(TapTargetView view) {
+                                        super.onTargetClick(view);
+                                        dialog.dismiss();
+                                    }
+                                });
                     }
                 });
 
@@ -77,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 super.onTargetClick(view);
                 // .. which evidently starts the sequence we defined earlier
                 sequence.start();
+            }
+
+            @Override
+            public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+                Log.d("WTF", "WTF");
             }
         });
     }

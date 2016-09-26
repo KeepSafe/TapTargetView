@@ -46,7 +46,7 @@ public class TapTarget {
     @ColorRes int dimColor = -1;
     @ColorRes int textColor = -1;
 
-    boolean drawShadow = true;
+    boolean drawShadow = false;
     boolean cancelable = true;
     boolean tintTarget = true;
 
