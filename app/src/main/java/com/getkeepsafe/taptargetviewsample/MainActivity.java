@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-                Log.d("WTF", "WTF");
+                Log.d("TapTargetViewSample", "You dismissed me :(");
             }
         });
     }
