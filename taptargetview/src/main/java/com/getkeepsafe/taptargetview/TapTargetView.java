@@ -478,21 +478,6 @@ public class TapTargetView extends View {
             animator.removeAllUpdateListeners();
         }
 
-        final Drawable icon = target.icon;
-        if (icon != null && icon instanceof BitmapDrawable) {
-            final BitmapDrawable bitmapDrawable = (BitmapDrawable) icon;
-            final Bitmap bitmap = bitmapDrawable.getBitmap();
-            if (bitmap != null && !bitmap.isRecycled()) {
-                bitmap.recycle();
-            }
-        }
-        target.icon = null;
-
-        if (tintedTarget != null && !tintedTarget.isRecycled()) {
-            tintedTarget.recycle();
-            tintedTarget = null;
-        }
-
         visible = false;
 
         if (listener != null) {
@@ -549,6 +534,7 @@ public class TapTargetView extends View {
             } else if (target.icon != null) {
                 c.translate(targetBounds.centerX() - target.icon.getBounds().width() / 2,
                             targetBounds.centerY() - target.icon.getBounds().height() / 2);
+                target.icon.setAlpha(targetCirclePaint.getAlpha());
                 target.icon.draw(c);
             }
         }
