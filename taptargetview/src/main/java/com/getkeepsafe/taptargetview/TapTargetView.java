@@ -291,7 +291,7 @@ public class TapTargetView extends View {
     private ValueAnimator[] animators = new ValueAnimator[]
             {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
 
-    TapTargetView(Context context,
+    public TapTargetView(Context context,
                   final ViewManager parent,
                   @Nullable final ViewGroup boundingParent,
                   final TapTarget target,
