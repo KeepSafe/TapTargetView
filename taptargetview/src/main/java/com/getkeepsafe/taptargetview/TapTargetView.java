@@ -291,11 +291,26 @@ public class TapTargetView extends View {
     private ValueAnimator[] animators = new ValueAnimator[]
             {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
 
+    /**
+     * This constructor should only be used directly for very specific use cases not covered by
+     * the static factory methods.
+     *
+     * @param context The host context
+     * @param parent The parent that this TapTargetView will become a child of. This parent should
+     *               allow the largest possible area for this view to utilize
+     * @param boundingParent Optional. Will be used to calculate boundaries if needed. For example,
+     *                       if your view is added to the decor view of your Window, then you want
+     *                       to adjust for system ui like the navigation bar or status bar, and so
+     *                       you would pass in the content view (which doesn't include system ui)
+     *                       here.
+     * @param target The {@link TapTarget} to target
+     * @param listener Optional. The {@link Listener} instance for this view
+     */
     public TapTargetView(Context context,
                   final ViewManager parent,
                   @Nullable final ViewGroup boundingParent,
                   final TapTarget target,
-                  final Listener listener) {
+                  @Nullable final Listener listener) {
         super(context);
         if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
