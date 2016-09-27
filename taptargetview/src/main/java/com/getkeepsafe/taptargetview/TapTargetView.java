@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Keepsafe Software, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -40,14 +39,13 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * TapTargetView implements a feature discovery paradigm following Google's Material Design
@@ -95,6 +93,7 @@ public class TapTargetView extends View {
     boolean shouldDrawShadow;
     boolean cancelable;
     boolean visible;
+    boolean isExpanded;
 
     // Drawing properties
     Rect drawingBounds;
@@ -167,23 +166,30 @@ public class TapTargetView extends View {
     }
 
     public static class Listener {
-        /** Signals that the user has clicked inside of the target **/
+        /**
+         * Signals that the user has clicked inside of the target
+         **/
         public void onTargetClick(TapTargetView view) {
             view.dismiss(true);
         }
 
-        /** Signals that the user has long clicked inside of the target **/
+        /**
+         * Signals that the user has long clicked inside of the target
+         **/
         public void onTargetLongClick(TapTargetView view) {
             onTargetClick(view);
         }
 
-        /** If cancelable, signals that the user has clicked outside of the outer circle **/
+        /**
+         * If cancelable, signals that the user has clicked outside of the outer circle
+         **/
         public void onTargetCancel(TapTargetView view) {
             view.dismiss(false);
         }
 
         /**
          * Signals that the tap target has been dismissed
+         *
          * @param userInitiated Whether the user caused this action
          */
         public void onTargetDismissed(TapTargetView view, boolean userInitiated) {}
@@ -222,6 +228,7 @@ public class TapTargetView extends View {
                 @Override
                 public void onEnd() {
                     pulseAnimation.start();
+                    isExpanded = true;
                 }
             })
             .build();
@@ -256,6 +263,7 @@ public class TapTargetView extends View {
                 @Override
                 public void onEnd() {
                     parent.removeView(TapTargetView.this);
+                    isExpanded = false;
                     onDismiss();
                 }
             })
@@ -295,22 +303,22 @@ public class TapTargetView extends View {
      * This constructor should only be used directly for very specific use cases not covered by
      * the static factory methods.
      *
-     * @param context The host context
-     * @param parent The parent that this TapTargetView will become a child of. This parent should
-     *               allow the largest possible area for this view to utilize
+     * @param context        The host context
+     * @param parent         The parent that this TapTargetView will become a child of. This parent should
+     *                       allow the largest possible area for this view to utilize
      * @param boundingParent Optional. Will be used to calculate boundaries if needed. For example,
      *                       if your view is added to the decor view of your Window, then you want
      *                       to adjust for system ui like the navigation bar or status bar, and so
      *                       you would pass in the content view (which doesn't include system ui)
      *                       here.
-     * @param target The {@link TapTarget} to target
-     * @param listener Optional. The {@link Listener} instance for this view
+     * @param target         The {@link TapTarget} to target
+     * @param listener       Optional. The {@link Listener} instance for this view
      */
     public TapTargetView(Context context,
-                  final ViewManager parent,
-                  @Nullable final ViewGroup boundingParent,
-                  final TapTarget target,
-                  @Nullable final Listener listener) {
+                         final ViewManager parent,
+                         @Nullable final ViewGroup boundingParent,
+                         final TapTarget target,
+                         @Nullable final Listener listener) {
         super(context);
         if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
@@ -394,6 +402,8 @@ public class TapTargetView extends View {
         });
 
         setClickable(true);
+        setFocusableInTouchMode(true);
+
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -474,6 +484,24 @@ public class TapTargetView extends View {
     }
 
     @Override
+    public boolean dispatchKeyEventPreIme(KeyEvent event) {
+        return (keyListener.onKey(this, event.getKeyCode(), event)) || super.dispatchKeyEventPreIme(event);
+    }
+
+    private View.OnKeyListener keyListener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(final android.view.View v, final int keyCode, final KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN &&
+                    isExpanded && listener != null) {
+                listener.onTargetCancel(TapTargetView.this);
+                return true;
+            }
+            return false;
+        }
+    };
+
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         onDismiss(false);
@@ -511,11 +539,13 @@ public class TapTargetView extends View {
         int saveCount;
         outerCirclePaint.setAlpha(outerCircleAlpha);
         if (shouldDrawShadow) {
-            saveCount = c.save(); {
+            saveCount = c.save();
+            {
                 c.clipPath(outerCirclePath, Region.Op.DIFFERENCE);
                 outerCircleShadowPaint.setAlpha((int) (0.20f * outerCircleAlpha));
                 c.drawPath(outerCirclePath, outerCircleShadowPaint);
-            } c.restoreToCount(saveCount);
+            }
+            c.restoreToCount(saveCount);
         }
         c.drawPath(outerCirclePath, outerCirclePaint);
 
@@ -528,7 +558,8 @@ public class TapTargetView extends View {
         c.drawCircle(targetBounds.centerX(), targetBounds.centerY(),
                 targetCircleRadius, targetCirclePaint);
 
-        saveCount = c.save(); {
+        saveCount = c.save();
+        {
             c.clipPath(outerCirclePath);
             c.translate(textBounds.left, textBounds.top);
             titlePaint.setAlpha(textAlpha);
@@ -539,16 +570,18 @@ public class TapTargetView extends View {
                 descriptionPaint.setAlpha((int) (0.54f * textAlpha));
                 descriptionLayout.draw(c);
             }
-        } c.restoreToCount(saveCount);
+        }
+        c.restoreToCount(saveCount);
 
-        saveCount = c.save(); {
+        saveCount = c.save();
+        {
             if (tintedTarget != null) {
                 c.translate(targetBounds.centerX() - tintedTarget.getWidth() / 2,
-                            targetBounds.centerY() - tintedTarget.getHeight() / 2);
+                        targetBounds.centerY() - tintedTarget.getHeight() / 2);
                 c.drawBitmap(tintedTarget, 0, 0, targetCirclePaint);
             } else if (target.icon != null) {
                 c.translate(targetBounds.centerX() - target.icon.getBounds().width() / 2,
-                            targetBounds.centerY() - target.icon.getBounds().height() / 2);
+                        targetBounds.centerY() - target.icon.getBounds().height() / 2);
                 target.icon.setAlpha(targetCirclePaint.getAlpha());
                 target.icon.draw(c);
             }
@@ -574,6 +607,7 @@ public class TapTargetView extends View {
 
     /**
      * Dismiss this view
+     *
      * @param tappedTarget If the user tapped the target or not
      *                     (results in different dismiss animations)
      */
@@ -587,7 +621,9 @@ public class TapTargetView extends View {
         }
     }
 
-    /** Specify whether to draw a wireframe around the view, useful for debugging **/
+    /**
+     * Specify whether to draw a wireframe around the view, useful for debugging
+     **/
     public void setDrawDebug(boolean status) {
         if (debug != status) {
             debug = status;
@@ -595,7 +631,9 @@ public class TapTargetView extends View {
         }
     }
 
-    /** Returns whether this view is visible or not **/
+    /**
+     * Returns whether this view is visible or not
+     **/
     public boolean isVisible() {
         return visible;
     }
@@ -686,7 +724,7 @@ public class TapTargetView extends View {
 
     int[] getOuterCircleCenterPoint() {
         if (inGutter(targetBounds.centerY())) {
-            return new int[] {targetBounds.centerX(), targetBounds.centerY()};
+            return new int[]{targetBounds.centerX(), targetBounds.centerY()};
         }
 
         final int targetRadius = Math.max(targetBounds.width(), targetBounds.height()) / 2 + TARGET_PADDING;
@@ -701,7 +739,7 @@ public class TapTargetView extends View {
                 :
                 targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING + titleLayout.getHeight();
 
-        return new int[] {(left + right) / 2, centerY};
+        return new int[]{(left + right) / 2, centerY};
     }
 
     int getTotalTextHeight() {
