@@ -16,6 +16,7 @@
 package com.getkeepsafe.taptargetview;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
@@ -40,9 +41,10 @@ public class ViewTapTarget extends TapTarget {
                 bounds = new Rect(location[0], location[1],
                         location[0] + view.getWidth(), location[1] + view.getHeight());
 
-                view.setDrawingCacheEnabled(true);
-                final Bitmap cacheCopy = view.getDrawingCache().copy(Bitmap.Config.ARGB_8888, false);
-                icon = new BitmapDrawable(view.getContext().getResources(), cacheCopy);
+                final Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+                final Canvas canvas = new Canvas(viewBitmap);
+                view.draw(canvas);
+                icon = new BitmapDrawable(view.getContext().getResources(), viewBitmap);
                 icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
 
                 runnable.run();
