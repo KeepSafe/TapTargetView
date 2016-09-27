@@ -18,6 +18,7 @@ package com.getkeepsafe.taptargetview;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -25,6 +26,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
@@ -37,10 +39,15 @@ import android.support.annotation.Nullable;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * TapTargetView implements a feature discovery paradigm following Google's Material Design
@@ -55,6 +62,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 @SuppressLint("ViewConstructor")
 public class TapTargetView extends View {
     private static final int UNSET_COLOR = -1;
+    private boolean isDismissed = false;
 
     final int TARGET_PADDING;
     final int TARGET_RADIUS;
@@ -64,7 +72,8 @@ public class TapTargetView extends View {
     final int CIRCLE_PADDING;
     final int GUTTER_DIM;
 
-    final ViewGroup parent;
+    @Nullable final ViewGroup boundingParent;
+    final ViewManager parent;
     final TapTarget target;
     final Rect targetBounds;
 
@@ -125,8 +134,34 @@ public class TapTargetView extends View {
         final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
         final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        final TapTargetView tapTargetView = new TapTargetView(decor, target, listener);
+        final ViewGroup content = (ViewGroup) decor.findViewById(android.R.id.content);
+        final TapTargetView tapTargetView = new TapTargetView(activity, decor, content, target, listener);
         decor.addView(tapTargetView, layoutParams);
+
+        return tapTargetView;
+    }
+
+    public static TapTargetView showFor(Dialog dialog, TapTarget target) {
+        return showFor(dialog, target, null);
+    }
+
+    public static TapTargetView showFor(Dialog dialog, TapTarget target, Listener listener) {
+        if (dialog == null) throw new IllegalArgumentException("Dialog is null");
+
+        final Context context = dialog.getContext();
+        final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+        params.type = WindowManager.LayoutParams.TYPE_APPLICATION;
+        params.format = PixelFormat.RGBA_8888;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        params.gravity = Gravity.START | Gravity.TOP;
+        params.x = 0;
+        params.y = 0;
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        final TapTargetView tapTargetView = new TapTargetView(context, windowManager, null, target, listener);
+        windowManager.addView(tapTargetView, params);
 
         return tapTargetView;
     }
@@ -256,17 +291,36 @@ public class TapTargetView extends View {
     private ValueAnimator[] animators = new ValueAnimator[]
             {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
 
-    TapTargetView(final ViewGroup parent, final TapTarget target, final Listener listener) {
-        super(parent.getContext());
+    /**
+     * This constructor should only be used directly for very specific use cases not covered by
+     * the static factory methods.
+     *
+     * @param context The host context
+     * @param parent The parent that this TapTargetView will become a child of. This parent should
+     *               allow the largest possible area for this view to utilize
+     * @param boundingParent Optional. Will be used to calculate boundaries if needed. For example,
+     *                       if your view is added to the decor view of your Window, then you want
+     *                       to adjust for system ui like the navigation bar or status bar, and so
+     *                       you would pass in the content view (which doesn't include system ui)
+     *                       here.
+     * @param target The {@link TapTarget} to target
+     * @param listener Optional. The {@link Listener} instance for this view
+     */
+    public TapTargetView(Context context,
+                  final ViewManager parent,
+                  @Nullable final ViewGroup boundingParent,
+                  final TapTarget target,
+                  @Nullable final Listener listener) {
+        super(context);
         if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
         this.target = target;
         this.parent = parent;
+        this.boundingParent = boundingParent;
         this.listener = listener != null ? listener : new Listener();
         this.title = target.title;
         this.description = target.description;
 
-        final Context context = getContext();
         TARGET_PADDING = UiUtil.dp(context, 20);
         CIRCLE_PADDING = UiUtil.dp(context, 40);
         TARGET_RADIUS = UiUtil.dp(context, 44);
@@ -325,9 +379,10 @@ public class TapTargetView extends View {
                         getLocationOnScreen(offset);
                         targetBounds.offset(-offset[0], -offset[1]);
 
-                        final ViewGroup content = (ViewGroup) parent.findViewById(android.R.id.content);
-                        content.getLocationOnScreen(offset);
-                        topBoundary = offset[1];
+                        if (boundingParent != null) {
+                            boundingParent.getLocationOnScreen(offset);
+                            topBoundary = offset[1];
+                        }
 
                         drawTintedTarget();
                         calculateDimensions();
@@ -429,18 +484,13 @@ public class TapTargetView extends View {
     }
 
     void onDismiss(boolean userInitiated) {
+        if (isDismissed) return;
+
+        isDismissed = true;
+
         for (final ValueAnimator animator : animators) {
             animator.cancel();
             animator.removeAllUpdateListeners();
-        }
-
-        final Drawable icon = target.icon;
-        if (icon != null && icon instanceof BitmapDrawable) {
-            final BitmapDrawable bitmapDrawable = (BitmapDrawable) icon;
-            final Bitmap bitmap = bitmapDrawable.getBitmap();
-            if (bitmap != null && !bitmap.isRecycled()) {
-                bitmap.recycle();
-            }
         }
 
         visible = false;
@@ -452,6 +502,8 @@ public class TapTargetView extends View {
 
     @Override
     protected void onDraw(Canvas c) {
+        if (isDismissed) return;
+
         if (dimColor != -1) {
             c.drawColor(dimColor);
         }
@@ -497,6 +549,7 @@ public class TapTargetView extends View {
             } else if (target.icon != null) {
                 c.translate(targetBounds.centerX() - target.icon.getBounds().width() / 2,
                             targetBounds.centerY() - target.icon.getBounds().height() / 2);
+                target.icon.setAlpha(targetCirclePaint.getAlpha());
                 target.icon.draw(c);
             }
         }
