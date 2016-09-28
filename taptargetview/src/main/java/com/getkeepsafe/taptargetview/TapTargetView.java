@@ -483,7 +483,7 @@ public class TapTargetView extends View {
 
     private View.OnKeyListener keyListener = new View.OnKeyListener() {
         @Override
-        public boolean onKey(final android.view.View v, final int keyCode, final KeyEvent event) {
+        public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
             if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP &&
                     isExpanded && listener != null) {
                 listener.onTargetCancel(TapTargetView.this);
