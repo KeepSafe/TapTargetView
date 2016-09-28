@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Keepsafe Software, Inc.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -166,30 +166,23 @@ public class TapTargetView extends View {
     }
 
     public static class Listener {
-        /**
-         * Signals that the user has clicked inside of the target
-         **/
+        /** Signals that the user has clicked inside of the target **/
         public void onTargetClick(TapTargetView view) {
             view.dismiss(true);
         }
 
-        /**
-         * Signals that the user has long clicked inside of the target
-         **/
+        /** Signals that the user has long clicked inside of the target **/
         public void onTargetLongClick(TapTargetView view) {
             onTargetClick(view);
         }
 
-        /**
-         * If cancelable, signals that the user has clicked outside of the outer circle
-         **/
+        /** If cancelable, signals that the user has clicked outside of the outer circle **/
         public void onTargetCancel(TapTargetView view) {
             view.dismiss(false);
         }
 
         /**
          * Signals that the tap target has been dismissed
-         *
          * @param userInitiated Whether the user caused this action
          */
         public void onTargetDismissed(TapTargetView view, boolean userInitiated) {}
@@ -485,13 +478,13 @@ public class TapTargetView extends View {
 
     @Override
     public boolean dispatchKeyEventPreIme(KeyEvent event) {
-        return (keyListener.onKey(this, event.getKeyCode(), event)) || super.dispatchKeyEventPreIme(event);
+        return keyListener.onKey(this, event.getKeyCode(), event) || super.dispatchKeyEventPreIme(event);
     }
 
     private View.OnKeyListener keyListener = new View.OnKeyListener() {
         @Override
         public boolean onKey(final android.view.View v, final int keyCode, final KeyEvent event) {
-            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN &&
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP &&
                     isExpanded && listener != null) {
                 listener.onTargetCancel(TapTargetView.this);
                 return true;
@@ -539,13 +532,11 @@ public class TapTargetView extends View {
         int saveCount;
         outerCirclePaint.setAlpha(outerCircleAlpha);
         if (shouldDrawShadow) {
-            saveCount = c.save();
-            {
+            saveCount = c.save(); {
                 c.clipPath(outerCirclePath, Region.Op.DIFFERENCE);
                 outerCircleShadowPaint.setAlpha((int) (0.20f * outerCircleAlpha));
                 c.drawPath(outerCirclePath, outerCircleShadowPaint);
-            }
-            c.restoreToCount(saveCount);
+            } c.restoreToCount(saveCount);
         }
         c.drawPath(outerCirclePath, outerCirclePaint);
 
@@ -558,8 +549,7 @@ public class TapTargetView extends View {
         c.drawCircle(targetBounds.centerX(), targetBounds.centerY(),
                 targetCircleRadius, targetCirclePaint);
 
-        saveCount = c.save();
-        {
+        saveCount = c.save(); {
             c.clipPath(outerCirclePath);
             c.translate(textBounds.left, textBounds.top);
             titlePaint.setAlpha(textAlpha);
@@ -570,18 +560,16 @@ public class TapTargetView extends View {
                 descriptionPaint.setAlpha((int) (0.54f * textAlpha));
                 descriptionLayout.draw(c);
             }
-        }
-        c.restoreToCount(saveCount);
+        } c.restoreToCount(saveCount);
 
-        saveCount = c.save();
-        {
+        saveCount = c.save(); {
             if (tintedTarget != null) {
                 c.translate(targetBounds.centerX() - tintedTarget.getWidth() / 2,
-                        targetBounds.centerY() - tintedTarget.getHeight() / 2);
+                            targetBounds.centerY() - tintedTarget.getHeight() / 2);
                 c.drawBitmap(tintedTarget, 0, 0, targetCirclePaint);
             } else if (target.icon != null) {
                 c.translate(targetBounds.centerX() - target.icon.getBounds().width() / 2,
-                        targetBounds.centerY() - target.icon.getBounds().height() / 2);
+                            targetBounds.centerY() - target.icon.getBounds().height() / 2);
                 target.icon.setAlpha(targetCirclePaint.getAlpha());
                 target.icon.draw(c);
             }
@@ -607,7 +595,6 @@ public class TapTargetView extends View {
 
     /**
      * Dismiss this view
-     *
      * @param tappedTarget If the user tapped the target or not
      *                     (results in different dismiss animations)
      */
@@ -621,9 +608,7 @@ public class TapTargetView extends View {
         }
     }
 
-    /**
-     * Specify whether to draw a wireframe around the view, useful for debugging
-     **/
+    /** Specify whether to draw a wireframe around the view, useful for debugging **/
     public void setDrawDebug(boolean status) {
         if (debug != status) {
             debug = status;
@@ -631,9 +616,7 @@ public class TapTargetView extends View {
         }
     }
 
-    /**
-     * Returns whether this view is visible or not
-     **/
+    /** Returns whether this view is visible or not **/
     public boolean isVisible() {
         return visible;
     }
@@ -724,7 +707,7 @@ public class TapTargetView extends View {
 
     int[] getOuterCircleCenterPoint() {
         if (inGutter(targetBounds.centerY())) {
-            return new int[]{targetBounds.centerX(), targetBounds.centerY()};
+            return new int[] {targetBounds.centerX(), targetBounds.centerY()};
         }
 
         final int targetRadius = Math.max(targetBounds.width(), targetBounds.height()) / 2 + TARGET_PADDING;
@@ -739,7 +722,7 @@ public class TapTargetView extends View {
                 :
                 targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING + titleLayout.getHeight();
 
-        return new int[]{(left + right) / 2, centerY};
+        return new int[] {(left + right) / 2, centerY};
     }
 
     int getTotalTextHeight() {
