@@ -12,7 +12,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 10
         versionCode 3
         versionName project.version
     }

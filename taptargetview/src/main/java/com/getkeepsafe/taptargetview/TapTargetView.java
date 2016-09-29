@@ -17,6 +17,7 @@ package com.getkeepsafe.taptargetview;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -124,10 +125,12 @@ public class TapTargetView extends View {
 
     Listener listener;
 
+    @TargetApi(14)
     public static TapTargetView showFor(Activity activity, TapTarget target) {
         return showFor(activity, target, null);
     }
 
+    @TargetApi(14)
     public static TapTargetView showFor(Activity activity, TapTarget target, Listener listener) {
         if (activity == null) throw new IllegalArgumentException("Activity is null");
 
@@ -141,10 +144,12 @@ public class TapTargetView extends View {
         return tapTargetView;
     }
 
+    @TargetApi(14)
     public static TapTargetView showFor(Dialog dialog, TapTarget target) {
         return showFor(dialog, target, null);
     }
 
+    @TargetApi(14)
     public static TapTargetView showFor(Dialog dialog, TapTarget target, Listener listener) {
         if (dialog == null) throw new IllegalArgumentException("Dialog is null");
 
@@ -306,6 +311,7 @@ public class TapTargetView extends View {
      * @param target The {@link TapTarget} to target
      * @param listener Optional. The {@link Listener} instance for this view
      */
+    @TargetApi(14)
     public TapTargetView(Context context,
                   final ViewManager parent,
                   @Nullable final ViewGroup boundingParent,
