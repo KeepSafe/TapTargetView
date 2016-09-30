@@ -517,7 +517,7 @@ public class TapTargetView extends View {
                 c.drawPath(outerCirclePath, outerCircleShadowPaint);
             } c.restoreToCount(saveCount);
         }
-        c.drawPath(outerCirclePath, outerCirclePaint);
+        c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, outerCirclePaint);
 
         targetCirclePaint.setAlpha(targetCircleAlpha);
         if (targetCirclePulseAlpha > 0) {
