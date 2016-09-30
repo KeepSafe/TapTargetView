@@ -19,7 +19,9 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 /**
@@ -49,6 +51,40 @@ public class TapTarget {
     boolean drawShadow = false;
     boolean cancelable = true;
     boolean tintTarget = true;
+
+    /** Return a tap target for the overflow button from the given toolbar **/
+    public static ToolbarTapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title) {
+        return forToolbarOverflow(toolbar, title, null);
+    }
+
+    /** Return a tap target for the overflow button from the given toolbar **/
+    public static ToolbarTapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title,
+                                                      @Nullable CharSequence description) {
+        return new ToolbarTapTarget(toolbar, false, title, description);
+    }
+
+    /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
+    public static ToolbarTapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title) {
+        return forToolbarNavigationIcon(toolbar, title, null);
+    }
+
+    /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
+    public static ToolbarTapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title,
+                                                            @Nullable CharSequence description) {
+        return new ToolbarTapTarget(toolbar, true, title, description);
+    }
+
+    /** Return a tap target for the menu item from the given toolbar **/
+    public static ToolbarTapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
+                                                      CharSequence title) {
+        return forToolbarMenuItem(toolbar, menuItemId, title, null);
+    }
+
+    /** Return a tap target for the menu item from the given toolbar **/
+    public static ToolbarTapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
+                                                      CharSequence title, @Nullable CharSequence description) {
+        return new ToolbarTapTarget(toolbar, menuItemId, title, description);
+    }
 
     /** Return a tap target for the specified view **/
     public static ViewTapTarget forView(View view, CharSequence title) {
