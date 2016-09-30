@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         spannedDesc.setSpan(new UnderlineSpan(), spannedDesc.length() - "TapTargetView".length(), spannedDesc.length(), 0);
         TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.fab), "Hello, world!", spannedDesc)
                 .cancelable(false)
+                .drawShadow(true)
                 .tintTarget(false), new TapTargetView.Listener() {
             @Override
             public void onTargetClick(TapTargetView view) {

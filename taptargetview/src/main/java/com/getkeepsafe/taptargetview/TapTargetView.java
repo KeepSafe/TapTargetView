@@ -17,6 +17,7 @@ package com.getkeepsafe.taptargetview;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
@@ -32,7 +34,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -44,10 +45,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
+import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * TapTargetView implements a feature discovery paradigm following Google's Material Design
@@ -71,6 +71,7 @@ public class TapTargetView extends View {
     final int TEXT_SPACING;
     final int CIRCLE_PADDING;
     final int GUTTER_DIM;
+    final int SHADOW_DIM;
 
     @Nullable final ViewGroup boundingParent;
     final ViewManager parent;
@@ -123,6 +124,9 @@ public class TapTargetView extends View {
     Bitmap tintedTarget;
 
     Listener listener;
+
+    @Nullable
+    ViewOutlineProvider outlineProvider;
 
     public static TapTargetView showFor(Activity activity, TapTarget target) {
         return showFor(activity, target, null);
@@ -204,7 +208,7 @@ public class TapTargetView extends View {
             textAlpha = (int) (delayedLerp(lerpTime, 0.7f) * 255);
 
             calculateDrawingBounds();
-            invalidate(drawingBounds);
+            invalidateViewAndOutline(drawingBounds);
         }
     };
 
@@ -238,7 +242,7 @@ public class TapTargetView extends View {
                     targetCirclePulseAlpha = (int) ((1.0f - pulseLerp) * 255);
                     targetCircleRadius = TARGET_RADIUS + halfwayLerp(lerpTime) * TARGET_PULSE_RADIUS;
                     calculateDrawingBounds();
-                    invalidate(drawingBounds);
+                    invalidateViewAndOutline(drawingBounds);
                 }
             })
             .build();
@@ -276,7 +280,7 @@ public class TapTargetView extends View {
                     targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
                     textAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
                     calculateDrawingBounds();
-                    invalidate(drawingBounds);
+                    invalidateViewAndOutline(drawingBounds);
                 }
             })
             .onEnd(new FloatValueAnimatorBuilder.EndListener() {
@@ -327,6 +331,7 @@ public class TapTargetView extends View {
         TEXT_PADDING = UiUtil.dp(context, 40);
         TEXT_SPACING = UiUtil.dp(context, 8);
         GUTTER_DIM = UiUtil.dp(context, 88);
+        SHADOW_DIM = UiUtil.dp(context, 8);
         TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
 
         outerCirclePath = new Path();
@@ -424,11 +429,31 @@ public class TapTargetView extends View {
     }
 
     protected void applyTargetOptions(Context context) {
-        this.shouldTintTarget = target.tintTarget;
-        this.shouldDrawShadow = target.drawShadow;
-        this.cancelable = target.cancelable;
+        shouldTintTarget = target.tintTarget;
+        shouldDrawShadow = target.drawShadow;
+        cancelable = target.cancelable;
 
-        if (target.drawShadow || Build.VERSION.SDK_INT < 18) {
+        if (shouldDrawShadow && Build.VERSION.SDK_INT >= 21) {
+            outlineProvider = new ViewOutlineProvider() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    if (outerCircleCenter == null) return;
+                    outline.setOval(
+                            (int) (outerCircleCenter[0] - outerCircleRadius), (int) (outerCircleCenter[1] - outerCircleRadius),
+                            (int) (outerCircleCenter[0] + outerCircleRadius), (int) (outerCircleCenter[1] + outerCircleRadius));
+                    outline.setAlpha(outerCircleAlpha / 255.0f);
+                    if (Build.VERSION.SDK_INT >= 22) {
+                        outline.offset(0, SHADOW_DIM);
+                    }
+                }
+            };
+
+            setOutlineProvider(outlineProvider);
+            setElevation(SHADOW_DIM);
+        }
+
+        if ((shouldDrawShadow && outlineProvider == null) || Build.VERSION.SDK_INT < 18) {
             setLayerType(LAYER_TYPE_SOFTWARE, null);
         } else {
             setLayerType(LAYER_TYPE_HARDWARE, null);
@@ -510,11 +535,11 @@ public class TapTargetView extends View {
 
         int saveCount;
         outerCirclePaint.setAlpha(outerCircleAlpha);
-        if (shouldDrawShadow) {
+        if (shouldDrawShadow && outlineProvider == null) {
             saveCount = c.save(); {
                 c.clipPath(outerCirclePath, Region.Op.DIFFERENCE);
                 outerCircleShadowPaint.setAlpha((int) (0.20f * outerCircleAlpha));
-                c.drawPath(outerCirclePath, outerCircleShadowPaint);
+                c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, outerCircleShadowPaint);
             } c.restoreToCount(saveCount);
         }
         c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, outerCirclePaint);
@@ -734,5 +759,12 @@ public class TapTargetView extends View {
 
     double distance(int x1, int y1, int x2, int y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+
+    void invalidateViewAndOutline(Rect bounds) {
+        invalidate(bounds);
+        if (outlineProvider != null && Build.VERSION.SDK_INT >= 21) {
+            invalidateOutline();
+        }
     }
 }
