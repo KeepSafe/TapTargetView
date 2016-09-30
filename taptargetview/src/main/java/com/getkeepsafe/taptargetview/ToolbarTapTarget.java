@@ -28,12 +28,22 @@ public class ToolbarTapTarget extends ViewTapTarget {
         super(toolbar.findViewById(menuItemId), title, description);
     }
 
+    protected ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
+                               CharSequence title, @Nullable CharSequence description) {
+        super(toolbar.findViewById(menuItemId), title, description);
+    }
+
     protected ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
                                CharSequence title, @Nullable CharSequence description) {
         super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
     }
 
-    private static View findNavView(Toolbar toolbar) {
+    protected ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
+                               CharSequence title, @Nullable CharSequence description) {
+        super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
+    }
+
+    private static View findNavView(Object toolbar) {
         // Both the appcompat and standard Toolbar implementations utilize a variable
         // "mNavButtonView" to represent the navigation icon
         try {
@@ -47,7 +57,7 @@ public class ToolbarTapTarget extends ViewTapTarget {
         }
     }
 
-    private static View findOverflowView(Toolbar toolbar) {
+    private static View findOverflowView(Object toolbar) {
         // Toolbars contain an "ActionMenuView" which in turn contains an "ActionMenuPresenter".
         // The "ActionMenuPresenter" then holds a reference to an "OverflowMenuButton" which is the
         // desired target
