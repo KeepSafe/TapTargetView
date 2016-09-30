@@ -11,40 +11,12 @@
         android:layout_height="250dp"
         android:background="#444444">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:tint="#ffffff"
-                android:src="@drawable/ic_arrow_back_black_24dp"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-
-            <ImageView
-                android:id="@+id/search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:tint="#ffffff"
-                android:src="@drawable/ic_search_black_24dp"/>
-
-            <ImageView
-                android:id="@+id/dots"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:tint="#ffffff"
-                android:src="@drawable/ic_more_vert_black_24dp"/>
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:theme="@style/Theme.AppCompat" />
 
         <LinearLayout
             android:layout_width="match_parent"
