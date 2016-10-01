@@ -1,21 +1,19 @@
 package com.getkeepsafe.taptargetviewsample;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Display;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -27,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.menu_main);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
 
         // We load a drawable and create a location to show a tap target here
         // We need the display to get the width and height at this point in time
@@ -44,14 +46,16 @@ public class MainActivity extends AppCompatActivity {
         // We have a sequence of targets, so lets build it!
         final TapTargetSequence sequence = new TapTargetSequence(this)
                 .targets(
-                        // This tap target will target the back button, we just need to pass its view
-                        TapTarget.forView(findViewById(R.id.back), "This is the back button", sassyDesc),
+                        // This tap target will target the back button, we just need to pass its containing toolbar
+                        TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc),
                         // Likewise, this tap target will target the search button
-                        TapTarget.forView(findViewById(R.id.search), "This is a search icon", "As you can see, it has gotten pretty dark around here...")
+                        TapTarget.forToolbarMenuItem(toolbar, R.id.search, "This is a search icon", "As you can see, it has gotten pretty dark around here...")
                                 .dimColor(android.R.color.black)
                                 .outerCircleColor(R.color.colorAccent)
                                 .targetCircleColor(android.R.color.black)
                                 .textColor(android.R.color.black),
+                        // You can also target the overflow button in your toolbar
+                        TapTarget.forToolbarOverflow(toolbar, "This will show more options", "But they're not useful :("),
                         // This tap target will target our droid buddy at the given target rect
                         TapTarget.forBounds(droidTarget, "Oh look!", "You can point to any part of the screen. You also can't cancel this one!")
                                 .cancelable(false)
