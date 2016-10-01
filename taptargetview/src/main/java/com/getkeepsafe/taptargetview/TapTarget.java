@@ -52,23 +52,36 @@ public class TapTarget {
     boolean cancelable = true;
     boolean tintTarget = true;
 
-    /** Return a tap target for the overflow button from the given toolbar **/
+    /**
+     * Return a tap target for the overflow button from the given toolbar
+     * <p>
+     * <b>Note:</b> This is currently experimental, use at your own risk
+     */
     public static ToolbarTapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title) {
         return forToolbarOverflow(toolbar, title, null);
     }
 
-    /** Return a tap target for the overflow button from the given toolbar **/
+    /** Return a tap target for the overflow button from the given toolbar
+     * <p>
+     * <b>Note:</b> This is currently experimental, use at your own risk
+     */
     public static ToolbarTapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title,
                                                       @Nullable CharSequence description) {
         return new ToolbarTapTarget(toolbar, false, title, description);
     }
 
-    /** Return a tap target for the overflow button from the given toolbar **/
+    /** Return a tap target for the overflow button from the given toolbar
+     * <p>
+     * <b>Note:</b> This is currently experimental, use at your own risk
+     */
     public static ToolbarTapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title) {
         return forToolbarOverflow(toolbar, title, null);
     }
 
-    /** Return a tap target for the overflow button from the given toolbar **/
+    /** Return a tap target for the overflow button from the given toolbar
+     * <p>
+     * <b>Note:</b> This is currently experimental, use at your own risk
+     */
     public static ToolbarTapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title,
                                                       @Nullable CharSequence description) {
         return new ToolbarTapTarget(toolbar, false, title, description);
