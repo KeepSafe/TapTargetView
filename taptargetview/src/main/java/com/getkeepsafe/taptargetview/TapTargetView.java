@@ -527,7 +527,7 @@ public class TapTargetView extends View {
 
     @Override
     protected void onDraw(Canvas c) {
-        if (isDismissed) return;
+        if (isDismissed || outerCircleCenter == null) return;
 
         if (dimColor != -1) {
             c.drawColor(dimColor);
