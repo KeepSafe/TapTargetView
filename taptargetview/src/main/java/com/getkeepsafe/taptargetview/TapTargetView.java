@@ -97,6 +97,7 @@ public class TapTargetView extends View {
     boolean shouldDrawShadow;
     boolean cancelable;
     boolean visible;
+    boolean isExpanded;
 
     // Drawing properties
     Rect drawingBounds;
@@ -227,6 +228,7 @@ public class TapTargetView extends View {
                 @Override
                 public void onEnd() {
                     pulseAnimation.start();
+                    isExpanded = true;
                 }
             })
             .build();
@@ -261,6 +263,7 @@ public class TapTargetView extends View {
                 @Override
                 public void onEnd() {
                     parent.removeView(TapTargetView.this);
+                    isExpanded = false;
                     onDismiss();
                 }
             })
@@ -300,22 +303,22 @@ public class TapTargetView extends View {
      * This constructor should only be used directly for very specific use cases not covered by
      * the static factory methods.
      *
-     * @param context The host context
-     * @param parent The parent that this TapTargetView will become a child of. This parent should
-     *               allow the largest possible area for this view to utilize
+     * @param context        The host context
+     * @param parent         The parent that this TapTargetView will become a child of. This parent should
+     *                       allow the largest possible area for this view to utilize
      * @param boundingParent Optional. Will be used to calculate boundaries if needed. For example,
      *                       if your view is added to the decor view of your Window, then you want
      *                       to adjust for system ui like the navigation bar or status bar, and so
      *                       you would pass in the content view (which doesn't include system ui)
      *                       here.
-     * @param target The {@link TapTarget} to target
-     * @param listener Optional. The {@link Listener} instance for this view
+     * @param target         The {@link TapTarget} to target
+     * @param listener       Optional. The {@link Listener} instance for this view
      */
     public TapTargetView(Context context,
-                  final ViewManager parent,
-                  @Nullable final ViewGroup boundingParent,
-                  final TapTarget target,
-                  @Nullable final Listener listener) {
+                         final ViewManager parent,
+                         @Nullable final ViewGroup boundingParent,
+                         final TapTarget target,
+                         @Nullable final Listener listener) {
         super(context);
         if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
@@ -402,6 +405,8 @@ public class TapTargetView extends View {
 
         setFocusableInTouchMode(true);
         setClickable(true);
+        setFocusableInTouchMode(true);
+
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -500,6 +505,24 @@ public class TapTargetView extends View {
             descriptionPaint.setTypeface(target.typeface);
         }
     }
+
+    @Override
+    public boolean dispatchKeyEventPreIme(KeyEvent event) {
+        return keyListener.onKey(this, event.getKeyCode(), event) || super.dispatchKeyEventPreIme(event);
+    }
+
+    private View.OnKeyListener keyListener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP &&
+                    isExpanded && listener != null) {
+                listener.onTargetCancel(TapTargetView.this);
+                return true;
+            }
+            return false;
+        }
+    };
+
 
     @Override
     protected void onDetachedFromWindow() {
