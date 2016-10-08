@@ -41,6 +41,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +158,7 @@ public class TapTargetView extends View {
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.type = WindowManager.LayoutParams.TYPE_APPLICATION;
         params.format = PixelFormat.RGBA_8888;
-        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        params.flags = 0;
         params.gravity = Gravity.START | Gravity.TOP;
         params.x = 0;
         params.y = 0;
@@ -393,11 +394,13 @@ public class TapTargetView extends View {
                         calculateDimensions();
                         expandAnimation.start();
                         visible = true;
+                        requestFocus();
                     }
                 });
             }
         });
 
+        setFocusableInTouchMode(true);
         setClickable(true);
         setOnClickListener(new OnClickListener() {
             @Override
@@ -597,6 +600,32 @@ public class TapTargetView extends View {
         return true;
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (isVisible() && cancelable && keyCode == KeyEvent.KEYCODE_BACK) {
+            event.startTracking();
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (isVisible() && cancelable
+                && keyCode == KeyEvent.KEYCODE_BACK && event.isTracking() && !event.isCanceled()) {
+            if (listener != null) {
+                listener.onTargetCancel(this);
+            } else {
+                new Listener().onTargetCancel(this);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Dismiss this view
      * @param tappedTarget If the user tapped the target or not
@@ -622,7 +651,7 @@ public class TapTargetView extends View {
 
     /** Returns whether this view is visible or not **/
     public boolean isVisible() {
-        return visible;
+        return !isDismissed && visible;
     }
 
     void drawTintedTarget() {
