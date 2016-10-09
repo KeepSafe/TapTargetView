@@ -487,13 +487,17 @@ public class TapTargetView extends View {
             dimColor = -1;
         }
 
-        if (target.textColor != UNSET_COLOR) {
-            titlePaint.setColor(UiUtil.getColor(context, target.textColor));
+        if (target.titleTextColor != UNSET_COLOR) {
+            titlePaint.setColor(UiUtil.getColor(context, target.titleTextColor));
         } else {
             titlePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
         }
 
-        descriptionPaint.setColor(titlePaint.getColor());
+        if (target.descriptionTextColor != UNSET_COLOR) {
+            descriptionPaint.setColor(UiUtil.getColor(context, target.descriptionTextColor));
+        } else {
+            descriptionPaint.setColor(titlePaint.getColor());
+        }
 
         if (target.typeface != null) {
             titlePaint.setTypeface(target.typeface);

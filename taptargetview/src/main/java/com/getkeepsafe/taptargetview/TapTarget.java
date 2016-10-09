@@ -46,7 +46,8 @@ public class TapTarget {
     @ColorRes int outerCircleColor = -1;
     @ColorRes int targetCircleColor = -1;
     @ColorRes int dimColor = -1;
-    @ColorRes int textColor = -1;
+    @ColorRes int titleTextColor = -1;
+    @ColorRes int descriptionTextColor = -1;
 
     int titleTextSize = 20;
     int descriptionTextSize = 18;
@@ -188,7 +189,20 @@ public class TapTarget {
 
     /** Specify the color resource for all text **/
     public TapTarget textColor(@ColorRes int color) {
-        this.textColor = color;
+        this.titleTextColor = color;
+        this.descriptionTextColor = color;
+        return this;
+    }
+
+    /** Specify the color resource for the title text **/
+    public TapTarget titleTextColor(@ColorRes int color) {
+        this.titleTextColor = color;
+        return this;
+    }
+
+    /** Specify the color resource for the description text **/
+    public TapTarget descriptionTextColor(@ColorRes int color) {
+        this.descriptionTextColor= color;
         return this;
     }
 
