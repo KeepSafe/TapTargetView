@@ -48,6 +48,9 @@ public class TapTarget {
     @ColorRes int dimColor = -1;
     @ColorRes int textColor = -1;
 
+    int titleTextSize = 20;
+    int descriptionTextSize = 18;
+
     boolean drawShadow = false;
     boolean cancelable = true;
     boolean tintTarget = true;
@@ -193,6 +196,20 @@ public class TapTarget {
     public TapTarget textTypeface(Typeface typeface) {
         if (typeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
         this.typeface = typeface;
+        return this;
+    }
+
+    /** Specify the text size for the title in SP **/
+    public TapTarget titleTextSize(int sp) {
+        if (sp < 0) throw new IllegalArgumentException("Given negative text size");
+        this.titleTextSize = sp;
+        return this;
+    }
+
+    /** Specify the text size for the description in SP **/
+    public TapTarget descriptionTextSize(int sp) {
+        if (sp < 0) throw new IllegalArgumentException("Given negative text size");
+        this.descriptionTextSize = sp;
         return this;
     }
 
