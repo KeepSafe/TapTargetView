@@ -55,6 +55,7 @@ public class TapTarget {
     boolean drawShadow = false;
     boolean cancelable = true;
     boolean tintTarget = true;
+    boolean transparentTarget = false;
 
     /**
      * Return a tap target for the overflow button from the given toolbar
@@ -173,6 +174,12 @@ public class TapTarget {
 
         this.title = title;
         this.description = description;
+    }
+
+    /** Specify whether the target should be transparent **/
+    public TapTarget transparentTarget(boolean transparent) {
+        this.transparentTarget = transparent;
+        return this;
     }
 
     /** Specify the color resource for the outer circle **/
