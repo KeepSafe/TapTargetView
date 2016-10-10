@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                                 .dimColor(android.R.color.black)
                                 .outerCircleColor(R.color.colorAccent)
                                 .targetCircleColor(android.R.color.black)
+                                .transparentTarget(true)
                                 .textColor(android.R.color.black),
                         // You can also target the overflow button in your toolbar
                         TapTarget.forToolbarOverflow(toolbar, "This will show more options", "But they're not useful :("),
