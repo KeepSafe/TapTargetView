@@ -198,18 +198,35 @@ public class TapTargetView extends View {
     final FloatValueAnimatorBuilder.UpdateListener expandContractUpdateListener = new FloatValueAnimatorBuilder.UpdateListener() {
         @Override
         public void onUpdate(float lerpTime) {
+            final float newOuterCircleRadius = calculatedOuterCircleRadius * lerpTime;
+            final boolean expanding = newOuterCircleRadius > outerCircleRadius;
+            if (!expanding) {
+                // When contracting we need to invalidate the old drawing bounds. Otherwise
+                // you will see artifacts as the circle gets smaller
+                calculateDrawingBounds();
+            }
+
             final float targetAlpha = 0.96f * 255;
-            outerCircleRadius = calculatedOuterCircleRadius * lerpTime;
+            outerCircleRadius = newOuterCircleRadius;
             outerCircleAlpha = (int) Math.min(targetAlpha, (lerpTime * 1.5f * targetAlpha));
             outerCirclePath.reset();
             outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
 
             targetCircleAlpha = (int) Math.min(255.0f, (lerpTime * 1.5f * 255.0f));
-            targetCircleRadius = TARGET_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
+
+            if (expanding) {
+                targetCircleRadius = TARGET_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
+            } else {
+                targetCircleRadius = TARGET_RADIUS * lerpTime;
+                targetCirclePulseRadius *= lerpTime;
+            }
 
             textAlpha = (int) (delayedLerp(lerpTime, 0.7f) * 255);
 
-            calculateDrawingBounds();
+            if (expanding) {
+                calculateDrawingBounds();
+            }
+
             invalidateViewAndOutline(drawingBounds);
         }
     };
@@ -280,6 +297,8 @@ public class TapTargetView extends View {
                     outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
                     targetCircleRadius = (1.0f - lerpTime) * TARGET_RADIUS;
                     targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
+                    targetCirclePulseRadius = (1.0f + lerpTime) * TARGET_RADIUS;
+                    targetCirclePulseAlpha = (int) ((1.0f - lerpTime) * targetCirclePulseAlpha);
                     textAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
                     calculateDrawingBounds();
                     invalidateViewAndOutline(drawingBounds);
