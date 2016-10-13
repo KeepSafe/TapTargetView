@@ -23,7 +23,7 @@ TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftwar
    }
    
    dependencies {
-         compile 'com.getkeepsafe.taptargetview:taptargetview:1.3.0'
+         compile 'com.getkeepsafe.taptargetview:taptargetview:1.4.0'
    }
 ```
 
@@ -39,12 +39,17 @@ TapTargetView.showFor(this,                 // `this` is an Activity
         // All options below are optional
         .outerCircleColor(R.color.red)      // Specify a color for the outer circle
         .targetCircleColor(R.color.white)   // Specify a color for the target circle
-        .textColor(R.color.blue)            // Specify a color for text
+        .titleTextSize(20)                  // Specify the size (in sp) of the title text
+        .titleTextColor(R.color.white)      // Specify the color of the title text
+        .descriptionTextSize(10)            // Specify the size (in sp) of the description text
+        .descriptionTextColor(R.color.red)  // Specify the color of the description text
+        .textColor(R.color.blue)            // Specify a color for both the title and description text
         .textTypeFace(Typeface.SANS_SERIF)  // Specify a typeface for the text
         .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
         .drawShadow(true)                   // Whether to draw a drop shadow or not
         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
         .tintTarget(true)                   // Whether to tint the target view's color
+        .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
         .icon(Drawable),                    // Specify a custom drawable to draw as the target
     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
         @Override
