@@ -330,20 +330,20 @@ public class TapTargetView extends View {
      *                       you would pass in the content view (which doesn't include system ui)
      *                       here.
      * @param target The {@link TapTarget} to target
-     * @param listener Optional. The {@link Listener} instance for this view
+     * @param userListener Optional. The {@link Listener} instance for this view
      */
     public TapTargetView(Context context,
                   final ViewManager parent,
                   @Nullable final ViewGroup boundingParent,
                   final TapTarget target,
-                  @Nullable final Listener listener) {
+                  @Nullable final Listener userListener) {
         super(context);
         if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
         this.target = target;
         this.parent = parent;
         this.boundingParent = boundingParent;
-        this.listener = listener != null ? listener : new Listener();
+        this.listener = userListener != null ? userListener : new Listener();
         this.title = target.title;
         this.description = target.description;
 
@@ -628,10 +628,9 @@ public class TapTargetView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        super.onTouchEvent(e);
         lastTouchX = e.getX();
         lastTouchY = e.getY();
-        return true;
+        return super.onTouchEvent(e);
     }
 
     @Override
