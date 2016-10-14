@@ -122,6 +122,7 @@ public class TapTargetView extends View {
     float lastTouchY;
 
     int topBoundary;
+    int bottomBoundary;
 
     Bitmap tintedTarget;
 
@@ -408,6 +409,7 @@ public class TapTargetView extends View {
                         if (boundingParent != null) {
                             boundingParent.getLocationOnScreen(offset);
                             topBoundary = offset[1];
+                            bottomBoundary = topBoundary + boundingParent.getHeight();
                         }
 
                         drawTintedTarget();
@@ -559,6 +561,10 @@ public class TapTargetView extends View {
     @Override
     protected void onDraw(Canvas c) {
         if (isDismissed || outerCircleCenter == null) return;
+
+        if (topBoundary > 0 && bottomBoundary > 0) {
+            c.clipRect(0, topBoundary, getWidth(), bottomBoundary);
+        }
 
         if (dimColor != -1) {
             c.drawColor(dimColor);
@@ -803,7 +809,11 @@ public class TapTargetView extends View {
     }
 
     boolean inGutter(int y) {
-        return y < GUTTER_DIM || y > getHeight() - GUTTER_DIM;
+        if (bottomBoundary > 0) {
+            return y < GUTTER_DIM || y > bottomBoundary - GUTTER_DIM;
+        } else {
+            return y < GUTTER_DIM || y > getHeight() - GUTTER_DIM;
+        }
     }
 
     int maxDistanceToPoints(int x1, int y1, Rect bounds) {
