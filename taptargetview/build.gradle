@@ -4,7 +4,7 @@ apply plugin: 'com.jfrog.bintray'
 
 def libname = 'TapTargetView'
 group = 'com.getkeepsafe.taptargetview'
-version = '1.4.0'
+version = '1.4.1'
 description = 'An implementation of tap targets from the Material Design guidelines for feature discovery'
 
 android {
@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        versionCode 5
+        versionCode 6
         versionName project.version
     }
     buildTypes {
