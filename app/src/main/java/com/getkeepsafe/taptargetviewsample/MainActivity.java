@@ -47,20 +47,22 @@ public class MainActivity extends AppCompatActivity {
         final TapTargetSequence sequence = new TapTargetSequence(this)
                 .targets(
                         // This tap target will target the back button, we just need to pass its containing toolbar
-                        TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc),
+                        TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc).id(1),
                         // Likewise, this tap target will target the search button
                         TapTarget.forToolbarMenuItem(toolbar, R.id.search, "This is a search icon", "As you can see, it has gotten pretty dark around here...")
                                 .dimColor(android.R.color.black)
                                 .outerCircleColor(R.color.colorAccent)
                                 .targetCircleColor(android.R.color.black)
                                 .transparentTarget(true)
-                                .textColor(android.R.color.black),
+                                .textColor(android.R.color.black)
+                                .id(2),
                         // You can also target the overflow button in your toolbar
-                        TapTarget.forToolbarOverflow(toolbar, "This will show more options", "But they're not useful :("),
+                        TapTarget.forToolbarOverflow(toolbar, "This will show more options", "But they're not useful :(").id(3),
                         // This tap target will target our droid buddy at the given target rect
                         TapTarget.forBounds(droidTarget, "Oh look!", "You can point to any part of the screen. You also can't cancel this one!")
                                 .cancelable(false)
                                 .icon(droid)
+                                .id(4)
                 )
                 .listener(new TapTargetSequence.Listener() {
                     // This listener will tell us when interesting(tm) events happen in regards
@@ -71,13 +73,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSequenceCanceled() {
+                    public void onSequenceCanceled(TapTarget lastTarget) {
                         final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
                                 .setTitle("Uh oh")
                                 .setMessage("You canceled the sequence")
                                 .setPositiveButton("Oops", null).show();
                         TapTargetView.showFor(dialog,
-                                TapTarget.forView(dialog.getButton(DialogInterface.BUTTON_POSITIVE), "Uh oh!", "You canceled the sequence")
+                                TapTarget.forView(dialog.getButton(DialogInterface.BUTTON_POSITIVE), "Uh oh!", "You canceled the sequence at step " + lastTarget.id())
                                         .cancelable(false)
                                         .tintTarget(false), new TapTargetView.Listener() {
                                     @Override
