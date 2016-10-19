@@ -51,6 +51,7 @@ public class TapTarget {
 
     int titleTextSize = 20;
     int descriptionTextSize = 18;
+    int id = -1;
 
     boolean drawShadow = false;
     boolean cancelable = true;
@@ -283,6 +284,17 @@ public class TapTarget {
         }
 
         return this;
+    }
+
+    /** Specify a unique identifier for this target. **/
+    public TapTarget id(int id) {
+        this.id = id;
+        return this;
+    }
+
+    /** Return the id associated with this tap target **/
+    public int id() {
+        return id;
     }
 
     /**
