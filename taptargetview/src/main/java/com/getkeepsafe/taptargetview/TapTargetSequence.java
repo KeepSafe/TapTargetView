@@ -38,7 +38,7 @@ public class TapTargetSequence {
 
     public interface Listener {
         void onSequenceFinish();
-        void onSequenceCanceled();
+        void onSequenceCanceled(TapTarget lastTarget);
     }
 
     public TapTargetSequence(Activity activity) {
@@ -112,7 +112,7 @@ public class TapTargetSequence {
                 showNext();
             } else {
                 if (listener != null) {
-                    listener.onSequenceCanceled();
+                    listener.onSequenceCanceled(view.target);
                 }
             }
         }
