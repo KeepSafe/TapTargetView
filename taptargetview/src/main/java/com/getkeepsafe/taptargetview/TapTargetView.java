@@ -407,9 +407,10 @@ public class TapTargetView extends View {
                         targetBounds.offset(-offset[0], -offset[1]);
 
                         if (boundingParent != null) {
-                            boundingParent.getLocationOnScreen(offset);
-                            topBoundary = offset[1];
-                            bottomBoundary = topBoundary + boundingParent.getHeight();
+                            final Rect rect = new Rect();
+                            boundingParent.getWindowVisibleDisplayFrame(rect);
+                            topBoundary = rect.top;
+                            bottomBoundary = rect.bottom;
                         }
 
                         drawTintedTarget();
