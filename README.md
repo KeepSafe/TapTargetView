@@ -23,7 +23,7 @@ TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftwar
    }
    
    dependencies {
-         compile 'com.getkeepsafe.taptargetview:taptargetview:1.4.1'
+         compile 'com.getkeepsafe.taptargetview:taptargetview:1.5.0'
    }
 ```
 
@@ -87,7 +87,7 @@ new TapTargetSequence(this)
         }
 
         @Override
-        public void onSequenceCanceled() {
+        public void onSequenceCanceled(TapTarget lastTarget) {
             // Boo
         }
     });
