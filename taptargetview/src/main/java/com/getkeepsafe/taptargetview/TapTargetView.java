@@ -428,7 +428,7 @@ public class TapTargetView extends View {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener == null) return;
+                if (listener == null || outerCircleCenter == null) return;
 
                 if (targetBounds.contains((int) lastTouchX, (int) lastTouchY)) {
                     listener.onTargetClick(TapTargetView.this);
