@@ -65,6 +65,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 public class TapTargetView extends View {
     private static final int UNSET_COLOR = -1;
     private boolean isDismissed = false;
+    private boolean isCanceled = false;
 
     final int TARGET_PADDING;
     final int TARGET_RADIUS;
@@ -432,8 +433,10 @@ public class TapTargetView extends View {
 
                 if (targetBounds.contains((int) lastTouchX, (int) lastTouchY)) {
                     listener.onTargetClick(TapTargetView.this);
-                } else if (cancelable && distance(outerCircleCenter[0], outerCircleCenter[1],
+                } else if (!isCanceled && cancelable
+                        && distance(outerCircleCenter[0], outerCircleCenter[1],
                         (int) lastTouchX, (int) lastTouchY) > outerCircleRadius) {
+                    isCanceled = true;
                     listener.onTargetCancel(TapTargetView.this);
                 }
             }
