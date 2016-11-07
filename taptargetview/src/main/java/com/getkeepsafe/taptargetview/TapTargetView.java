@@ -649,8 +649,10 @@ public class TapTargetView extends View {
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (isVisible() && cancelable
+        if (isVisible() && !isCanceled && cancelable
                 && keyCode == KeyEvent.KEYCODE_BACK && event.isTracking() && !event.isCanceled()) {
+            isCanceled = true;
+
             if (listener != null) {
                 listener.onTargetCancel(this);
             } else {
