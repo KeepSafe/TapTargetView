@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         // We need the display to get the width and height at this point in time
         final Display display = getWindowManager().getDefaultDisplay();
         // Load our little droid guy
-        final Drawable droid = getResources().getDrawable(R.drawable.ic_android_black_24dp, getTheme());
+        final Drawable droid = ContextCompat.getDrawable(this, R.drawable.ic_android_black_24dp);
         // Tell our droid buddy where we want him to appear
         final Rect droidTarget = new Rect(0, 0, droid.getIntrinsicWidth() * 2, droid.getIntrinsicHeight() * 2);
         // Using deprecated methods makes you look way cool
