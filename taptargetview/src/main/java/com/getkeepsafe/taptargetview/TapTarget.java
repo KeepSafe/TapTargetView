@@ -53,6 +53,8 @@ public class TapTarget {
     int descriptionTextSize = 18;
     int id = -1;
 
+    double outerCircleOpacity = -1;
+
     boolean drawShadow = false;
     boolean cancelable = true;
     boolean tintTarget = true;
@@ -242,6 +244,13 @@ public class TapTarget {
      */
     public TapTarget dimColor(@ColorRes int color) {
         this.dimColor = color;
+        return this;
+    }
+
+    /** Specify the opacity of the outer circle **/
+    public TapTarget outerCircleOpacity(double opacity) {
+        if (opacity < 0 || opacity > 1) throw new IllegalArgumentException("Cannot pass a value lower than 0 or greater than 1");
+        this.outerCircleOpacity = opacity;
         return this;
     }
 
