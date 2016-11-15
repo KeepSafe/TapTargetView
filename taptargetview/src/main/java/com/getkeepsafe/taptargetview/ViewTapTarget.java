@@ -27,6 +27,9 @@ public class ViewTapTarget extends TapTarget {
 
     protected ViewTapTarget(View view, CharSequence title, @Nullable CharSequence description) {
         super(title, description);
+        if (view == null) {
+            throw new IllegalArgumentException("Given null view to target");
+        }
         this.view = view;
     }
 
