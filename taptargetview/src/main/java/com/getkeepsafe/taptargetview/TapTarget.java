@@ -242,7 +242,7 @@ public class TapTarget {
 
     /**
      * Specify the text size for the title via a dimen resource
-     * * <p>
+     * <p>
      * Note: If set, this value will take precedence over the specified sp size
      */
     public TapTarget titleTextDimen(@DimenRes int dimen) {
