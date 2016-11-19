@@ -65,7 +65,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 public class TapTargetView extends View {
     private static final int UNSET_COLOR = -1;
     private boolean isDismissed = false;
-    private boolean isCanceled = false;
+    private boolean isInteractable = true;
 
     final int TARGET_PADDING;
     final int TARGET_RADIUS;
@@ -429,14 +429,14 @@ public class TapTargetView extends View {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener == null || outerCircleCenter == null) return;
+                if (listener == null || outerCircleCenter == null || !isInteractable) return;
 
                 if (targetBounds.contains((int) lastTouchX, (int) lastTouchY)) {
+                    isInteractable = false;
                     listener.onTargetClick(TapTargetView.this);
-                } else if (!isCanceled && cancelable
-                        && distance(outerCircleCenter[0], outerCircleCenter[1],
-                        (int) lastTouchX, (int) lastTouchY) > outerCircleRadius) {
-                    isCanceled = true;
+                } else if (cancelable && distance(outerCircleCenter[0], outerCircleCenter[1],
+                    (int) lastTouchX, (int) lastTouchY) > outerCircleRadius) {
+                    isInteractable = false;
                     listener.onTargetCancel(TapTargetView.this);
                 }
             }
@@ -649,9 +649,9 @@ public class TapTargetView extends View {
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (isVisible() && !isCanceled && cancelable
+        if (isVisible() && isInteractable && cancelable
                 && keyCode == KeyEvent.KEYCODE_BACK && event.isTracking() && !event.isCanceled()) {
-            isCanceled = true;
+            isInteractable = false;
 
             if (listener != null) {
                 listener.onTargetCancel(this);
