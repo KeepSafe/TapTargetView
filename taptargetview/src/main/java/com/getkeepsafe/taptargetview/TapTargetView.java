@@ -362,12 +362,12 @@ public class TapTargetView extends View {
         drawingBounds = new Rect();
 
         titlePaint = new TextPaint();
-        titlePaint.setTextSize(UiUtil.sp(context, target.titleTextSize));
+        titlePaint.setTextSize(target.titleTextSizePx(context));
         titlePaint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         titlePaint.setAntiAlias(true);
 
         descriptionPaint = new TextPaint();
-        descriptionPaint.setTextSize(UiUtil.sp(context, target.descriptionTextSize));
+        descriptionPaint.setTextSize(target.descriptionTextSizePx(context));
         descriptionPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         descriptionPaint.setAntiAlias(true);
         descriptionPaint.setAlpha((int) (0.54f * 255.0f));
