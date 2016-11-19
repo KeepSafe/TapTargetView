@@ -15,10 +15,12 @@
  */
 package com.getkeepsafe.taptargetview;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -49,8 +51,11 @@ public class TapTarget {
     @ColorRes int titleTextColor = -1;
     @ColorRes int descriptionTextColor = -1;
 
-    int titleTextSize = 20;
-    int descriptionTextSize = 18;
+    @DimenRes private int titleTextDimen = -1;
+    @DimenRes private int descriptionTextDimen = -1;
+
+    private int titleTextSize = 20;
+    private int descriptionTextSize = 18;
     int id = -1;
 
     boolean drawShadow = false;
@@ -236,6 +241,26 @@ public class TapTarget {
     }
 
     /**
+     * Specify the text size for the title via a dimen resource
+     * * <p>
+     * Note: If set, this value will take precedence over the specified sp size
+     */
+    public TapTarget titleTextDimen(@DimenRes int dimen) {
+        this.titleTextDimen = dimen;
+        return this;
+    }
+
+    /**
+     * Specify the text size for the description via a dimen resource
+     * <p>
+     * Note: If set, this value will take precedence over the specified sp size
+     */
+    public TapTarget descriptionTextDimen(@DimenRes int dimen) {
+        this.descriptionTextDimen = dimen;
+        return this;
+    }
+
+    /**
      * Specify the color resource to use as a dim effect
      * <p>
      * <b>Note:</b> The given color will have its opacity modified to 30% automatically
@@ -316,5 +341,21 @@ public class TapTarget {
             throw new IllegalStateException("Requesting bounds that are not set! Make sure your target is ready");
         }
         return bounds;
+    }
+
+    int titleTextSizePx(Context context) {
+        return dimenOrSize(context, titleTextSize, titleTextDimen);
+    }
+
+    int descriptionTextSizePx(Context context) {
+        return dimenOrSize(context, descriptionTextSize, descriptionTextDimen);
+    }
+
+    private int dimenOrSize(Context context, int size, @DimenRes int dimen) {
+        if (dimen != -1) {
+            return (int) context.getResources().getDimension(dimen);
+        }
+
+        return UiUtil.sp(context, size);
     }
 }
