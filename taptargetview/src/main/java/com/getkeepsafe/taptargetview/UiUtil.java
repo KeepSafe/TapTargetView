@@ -18,6 +18,8 @@ package com.getkeepsafe.taptargetview;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.util.TypedValue;
 
 class UiUtil {
@@ -66,12 +68,17 @@ class UiUtil {
     }
 
     /** Compatibility wrapper for getting a color resource value **/
-    static int getColor(Context context, int id) {
+    static int color(Context context, @ColorRes int id) {
         if (Build.VERSION.SDK_INT >= 23) {
             return context.getColor(id);
         }
 
         //noinspection deprecation
         return context.getResources().getColor(id);
+    }
+
+    /** Returns the given dimension id in pixels **/
+    static int dimen(Context context, @DimenRes int id) {
+        return (int) context.getResources().getDimension(id);
     }
 }

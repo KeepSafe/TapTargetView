@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
@@ -45,11 +46,17 @@ public class TapTarget {
     Drawable icon;
     Typeface typeface;
 
-    @ColorRes int outerCircleColor = -1;
-    @ColorRes int targetCircleColor = -1;
-    @ColorRes int dimColor = -1;
-    @ColorRes int titleTextColor = -1;
-    @ColorRes int descriptionTextColor = -1;
+    @ColorRes private int outerCircleColorRes = -1;
+    @ColorRes private int targetCircleColorRes = -1;
+    @ColorRes private int dimColorRes = -1;
+    @ColorRes private int titleTextColorRes = -1;
+    @ColorRes private int descriptionTextColorRes = -1;
+
+    private int outerCircleColor = -1;
+    private int targetCircleColor = -1;
+    private int dimColor = -1;
+    private int titleTextColor = -1;
+    private int descriptionTextColor = -1;
 
     @DimenRes private int titleTextDimen = -1;
     @DimenRes private int descriptionTextDimen = -1;
@@ -190,18 +197,40 @@ public class TapTarget {
 
     /** Specify the color resource for the outer circle **/
     public TapTarget outerCircleColor(@ColorRes int color) {
+        this.outerCircleColorRes = color;
+        return this;
+    }
+
+    /** Specify the color value for the outer circle **/
+    // TODO(Hilal): In v2, this API should be cleaned up / torched
+    public TapTarget outerCircleColorInt(@ColorInt int color) {
         this.outerCircleColor = color;
         return this;
     }
 
     /** Specify the color resource for the target circle **/
     public TapTarget targetCircleColor(@ColorRes int color) {
+        this.targetCircleColorRes = color;
+        return this;
+    }
+
+    /** Specify the color value for the target circle **/
+    // TODO(Hilal): In v2, this API should be cleaned up / torched
+    public TapTarget targetCircleColorInt(@ColorInt int color) {
         this.targetCircleColor = color;
         return this;
     }
 
     /** Specify the color resource for all text **/
     public TapTarget textColor(@ColorRes int color) {
+        this.titleTextColorRes = color;
+        this.descriptionTextColorRes = color;
+        return this;
+    }
+
+    /** Specify the color value for all text **/
+    // TODO(Hilal): In v2, this API should be cleaned up / torched
+    public TapTarget textColorInt(@ColorInt int color) {
         this.titleTextColor = color;
         this.descriptionTextColor = color;
         return this;
@@ -209,13 +238,27 @@ public class TapTarget {
 
     /** Specify the color resource for the title text **/
     public TapTarget titleTextColor(@ColorRes int color) {
+        this.titleTextColorRes = color;
+        return this;
+    }
+
+    /** Specify the color value for the title text **/
+    // TODO(Hilal): In v2, this API should be cleaned up / torched
+    public TapTarget titleTextColorInt(@ColorInt int color) {
         this.titleTextColor = color;
         return this;
     }
 
     /** Specify the color resource for the description text **/
     public TapTarget descriptionTextColor(@ColorRes int color) {
-        this.descriptionTextColor= color;
+        this.descriptionTextColorRes = color;
+        return this;
+    }
+
+    /** Specify the color value for the description text **/
+    // TODO(Hilal): In v2, this API should be cleaned up / torched
+    public TapTarget descriptionTextColorInt(@ColorInt int color) {
+        this.descriptionTextColor = color;
         return this;
     }
 
@@ -266,6 +309,17 @@ public class TapTarget {
      * <b>Note:</b> The given color will have its opacity modified to 30% automatically
      */
     public TapTarget dimColor(@ColorRes int color) {
+        this.dimColorRes = color;
+        return this;
+    }
+
+    /**
+     * Specify the color value to use as a dim effect
+     * <p>
+     * <b>Note:</b> The given color will have its opacity modified to 30% automatically
+     */
+    // TODO(Hilal): In v2, this API should be cleaned up / torched
+    public TapTarget dimColorInt(@ColorInt int color) {
         this.dimColor = color;
         return this;
     }
@@ -343,6 +397,26 @@ public class TapTarget {
         return bounds;
     }
 
+    int outerCircleColorInt(Context context) {
+        return colorResOrInt(context, outerCircleColor, outerCircleColorRes);
+    }
+
+    int targetCircleColorInt(Context context) {
+        return colorResOrInt(context, targetCircleColor, targetCircleColorRes);
+    }
+
+    int dimColorInt(Context context) {
+        return colorResOrInt(context, dimColor, dimColorRes);
+    }
+
+    int titleTextColorInt(Context context) {
+        return colorResOrInt(context, titleTextColor, titleTextColorRes);
+    }
+
+    int descriptionTextColorInt(Context context) {
+        return colorResOrInt(context, descriptionTextColor, descriptionTextColorRes);
+    }
+
     int titleTextSizePx(Context context) {
         return dimenOrSize(context, titleTextSize, titleTextDimen);
     }
@@ -351,9 +425,17 @@ public class TapTarget {
         return dimenOrSize(context, descriptionTextSize, descriptionTextDimen);
     }
 
+    private int colorResOrInt(Context context, int value, @ColorRes int resource) {
+        if (resource != -1) {
+            return UiUtil.color(context, resource);
+        }
+
+        return value;
+    }
+
     private int dimenOrSize(Context context, int size, @DimenRes int dimen) {
         if (dimen != -1) {
-            return (int) context.getResources().getDimension(dimen);
+            return UiUtil.dimen(context, dimen);
         }
 
         return UiUtil.sp(context, size);

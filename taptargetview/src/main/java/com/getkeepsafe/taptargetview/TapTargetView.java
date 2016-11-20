@@ -491,16 +491,18 @@ public class TapTargetView extends View {
         final Resources.Theme theme = context.getTheme();
         isDark = UiUtil.themeIntAttr(context, "isLightTheme") == 0;
 
-        if (target.outerCircleColor != UNSET_COLOR) {
-            outerCirclePaint.setColor(UiUtil.getColor(context, target.outerCircleColor));
+        final int outerCircleColor = target.outerCircleColorInt(context);
+        if (outerCircleColor != UNSET_COLOR) {
+            outerCirclePaint.setColor(outerCircleColor);
         } else if (theme != null) {
             outerCirclePaint.setColor(UiUtil.themeIntAttr(context, "colorPrimary"));
         } else {
             outerCirclePaint.setColor(Color.WHITE);
         }
 
-        if (target.targetCircleColor != UNSET_COLOR) {
-            targetCirclePaint.setColor(UiUtil.getColor(context, target.targetCircleColor));
+        final int targetCircleColor = target.targetCircleColorInt(context);
+        if (targetCircleColor != UNSET_COLOR) {
+            targetCirclePaint.setColor(targetCircleColor);
         } else {
             targetCirclePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
         }
@@ -511,20 +513,23 @@ public class TapTargetView extends View {
 
         targetCirclePulsePaint.setColor(targetCirclePaint.getColor());
 
-        if (target.dimColor != UNSET_COLOR) {
-            dimColor = UiUtil.setAlpha(UiUtil.getColor(context, target.dimColor), 0.3f);
+        final int targetDimColor = target.dimColorInt(context);
+        if (targetDimColor != UNSET_COLOR) {
+            dimColor = UiUtil.setAlpha(targetDimColor, 0.3f);
         } else {
             dimColor = -1;
         }
 
-        if (target.titleTextColor != UNSET_COLOR) {
-            titlePaint.setColor(UiUtil.getColor(context, target.titleTextColor));
+        final int titleTextColor = target.titleTextColorInt(context);
+        if (titleTextColor != UNSET_COLOR) {
+            titlePaint.setColor(titleTextColor);
         } else {
             titlePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
         }
 
-        if (target.descriptionTextColor != UNSET_COLOR) {
-            descriptionPaint.setColor(UiUtil.getColor(context, target.descriptionTextColor));
+        final int descriptionTextColor = target.descriptionTextColorInt(context);
+        if (descriptionTextColor != UNSET_COLOR) {
+            descriptionPaint.setColor(descriptionTextColor);
         } else {
             descriptionPaint.setColor(titlePaint.getColor());
         }
