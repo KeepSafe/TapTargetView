@@ -62,6 +62,8 @@ TapTargetView.showFor(this,                 // `this` is an Activity
 
 You may also choose to target your own custom `Rect` with `TapTarget.forBounds(Rect, ...)`
 
+Additionally, each color can be specified via a `@ColorRes` or a `@ColorInt`. Functions that have the suffix `Int` take a `@ColorInt`.
+
 ### Sequences
 
 You can easily create a sequence of tap targets with `TapTargetSequence`:
