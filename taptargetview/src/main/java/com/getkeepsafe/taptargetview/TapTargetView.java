@@ -64,6 +64,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 @SuppressLint("ViewConstructor")
 public class TapTargetView extends View {
     private static final int UNSET_COLOR = -1;
+    private static final int UNSET_OPACITY = -1;
     private boolean isDismissed = false;
     private boolean isInteractable = true;
 
@@ -208,9 +209,9 @@ public class TapTargetView extends View {
                 calculateDrawingBounds();
             }
 
-            final float targetAlpha = 0.96f * 255;
+//            final float targetAlpha = 0.96f * 255;
             outerCircleRadius = newOuterCircleRadius;
-            outerCircleAlpha = (int) Math.min(targetAlpha, (lerpTime * 1.5f * targetAlpha));
+//            outerCircleAlpha = (int) Math.min(targetAlpha, (lerpTime * 1.5f * targetAlpha));
             outerCirclePath.reset();
             outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
 
@@ -372,9 +373,11 @@ public class TapTargetView extends View {
         descriptionPaint.setAntiAlias(true);
         descriptionPaint.setAlpha((int) (0.54f * 255.0f));
 
+        outerCircleAlpha = ((int) (0.96f * 255.0f));
+
         outerCirclePaint = new Paint();
         outerCirclePaint.setAntiAlias(true);
-        outerCirclePaint.setAlpha((int) (0.96f * 255.0f));
+        outerCirclePaint.setAlpha(outerCircleAlpha);
 
         outerCircleShadowPaint = new Paint();
         outerCircleShadowPaint.setAntiAlias(true);
@@ -497,6 +500,11 @@ public class TapTargetView extends View {
             outerCirclePaint.setColor(UiUtil.themeIntAttr(context, "colorPrimary"));
         } else {
             outerCirclePaint.setColor(Color.WHITE);
+        }
+
+        if (target.outerCircleOpacity != UNSET_OPACITY) {
+            outerCircleAlpha = (int) ((float) target.outerCircleOpacity * 255.0f);
+            outerCirclePaint.setAlpha(outerCircleAlpha);
         }
 
         if (target.targetCircleColor != UNSET_COLOR) {
