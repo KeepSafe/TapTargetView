@@ -446,7 +446,6 @@ public class TapTargetView extends View {
                 } else if (clickedInsideOfOuterCircle) {
                     listener.onOuterCircleClick(TapTargetView.this);
                 } else if (cancelable) {
-                    // click outside of outer circle
                     isInteractable = false;
                     listener.onTargetCancel(TapTargetView.this);
                 }
