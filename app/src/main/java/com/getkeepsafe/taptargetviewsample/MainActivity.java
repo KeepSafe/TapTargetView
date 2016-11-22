@@ -15,6 +15,7 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Display;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -103,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
                 super.onTargetClick(view);
                 // .. which evidently starts the sequence we defined earlier
                 sequence.start();
+            }
+
+            @Override
+            public void onOuterCircleClick(TapTargetView view) {
+                super.onOuterCircleClick(view);
+                Toast.makeText(view.getContext(), "Smart guy just clicked the outer circle!", Toast.LENGTH_SHORT).show();
             }
 
             @Override

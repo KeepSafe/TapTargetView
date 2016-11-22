@@ -190,6 +190,10 @@ public class TapTargetView extends View {
             view.dismiss(false);
         }
 
+        public void onOuterCircleClick(TapTargetView view) {
+            // no-op as default
+        }
+
         /**
          * Signals that the tap target has been dismissed
          * @param userInitiated Whether the user caused this action
@@ -334,10 +338,10 @@ public class TapTargetView extends View {
      * @param userListener Optional. The {@link Listener} instance for this view
      */
     public TapTargetView(Context context,
-                  final ViewManager parent,
-                  @Nullable final ViewGroup boundingParent,
-                  final TapTarget target,
-                  @Nullable final Listener userListener) {
+                         final ViewManager parent,
+                         @Nullable final ViewGroup boundingParent,
+                         final TapTarget target,
+                         @Nullable final Listener userListener) {
         super(context);
         if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
@@ -431,11 +435,17 @@ public class TapTargetView extends View {
             public void onClick(View v) {
                 if (listener == null || outerCircleCenter == null || !isInteractable) return;
 
-                if (targetBounds.contains((int) lastTouchX, (int) lastTouchY)) {
+                final boolean clickedInTarget = targetBounds.contains((int) lastTouchX, (int) lastTouchY);
+                final double distanceToOuterCircleCenter = distance(outerCircleCenter[0], outerCircleCenter[1],
+                                           (int) lastTouchX, (int) lastTouchY);
+                final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
+
+                if (clickedInTarget) {
                     isInteractable = false;
                     listener.onTargetClick(TapTargetView.this);
-                } else if (cancelable && distance(outerCircleCenter[0], outerCircleCenter[1],
-                    (int) lastTouchX, (int) lastTouchY) > outerCircleRadius) {
+                } else if (clickedInsideOfOuterCircle) {
+                    listener.onOuterCircleClick(TapTargetView.this);
+                } else if (cancelable) {
                     isInteractable = false;
                     listener.onTargetCancel(TapTargetView.this);
                 }
