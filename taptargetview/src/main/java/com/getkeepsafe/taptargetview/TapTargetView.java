@@ -337,7 +337,7 @@ public class TapTargetView extends View {
      * @param target The {@link TapTarget} to target
      * @param userListener Optional. The {@link Listener} instance for this view
      */
-    public TapTargetView(final Context context,
+    public TapTargetView(Context context,
                          final ViewManager parent,
                          @Nullable final ViewGroup boundingParent,
                          final TapTarget target,
