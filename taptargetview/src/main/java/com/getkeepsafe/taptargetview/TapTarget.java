@@ -63,6 +63,7 @@ public class TapTarget {
 
     private int titleTextSize = 20;
     private int descriptionTextSize = 18;
+    private int targetSize = 44;
     int id = -1;
 
     boolean drawShadow = false;
@@ -371,6 +372,13 @@ public class TapTarget {
         return this;
     }
 
+    /** Specify the target size. **/
+    public TapTarget targetSize(int targetSize) {
+        this.targetSize = targetSize;
+        return this;
+    }
+
+
     /** Return the id associated with this tap target **/
     public int id() {
         return id;
@@ -423,6 +431,10 @@ public class TapTarget {
 
     int descriptionTextSizePx(Context context) {
         return dimenOrSize(context, descriptionTextSize, descriptionTextDimen);
+    }
+
+    int targetSize() {
+        return targetSize;
     }
 
     private int colorResOrInt(Context context, int value, @ColorRes int resource) {
