@@ -41,6 +41,7 @@ import android.view.View;
 public class TapTarget {
     final CharSequence title;
     @Nullable final CharSequence description;
+    int targetRadius = 44;
 
     Rect bounds;
     Drawable icon;
@@ -370,6 +371,13 @@ public class TapTarget {
         this.id = id;
         return this;
     }
+
+    /** Specify the target radius in dp. **/
+    public TapTarget targetRadius(int targetRadius) {
+        this.targetRadius = targetRadius;
+        return this;
+    }
+
 
     /** Return the id associated with this tap target **/
     public int id() {

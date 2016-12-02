@@ -50,7 +50,8 @@ TapTargetView.showFor(this,                 // `this` is an Activity
         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
         .tintTarget(true)                   // Whether to tint the target view's color
         .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
-        .icon(Drawable),                    // Specify a custom drawable to draw as the target
+        .icon(Drawable)                     // Specify a custom drawable to draw as the target
+        .targetRadius(60),                  // Specify the target radius (in dp)
     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
         @Override
         public void onTargetClick(TapTargetView view) {

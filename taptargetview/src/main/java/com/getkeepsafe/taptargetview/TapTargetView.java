@@ -354,7 +354,7 @@ public class TapTargetView extends View {
 
         TARGET_PADDING = UiUtil.dp(context, 20);
         CIRCLE_PADDING = UiUtil.dp(context, 40);
-        TARGET_RADIUS = UiUtil.dp(context, 44);
+        TARGET_RADIUS = UiUtil.dp(context, target.targetRadius);
         TEXT_PADDING = UiUtil.dp(context, 40);
         TEXT_SPACING = UiUtil.dp(context, 8);
         GUTTER_DIM = UiUtil.dp(context, 88);
@@ -437,7 +437,7 @@ public class TapTargetView extends View {
 
                 final boolean clickedInTarget = targetBounds.contains((int) lastTouchX, (int) lastTouchY);
                 final double distanceToOuterCircleCenter = distance(outerCircleCenter[0], outerCircleCenter[1],
-                                           (int) lastTouchX, (int) lastTouchY);
+                        (int) lastTouchX, (int) lastTouchY);
                 final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
 
                 if (clickedInTarget) {
@@ -625,11 +625,11 @@ public class TapTargetView extends View {
         saveCount = c.save(); {
             if (tintedTarget != null) {
                 c.translate(targetBounds.centerX() - tintedTarget.getWidth() / 2,
-                            targetBounds.centerY() - tintedTarget.getHeight() / 2);
+                        targetBounds.centerY() - tintedTarget.getHeight() / 2);
                 c.drawBitmap(tintedTarget, 0, 0, targetCirclePaint);
             } else if (target.icon != null) {
                 c.translate(targetBounds.centerX() - target.icon.getBounds().width() / 2,
-                            targetBounds.centerY() - target.icon.getBounds().height() / 2);
+                        targetBounds.centerY() - target.icon.getBounds().height() / 2);
                 target.icon.setAlpha(targetCirclePaint.getAlpha());
                 target.icon.draw(c);
             }
