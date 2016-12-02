@@ -373,8 +373,8 @@ public class TapTarget {
     }
 
     /** Specify the target radius in dp. **/
-    public TapTarget targetRadius(int targetSize) {
-        this.targetRadius = targetSize;
+    public TapTarget targetRadius(int targetRadius) {
+        this.targetRadius = targetRadius;
         return this;
     }
 
