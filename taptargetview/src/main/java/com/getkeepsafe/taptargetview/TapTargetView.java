@@ -725,7 +725,7 @@ public class TapTargetView extends View {
     }
 
     void updateTextLayouts() {
-        final int textWidth = getMeasuredWidth() - TEXT_PADDING * 2;
+        final int textWidth = Math.max(getMeasuredWidth() - TEXT_PADDING * 2, 0);
         titleLayout = new StaticLayout(title, titlePaint, textWidth,
                 Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
