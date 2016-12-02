@@ -41,6 +41,7 @@ import android.view.View;
 public class TapTarget {
     final CharSequence title;
     @Nullable final CharSequence description;
+    int targetRadius = 44;
 
     Rect bounds;
     Drawable icon;
@@ -63,7 +64,6 @@ public class TapTarget {
 
     private int titleTextSize = 20;
     private int descriptionTextSize = 18;
-    private int targetSize = 44;
     int id = -1;
 
     boolean drawShadow = false;
@@ -372,9 +372,9 @@ public class TapTarget {
         return this;
     }
 
-    /** Specify the target size. **/
-    public TapTarget targetSize(int targetSize) {
-        this.targetSize = targetSize;
+    /** Specify the target radius in dp. **/
+    public TapTarget targetRadius(int targetSize) {
+        this.targetRadius = targetSize;
         return this;
     }
 
@@ -431,10 +431,6 @@ public class TapTarget {
 
     int descriptionTextSizePx(Context context) {
         return dimenOrSize(context, descriptionTextSize, descriptionTextDimen);
-    }
-
-    int targetSize() {
-        return targetSize;
     }
 
     private int colorResOrInt(Context context, int value, @ColorRes int resource) {

@@ -354,7 +354,7 @@ public class TapTargetView extends View {
 
         TARGET_PADDING = UiUtil.dp(context, 20);
         CIRCLE_PADDING = UiUtil.dp(context, 40);
-        TARGET_RADIUS = UiUtil.dp(context, target.targetSize());
+        TARGET_RADIUS = UiUtil.dp(context, target.targetRadius);
         TEXT_PADDING = UiUtil.dp(context, 40);
         TEXT_SPACING = UiUtil.dp(context, 8);
         GUTTER_DIM = UiUtil.dp(context, 88);
