@@ -41,6 +41,7 @@ import android.support.annotation.Nullable;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -337,7 +338,7 @@ public class TapTargetView extends View {
      * @param target The {@link TapTarget} to target
      * @param userListener Optional. The {@link Listener} instance for this view
      */
-    public TapTargetView(Context context,
+    public TapTargetView(final Context context,
                          final ViewManager parent,
                          @Nullable final ViewGroup boundingParent,
                          final TapTarget target,
@@ -412,10 +413,19 @@ public class TapTargetView extends View {
                         targetBounds.offset(-offset[0], -offset[1]);
 
                         if (boundingParent != null) {
+                            final WindowManager windowManager
+                                = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                            final DisplayMetrics displayMetrics = new DisplayMetrics();
+                            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+
                             final Rect rect = new Rect();
                             boundingParent.getWindowVisibleDisplayFrame(rect);
-                            topBoundary = rect.top;
-                            bottomBoundary = rect.bottom;
+
+                            // We bound the boundaries to be within the screen's coordinates to
+                            // handle the case where the layout bounds do not match
+                            // (like when FLAG_LAYOUT_NO_LIMITS is specified)
+                            topBoundary = Math.max(0, rect.top);
+                            bottomBoundary = Math.min(rect.bottom, displayMetrics.heightPixels);
                         }
 
                         drawTintedTarget();
