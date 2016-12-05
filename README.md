@@ -23,7 +23,7 @@ TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftwar
    }
    
    dependencies {
-         compile 'com.getkeepsafe.taptargetview:taptargetview:1.5.3'
+         compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.0'
    }
 ```
 
