@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onOuterCircleClick(TapTargetView view) {
                 super.onOuterCircleClick(view);
-                Toast.makeText(view.getContext(), "Smart guy just clicked the outer circle!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "You clicked the outer circle!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
