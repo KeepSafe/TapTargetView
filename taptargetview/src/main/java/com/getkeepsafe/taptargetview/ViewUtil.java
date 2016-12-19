@@ -16,6 +16,7 @@
 package com.getkeepsafe.taptargetview;
 
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -23,12 +24,8 @@ class ViewUtil {
     ViewUtil() {}
 
     /** Returns whether or not the view has been laid out **/
-    static boolean isLaidOut(View view) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return view.isLaidOut();
-        }
-
-        return view.getWidth() > 0 && view.getHeight() > 0;
+    private static boolean isLaidOut(View view) {
+        return ViewCompat.isLaidOut(view) && view.getWidth() > 0 && view.getHeight() > 0;
     }
 
     /** Executes the given {@link java.lang.Runnable} when the view is laid out **/
