@@ -8,8 +8,8 @@ version = '1.6.0'
 description = 'An implementation of tap targets from the Material Design guidelines for feature discovery'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         minSdkVersion 14
@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    def supportLibraryVersion = '24.2.1'
+    def supportLibraryVersion = '25.1.0'
     compile "com.android.support:support-annotations:$supportLibraryVersion"
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
 }
