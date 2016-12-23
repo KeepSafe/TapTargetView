@@ -445,7 +445,8 @@ public class TapTargetView extends View {
             public void onClick(View v) {
                 if (listener == null || outerCircleCenter == null || !isInteractable) return;
 
-                final boolean clickedInTarget = targetBounds.contains((int) lastTouchX, (int) lastTouchY);
+                final boolean clickedInTarget =
+                    distance(targetBounds.centerX(), targetBounds.centerY(), (int) lastTouchX, (int) lastTouchY) <= targetCircleRadius;
                 final double distanceToOuterCircleCenter = distance(outerCircleCenter[0], outerCircleCenter[1],
                         (int) lastTouchX, (int) lastTouchY);
                 final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
