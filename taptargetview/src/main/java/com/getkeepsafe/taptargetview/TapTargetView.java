@@ -329,6 +329,8 @@ public class TapTargetView extends View {
     private ValueAnimator[] animators = new ValueAnimator[]
             {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
 
+    private final ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
+
     /**
      * This constructor should only be used directly for very specific use cases not covered by
      * the static factory methods.
@@ -404,7 +406,7 @@ public class TapTargetView extends View {
 
         applyTargetOptions(context);
 
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 updateTextLayouts();
@@ -444,7 +446,9 @@ public class TapTargetView extends View {
                     }
                 });
             }
-        });
+        };
+
+        getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
 
         setFocusableInTouchMode(true);
         setClickable(true);
@@ -588,6 +592,7 @@ public class TapTargetView extends View {
             animator.removeAllUpdateListeners();
         }
 
+        ViewUtil.removeOnGlobalLayoutListener(getViewTreeObserver(), globalLayoutListener);
         visible = false;
 
         if (listener != null) {
