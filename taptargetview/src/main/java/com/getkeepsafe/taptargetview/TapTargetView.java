@@ -49,6 +49,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.ViewOutlineProvider;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -267,6 +268,11 @@ public class TapTargetView extends View {
                     targetCirclePulseRadius = (1.0f + pulseLerp) * TARGET_RADIUS;
                     targetCirclePulseAlpha = (int) ((1.0f - pulseLerp) * 255);
                     targetCircleRadius = TARGET_RADIUS + halfwayLerp(lerpTime) * TARGET_PULSE_RADIUS;
+
+                    if (outerCircleRadius != calculatedOuterCircleRadius) {
+                        outerCircleRadius = calculatedOuterCircleRadius;
+                    }
+
                     calculateDrawingBounds();
                     invalidateViewAndOutline(drawingBounds);
                 }
@@ -322,6 +328,8 @@ public class TapTargetView extends View {
 
     private ValueAnimator[] animators = new ValueAnimator[]
             {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
+
+    private final ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
 
     /**
      * This constructor should only be used directly for very specific use cases not covered by
@@ -398,9 +406,9 @@ public class TapTargetView extends View {
 
         applyTargetOptions(context);
 
-        ViewUtil.onLaidOut(this, new Runnable() {
+        globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void run() {
+            public void onGlobalLayout() {
                 updateTextLayouts();
                 target.onReady(new Runnable() {
                     @Override
@@ -429,14 +437,18 @@ public class TapTargetView extends View {
                         }
 
                         drawTintedTarget();
-                        calculateDimensions();
-                        expandAnimation.start();
-                        visible = true;
                         requestFocus();
+                        calculateDimensions();
+                        if (!visible) {
+                            expandAnimation.start();
+                            visible = true;
+                        }
                     }
                 });
             }
-        });
+        };
+
+        getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
 
         setFocusableInTouchMode(true);
         setClickable(true);
@@ -580,6 +592,7 @@ public class TapTargetView extends View {
             animator.removeAllUpdateListeners();
         }
 
+        ViewUtil.removeOnGlobalLayoutListener(getViewTreeObserver(), globalLayoutListener);
         visible = false;
 
         if (listener != null) {
