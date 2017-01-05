@@ -44,7 +44,7 @@ TapTargetView.showFor(this,                 // `this` is an Activity
         .descriptionTextSize(10)            // Specify the size (in sp) of the description text
         .descriptionTextColor(R.color.red)  // Specify the color of the description text
         .textColor(R.color.blue)            // Specify a color for both the title and description text
-        .textTypeFace(Typeface.SANS_SERIF)  // Specify a typeface for the text
+        .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
         .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
         .drawShadow(true)                   // Whether to draw a drop shadow or not
         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
