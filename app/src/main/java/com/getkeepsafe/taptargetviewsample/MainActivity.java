@@ -74,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onSequenceStep(TapTarget lastTarget) {
+                        Log.d("TapTargetView", "Clicked on " + lastTarget.id());
+                    }
+
+                    @Override
                     public void onSequenceCanceled(TapTarget lastTarget) {
                         final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
                                 .setTitle("Uh oh")
