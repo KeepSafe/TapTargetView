@@ -88,6 +88,11 @@ new TapTargetSequence(this)
         public void onSequenceFinish() {
             // Yay
         }
+        
+         @Override
+         public void onSequenceStep(TapTarget lastTarget) {
+           // Perfom action for the current target
+        }
 
         @Override
         public void onSequenceCanceled(TapTarget lastTarget) {
