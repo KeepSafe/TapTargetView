@@ -38,6 +38,7 @@ public class TapTargetSequence {
 
     public interface Listener {
         void onSequenceFinish();
+        void onSequenceStep(TapTarget lastTarget);
         void onSequenceCanceled(TapTarget lastTarget);
     }
 
@@ -102,6 +103,9 @@ public class TapTargetSequence {
         @Override
         public void onTargetClick(TapTargetView view) {
             super.onTargetClick(view);
+            if (listener != null) {
+                listener.onSequenceStep(view.target);
+            }
             showNext();
         }
 
