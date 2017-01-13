@@ -795,8 +795,11 @@ public class TapTargetView extends View {
     }
 
     int getOuterCircleRadius(int centerX, int centerY, Rect textBounds, Rect targetBounds) {
-        final Rect expandedBounds = new Rect(targetBounds);
-        expandedBounds.inset(-TARGET_PADDING / 2, -TARGET_PADDING / 2);
+        final int targetCenterX = targetBounds.centerX();
+        final int targetCenterY = targetBounds.centerY();
+        final int expandedRadius = (int) (1.1f * TARGET_RADIUS);
+        final Rect expandedBounds = new Rect(targetCenterX, targetCenterY, targetCenterX, targetCenterY);
+        expandedBounds.inset(-expandedRadius, -expandedRadius);
 
         final int textRadius = maxDistanceToPoints(centerX, centerY, textBounds);
         final int targetRadius = maxDistanceToPoints(centerX, centerY, expandedBounds);
