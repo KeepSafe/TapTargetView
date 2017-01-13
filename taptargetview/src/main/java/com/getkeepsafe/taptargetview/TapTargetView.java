@@ -739,6 +739,8 @@ public class TapTargetView extends View {
             return;
         }
 
+        if (tintedTarget != null) return;
+
         tintedTarget = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(),
                 Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(tintedTarget);
