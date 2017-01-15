@@ -108,8 +108,7 @@ public class TapTargetView extends View {
     @Nullable DynamicLayout debugLayout;
     @Nullable TextPaint debugTextPaint;
     @Nullable Paint debugPaint;
-
-
+    
     // Drawing properties
     Rect drawingBounds;
     Rect textBounds;
