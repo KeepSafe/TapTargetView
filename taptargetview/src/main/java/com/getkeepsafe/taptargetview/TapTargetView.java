@@ -38,7 +38,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.text.DynamicLayout;
 import android.text.Layout;
+import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
@@ -89,7 +91,6 @@ public class TapTargetView extends View {
     final Paint outerCircleShadowPaint;
     final Paint targetCirclePaint;
     final Paint targetCirclePulsePaint;
-    final Paint debugPaint;
 
     CharSequence title;
     StaticLayout titleLayout;
@@ -102,6 +103,12 @@ public class TapTargetView extends View {
     boolean cancelable;
     boolean visible;
 
+    // Debug related variables
+    @Nullable SpannableStringBuilder debugStringBuilder;
+    @Nullable DynamicLayout debugLayout;
+    @Nullable TextPaint debugTextPaint;
+    @Nullable Paint debugPaint;
+    
     // Drawing properties
     Rect drawingBounds;
     Rect textBounds;
@@ -400,10 +407,6 @@ public class TapTargetView extends View {
         targetCirclePulsePaint = new Paint();
         targetCirclePulsePaint.setAntiAlias(true);
 
-        debugPaint = new Paint();
-        debugPaint.setColor(0xFFFF0000);
-        debugPaint.setStyle(Paint.Style.STROKE);
-
         applyTargetOptions(context);
 
         globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -661,11 +664,7 @@ public class TapTargetView extends View {
         c.restoreToCount(saveCount);
 
         if (debug) {
-            c.drawRect(textBounds, debugPaint);
-            c.drawRect(targetBounds, debugPaint);
-            c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], 10, debugPaint);
-            c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], calculatedOuterCircleRadius - CIRCLE_PADDING, debugPaint);
-            c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), TARGET_RADIUS + TARGET_PADDING, debugPaint);
+            drawDebugInformation(c);
         }
     }
 
@@ -730,6 +729,58 @@ public class TapTargetView extends View {
     /** Returns whether this view is visible or not **/
     public boolean isVisible() {
         return !isDismissed && visible;
+    }
+
+    void drawDebugInformation(Canvas c) {
+        if (debugPaint == null) {
+            debugPaint = new Paint();
+            debugPaint.setARGB(255, 255, 0, 0);
+            debugPaint.setStyle(Paint.Style.STROKE);
+            debugPaint.setStrokeWidth(UiUtil.dp(getContext(), 1));
+        }
+
+        if (debugTextPaint == null) {
+            debugTextPaint = new TextPaint();
+            debugTextPaint.setColor(0xFFFF0000);
+            debugTextPaint.setTextSize(UiUtil.sp(getContext(), 16));
+        }
+
+        // Draw wireframe
+        debugPaint.setStyle(Paint.Style.STROKE);
+        c.drawRect(textBounds, debugPaint);
+        c.drawRect(targetBounds, debugPaint);
+        c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], 10, debugPaint);
+        c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], calculatedOuterCircleRadius - CIRCLE_PADDING, debugPaint);
+        c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), TARGET_RADIUS + TARGET_PADDING, debugPaint);
+
+        // Draw positions and dimensions
+        debugPaint.setStyle(Paint.Style.FILL);
+        final String debugText =
+            "Text bounds: " + textBounds.toShortString() + "\n" +
+            "Target bounds: " + targetBounds.toShortString() + "\n" +
+            "Center: " + outerCircleCenter[0] + " " + outerCircleCenter[1] + "\n" +
+            "View size: " + getWidth() + " " + getHeight() + "\n" +
+            "Target bounds: " + targetBounds.toShortString();
+
+        if (debugStringBuilder == null) {
+            debugStringBuilder = new SpannableStringBuilder(debugText);
+        } else {
+            debugStringBuilder.clear();
+            debugStringBuilder.append(debugText);
+        }
+
+        if (debugLayout == null) {
+            debugLayout = new DynamicLayout(debugText, debugTextPaint, getWidth(), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        }
+
+        final int saveCount = c.save(); {
+            debugPaint.setARGB(220, 0, 0, 0);
+            c.translate(0.0f, topBoundary);
+            c.drawRect(0.0f, 0.0f, debugLayout.getWidth(), debugLayout.getHeight(), debugPaint);
+            debugPaint.setARGB(255, 255, 0, 0);
+            debugLayout.draw(c);
+        }
+        c.restoreToCount(saveCount);
     }
 
     void drawTintedTarget() {
