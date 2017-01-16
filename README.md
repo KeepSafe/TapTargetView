@@ -23,7 +23,7 @@ TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftwar
    }
    
    dependencies {
-         compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.1'
+         compile 'com.getkeepsafe.taptargetview:taptargetview:1.7.0'
    }
 ```
 
@@ -89,8 +89,8 @@ new TapTargetSequence(this)
             // Yay
         }
         
-         @Override
-         public void onSequenceStep(TapTarget lastTarget) {
+        @Override
+        public void onSequenceStep(TapTarget lastTarget) {
            // Perfom action for the current target
         }
 
