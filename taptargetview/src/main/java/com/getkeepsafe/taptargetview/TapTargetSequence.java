@@ -34,6 +34,7 @@ public class TapTargetSequence {
     private boolean started;
 
     Listener listener;
+    boolean considerOuterCircleCanceled;
     boolean continueOnCancel;
 
     public interface Listener {
@@ -72,6 +73,12 @@ public class TapTargetSequence {
         return this;
     }
 
+    /** Whether or not to consider taps on the outer circle as a cancellation **/
+    public TapTargetSequence considerOuterCircleCanceled(boolean status) {
+        this.considerOuterCircleCanceled = status;
+        return this;
+    }
+
     /** Specify the listener for this sequence **/
     public TapTargetSequence listener(Listener listener) {
         this.listener = listener;
@@ -107,6 +114,13 @@ public class TapTargetSequence {
                 listener.onSequenceStep(view.target);
             }
             showNext();
+        }
+
+        @Override
+        public void onOuterCircleClick(TapTargetView view) {
+            if (considerOuterCircleCanceled) {
+                onTargetCancel(view);
+            }
         }
 
         @Override
