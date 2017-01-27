@@ -108,7 +108,7 @@ public class TapTargetView extends View {
     @Nullable DynamicLayout debugLayout;
     @Nullable TextPaint debugTextPaint;
     @Nullable Paint debugPaint;
-    
+
     // Drawing properties
     Rect drawingBounds;
     Rect textBounds;
@@ -199,6 +199,7 @@ public class TapTargetView extends View {
             view.dismiss(false);
         }
 
+        /** Signals that the user clicked on the outer circle portion of the tap target **/
         public void onOuterCircleClick(TapTargetView view) {
             // no-op as default
         }
