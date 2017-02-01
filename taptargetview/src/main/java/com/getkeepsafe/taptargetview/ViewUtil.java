@@ -18,6 +18,7 @@ package com.getkeepsafe.taptargetview;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
+import android.view.ViewManager;
 import android.view.ViewTreeObserver;
 
 class ViewUtil {
@@ -61,6 +62,19 @@ class ViewUtil {
         } else {
             //noinspection deprecation
             observer.removeGlobalOnLayoutListener(listener);
+        }
+    }
+
+    static void removeView(ViewManager parent, View child) {
+        if (parent == null || child == null) {
+            return;
+        }
+
+        try {
+            parent.removeView(child);
+        } catch (NullPointerException ignored) {
+            // This catch exists for modified versions of Android that have a buggy ViewGroup
+            // implementation. See b.android.com/77639, #121 and #49
         }
     }
 }
