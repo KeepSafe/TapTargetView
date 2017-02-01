@@ -299,7 +299,7 @@ public class TapTargetView extends View {
             .onEnd(new FloatValueAnimatorBuilder.EndListener() {
                 @Override
                 public void onEnd() {
-                    parent.removeView(TapTargetView.this);
+                    ViewUtil.removeView(parent, TapTargetView.this);
                     onDismiss();
                 }
             })
@@ -328,7 +328,7 @@ public class TapTargetView extends View {
             .onEnd(new FloatValueAnimatorBuilder.EndListener() {
                 @Override
                 public void onEnd() {
-                    parent.removeView(TapTargetView.this);
+                    ViewUtil.removeView(parent, TapTargetView.this);
                     onDismiss();
                 }
             })
