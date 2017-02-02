@@ -67,7 +67,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
  */
 @SuppressLint("ViewConstructor")
 public class TapTargetView extends View {
-    private static final int UNSET_COLOR = -1;
     private boolean isDismissed = false;
     private boolean isInteractable = true;
 
@@ -528,8 +527,8 @@ public class TapTargetView extends View {
         final Resources.Theme theme = context.getTheme();
         isDark = UiUtil.themeIntAttr(context, "isLightTheme") == 0;
 
-        final int outerCircleColor = target.outerCircleColorInt(context);
-        if (outerCircleColor != UNSET_COLOR) {
+        final Integer outerCircleColor = target.outerCircleColorInt(context);
+        if (outerCircleColor != null) {
             outerCirclePaint.setColor(outerCircleColor);
         } else if (theme != null) {
             outerCirclePaint.setColor(UiUtil.themeIntAttr(context, "colorPrimary"));
@@ -537,8 +536,8 @@ public class TapTargetView extends View {
             outerCirclePaint.setColor(Color.WHITE);
         }
 
-        final int targetCircleColor = target.targetCircleColorInt(context);
-        if (targetCircleColor != UNSET_COLOR) {
+        final Integer targetCircleColor = target.targetCircleColorInt(context);
+        if (targetCircleColor != null) {
             targetCirclePaint.setColor(targetCircleColor);
         } else {
             targetCirclePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
@@ -550,22 +549,22 @@ public class TapTargetView extends View {
 
         targetCirclePulsePaint.setColor(targetCirclePaint.getColor());
 
-        final int targetDimColor = target.dimColorInt(context);
-        if (targetDimColor != UNSET_COLOR) {
+        final Integer targetDimColor = target.dimColorInt(context);
+        if (targetDimColor != null) {
             dimColor = UiUtil.setAlpha(targetDimColor, 0.3f);
         } else {
             dimColor = -1;
         }
 
-        final int titleTextColor = target.titleTextColorInt(context);
-        if (titleTextColor != UNSET_COLOR) {
+        final Integer titleTextColor = target.titleTextColorInt(context);
+        if (titleTextColor != null) {
             titlePaint.setColor(titleTextColor);
         } else {
             titlePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
         }
 
-        final int descriptionTextColor = target.descriptionTextColorInt(context);
-        if (descriptionTextColor != UNSET_COLOR) {
+        final Integer descriptionTextColor = target.descriptionTextColorInt(context);
+        if (descriptionTextColor != null) {
             descriptionPaint.setColor(descriptionTextColor);
         } else {
             descriptionPaint.setColor(titlePaint.getColor());
