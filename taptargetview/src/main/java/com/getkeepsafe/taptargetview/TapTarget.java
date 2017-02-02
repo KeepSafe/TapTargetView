@@ -53,11 +53,11 @@ public class TapTarget {
     @ColorRes private int titleTextColorRes = -1;
     @ColorRes private int descriptionTextColorRes = -1;
 
-    private int outerCircleColor = -1;
-    private int targetCircleColor = -1;
-    private int dimColor = -1;
-    private int titleTextColor = -1;
-    private int descriptionTextColor = -1;
+    private Integer outerCircleColor = null;
+    private Integer targetCircleColor = null;
+    private Integer dimColor = null;
+    private Integer titleTextColor = null;
+    private Integer descriptionTextColor = null;
 
     @DimenRes private int titleTextDimen = -1;
     @DimenRes private int descriptionTextDimen = -1;
@@ -405,23 +405,23 @@ public class TapTarget {
         return bounds;
     }
 
-    int outerCircleColorInt(Context context) {
+    @Nullable Integer outerCircleColorInt(Context context) {
         return colorResOrInt(context, outerCircleColor, outerCircleColorRes);
     }
 
-    int targetCircleColorInt(Context context) {
+    @Nullable Integer targetCircleColorInt(Context context) {
         return colorResOrInt(context, targetCircleColor, targetCircleColorRes);
     }
 
-    int dimColorInt(Context context) {
+    @Nullable Integer dimColorInt(Context context) {
         return colorResOrInt(context, dimColor, dimColorRes);
     }
 
-    int titleTextColorInt(Context context) {
+    @Nullable Integer titleTextColorInt(Context context) {
         return colorResOrInt(context, titleTextColor, titleTextColorRes);
     }
 
-    int descriptionTextColorInt(Context context) {
+    @Nullable Integer descriptionTextColorInt(Context context) {
         return colorResOrInt(context, descriptionTextColor, descriptionTextColorRes);
     }
 
@@ -433,7 +433,7 @@ public class TapTarget {
         return dimenOrSize(context, descriptionTextSize, descriptionTextDimen);
     }
 
-    private int colorResOrInt(Context context, int value, @ColorRes int resource) {
+    private @Nullable Integer colorResOrInt(Context context, @Nullable Integer value, @ColorRes int resource) {
         if (resource != -1) {
             return UiUtil.color(context, resource);
         }
