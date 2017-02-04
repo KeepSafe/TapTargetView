@@ -75,6 +75,8 @@ public class TapTargetView extends View {
     final int TARGET_PULSE_RADIUS;
     final int TEXT_PADDING;
     final int TEXT_SPACING;
+    final int TEXT_MAX_WIDTH;
+    final int TEXT_POSITIONING_BIAS;
     final int CIRCLE_PADDING;
     final int GUTTER_DIM;
     final int SHADOW_DIM;
@@ -373,6 +375,8 @@ public class TapTargetView extends View {
         TARGET_RADIUS = UiUtil.dp(context, target.targetRadius);
         TEXT_PADDING = UiUtil.dp(context, 40);
         TEXT_SPACING = UiUtil.dp(context, 8);
+        TEXT_MAX_WIDTH = UiUtil.dp(context, 360);
+        TEXT_POSITIONING_BIAS = UiUtil.dp(context, 20);
         GUTTER_DIM = UiUtil.dp(context, 88);
         SHADOW_DIM = UiUtil.dp(context, 8);
         TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
@@ -802,7 +806,7 @@ public class TapTargetView extends View {
     }
 
     void updateTextLayouts() {
-        final int textWidth = Math.max(getMeasuredWidth() - TEXT_PADDING * 2, 0);
+        final int textWidth = Math.min(getWidth(), TEXT_MAX_WIDTH) - TEXT_PADDING * 2;
         titleLayout = new StaticLayout(title, titlePaint, textWidth,
                 Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
@@ -869,7 +873,11 @@ public class TapTargetView extends View {
             top = targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING;
         }
 
-        return new Rect(TEXT_PADDING, top, TEXT_PADDING + totalTextWidth, top + totalTextHeight);
+        final int relativeCenterDistance = (getWidth() / 2) - targetBounds.centerX();
+        final int bias = relativeCenterDistance < 0 ? -TEXT_POSITIONING_BIAS : TEXT_POSITIONING_BIAS;
+        final int left = Math.max(TEXT_PADDING, targetBounds.centerX() - bias - totalTextWidth);
+        final int right = Math.min(getWidth() - TEXT_PADDING, left + totalTextWidth);
+        return new Rect(left, top, right, top + totalTextHeight);
     }
 
     int[] getOuterCircleCenterPoint() {
@@ -882,8 +890,8 @@ public class TapTargetView extends View {
 
         final boolean onTop = targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight > 0;
 
-        final int left = Math.min(TEXT_PADDING, targetBounds.left - targetRadius);
-        final int right = Math.max(getWidth() - TEXT_PADDING, targetBounds.right + targetRadius);
+        final int left = Math.min(textBounds.left, targetBounds.left - targetRadius);
+        final int right = Math.max(textBounds.right, targetBounds.right + targetRadius);
         final int centerY = onTop ?
                 targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight + titleLayout.getHeight()
                 :
