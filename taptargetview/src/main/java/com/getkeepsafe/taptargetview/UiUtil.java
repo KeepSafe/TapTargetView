@@ -67,19 +67,4 @@ class UiUtil {
 
     return ((int) ((argb >>> 24) * alpha) << 24) | (argb & 0x00FFFFFF);
   }
-
-  /** Compatibility wrapper for getting a color resource value **/
-  static int color(Context context, @ColorRes int id) {
-    if (Build.VERSION.SDK_INT >= 23) {
-      return context.getColor(id);
-    }
-
-    //noinspection deprecation
-    return context.getResources().getColor(id);
-  }
-
-  /** Returns the given dimension id in pixels **/
-  static int dimen(Context context, @DimenRes int id) {
-    return (int) context.getResources().getDimension(id);
-  }
 }
