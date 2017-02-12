@@ -16,6 +16,7 @@
 package com.getkeepsafe.taptargetview;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 
@@ -84,22 +85,10 @@ class FloatValueAnimatorBuilder {
 
   public ValueAnimator build() {
     if (endListener != null) {
-      animator.addListener(new Animator.AnimatorListener() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-        }
-
+      animator.addListener(new AnimatorListenerAdapter() {
         @Override
         public void onAnimationEnd(Animator animation) {
           endListener.onEnd();
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
         }
       });
     }
