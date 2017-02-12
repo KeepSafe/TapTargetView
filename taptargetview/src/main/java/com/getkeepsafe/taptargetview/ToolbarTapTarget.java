@@ -30,24 +30,24 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class ToolbarTapTarget extends ViewTapTarget {
-  protected ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
-                             CharSequence title, @Nullable CharSequence description) {
+class ToolbarTapTarget extends ViewTapTarget {
+  ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
+                   CharSequence title, @Nullable CharSequence description) {
     super(toolbar.findViewById(menuItemId), title, description);
   }
 
-  protected ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
-                             CharSequence title, @Nullable CharSequence description) {
+  ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
+                   CharSequence title, @Nullable CharSequence description) {
     super(toolbar.findViewById(menuItemId), title, description);
   }
 
-  protected ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
-                             CharSequence title, @Nullable CharSequence description) {
+  ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
+                   CharSequence title, @Nullable CharSequence description) {
     super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
   }
 
-  protected ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
-                             CharSequence title, @Nullable CharSequence description) {
+  ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
+                   CharSequence title, @Nullable CharSequence description) {
     super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
   }
 
@@ -174,7 +174,7 @@ public class ToolbarTapTarget extends ViewTapTarget {
     Object internalToolbar();
   }
 
-  static class SupportToolbarProxy implements ToolbarProxy {
+  private static class SupportToolbarProxy implements ToolbarProxy {
     private final Toolbar toolbar;
 
     SupportToolbarProxy(Toolbar toolbar) {
@@ -223,7 +223,7 @@ public class ToolbarTapTarget extends ViewTapTarget {
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  static class StandardToolbarProxy implements ToolbarProxy {
+  private static class StandardToolbarProxy implements ToolbarProxy {
     private final android.widget.Toolbar toolbar;
 
     StandardToolbarProxy(android.widget.Toolbar toolbar) {
