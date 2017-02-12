@@ -24,6 +24,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -446,11 +447,10 @@ public class TapTarget {
     return dimenOrSize(context, descriptionTextSize, descriptionTextDimen);
   }
 
-  private
   @Nullable
-  Integer colorResOrInt(Context context, @Nullable Integer value, @ColorRes int resource) {
+  private Integer colorResOrInt(Context context, @Nullable Integer value, @ColorRes int resource) {
     if (resource != -1) {
-      return UiUtil.color(context, resource);
+      return ContextCompat.getColor(context, resource);
     }
 
     return value;
@@ -458,7 +458,7 @@ public class TapTarget {
 
   private int dimenOrSize(Context context, int size, @DimenRes int dimen) {
     if (dimen != -1) {
-      return UiUtil.dimen(context, dimen);
+      return (int) context.getResources().getDimension(id);
     }
 
     return UiUtil.sp(context, size);
