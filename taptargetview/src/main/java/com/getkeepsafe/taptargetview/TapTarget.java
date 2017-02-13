@@ -85,7 +85,7 @@ public class TapTarget {
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
-  public static ToolbarTapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title) {
+  public static TapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title) {
     return forToolbarOverflow(toolbar, title, null);
   }
 
@@ -93,7 +93,7 @@ public class TapTarget {
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
-  public static ToolbarTapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title,
+  public static TapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title,
                                                     @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, false, title, description);
   }
@@ -102,7 +102,7 @@ public class TapTarget {
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
-  public static ToolbarTapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title) {
+  public static TapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title) {
     return forToolbarOverflow(toolbar, title, null);
   }
 
@@ -110,64 +110,64 @@ public class TapTarget {
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
-  public static ToolbarTapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title,
+  public static TapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title,
                                                     @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, false, title, description);
   }
 
   /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static ToolbarTapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title) {
+  public static TapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title) {
     return forToolbarNavigationIcon(toolbar, title, null);
   }
 
   /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static ToolbarTapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title,
+  public static TapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title,
                                                           @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, true, title, description);
   }
 
   /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static ToolbarTapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title) {
+  public static TapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title) {
     return forToolbarNavigationIcon(toolbar, title, null);
   }
 
   /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static ToolbarTapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title,
-                                                          @Nullable CharSequence description) {
+  public static TapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title,
+                                                   @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, true, title, description);
   }
 
   /** Return a tap target for the menu item from the given toolbar **/
-  public static ToolbarTapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
-                                                    CharSequence title) {
+  public static TapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
+                                             CharSequence title) {
     return forToolbarMenuItem(toolbar, menuItemId, title, null);
   }
 
   /** Return a tap target for the menu item from the given toolbar **/
-  public static ToolbarTapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
-                                                    CharSequence title, @Nullable CharSequence description) {
+  public static TapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
+                                             CharSequence title, @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, menuItemId, title, description);
   }
 
   /** Return a tap target for the menu item from the given toolbar **/
-  public static ToolbarTapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
-                                                    CharSequence title) {
+  public static TapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
+                                             CharSequence title) {
     return forToolbarMenuItem(toolbar, menuItemId, title, null);
   }
 
   /** Return a tap target for the menu item from the given toolbar **/
-  public static ToolbarTapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
+  public static TapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
                                                     CharSequence title, @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, menuItemId, title, description);
   }
 
   /** Return a tap target for the specified view **/
-  public static ViewTapTarget forView(View view, CharSequence title) {
+  public static TapTarget forView(View view, CharSequence title) {
     return forView(view, title, null);
   }
 
   /** Return a tap target for the specified view **/
-  public static ViewTapTarget forView(View view, CharSequence title, @Nullable CharSequence description) {
+  public static TapTarget forView(View view, CharSequence title, @Nullable CharSequence description) {
     return new ViewTapTarget(view, title, description);
   }
 
