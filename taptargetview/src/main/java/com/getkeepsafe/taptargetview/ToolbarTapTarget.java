@@ -154,7 +154,6 @@ class ToolbarTapTarget extends ViewTapTarget {
     }
   }
 
-
   private interface ToolbarProxy {
     CharSequence getNavigationContentDescription();
 
