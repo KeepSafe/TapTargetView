@@ -38,10 +38,23 @@ public class TapTargetSequence {
   boolean continueOnCancel;
 
   public interface Listener {
+    /** Called when there are no more tap targets to display */
     void onSequenceFinish();
 
-    void onSequenceStep(TapTarget lastTarget);
+    /**
+     * Called when moving onto the next tap target.
+     * @param lastTarget The last displayed target
+     * @param targetClicked Whether the last displayed target was clicked (this will always be true
+     *                      unless you have set {@link #continueOnCancel(boolean)} and the user
+     *                      clicks outside of the target
+     */
+    void onSequenceStep(TapTarget lastTarget, boolean targetClicked);
 
+    /**
+     * Called when the user taps outside of the current target, the target is cancelable, and
+     * {@link #continueOnCancel(boolean)} is not set.
+     * @param lastTarget The last displayed target
+     */
     void onSequenceCanceled(TapTarget lastTarget);
   }
 
@@ -113,7 +126,7 @@ public class TapTargetSequence {
     public void onTargetClick(TapTargetView view) {
       super.onTargetClick(view);
       if (listener != null) {
-        listener.onSequenceStep(view.target);
+        listener.onSequenceStep(view.target, true);
       }
       showNext();
     }
@@ -129,6 +142,9 @@ public class TapTargetSequence {
     public void onTargetCancel(TapTargetView view) {
       super.onTargetCancel(view);
       if (continueOnCancel) {
+        if (listener != null) {
+          listener.onSequenceStep(view.target, false);
+        }
         showNext();
       } else {
         if (listener != null) {
