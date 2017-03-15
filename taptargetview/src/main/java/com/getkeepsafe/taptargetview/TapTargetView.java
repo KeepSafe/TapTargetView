@@ -95,6 +95,7 @@ public class TapTargetView extends View {
   final Paint targetCirclePulsePaint;
 
   CharSequence title;
+  @Nullable
   StaticLayout titleLayout;
   @Nullable
   CharSequence description;
@@ -655,9 +656,11 @@ public class TapTargetView extends View {
       c.clipPath(outerCirclePath);
       c.translate(textBounds.left, textBounds.top);
       titlePaint.setAlpha(textAlpha);
-      titleLayout.draw(c);
+      if (titleLayout != null) {
+        titleLayout.draw(c);
+      }
 
-      if (descriptionLayout != null) {
+      if (descriptionLayout != null && titleLayout != null) {
         c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
         descriptionPaint.setAlpha((int) (0.54f * textAlpha));
         descriptionLayout.draw(c);
@@ -821,12 +824,16 @@ public class TapTargetView extends View {
 
   void updateTextLayouts() {
     final int textWidth = Math.min(getWidth(), TEXT_MAX_WIDTH) - TEXT_PADDING * 2;
+    if (textWidth <= 0) {
+      return;
+    }
+
     titleLayout = new StaticLayout(title, titlePaint, textWidth,
-        Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+            Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
     if (description != null) {
       descriptionLayout = new StaticLayout(description, descriptionPaint, textWidth,
-          Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+              Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
     } else {
       descriptionLayout = null;
     }
@@ -906,15 +913,20 @@ public class TapTargetView extends View {
 
     final int left = Math.min(textBounds.left, targetBounds.left - targetRadius);
     final int right = Math.max(textBounds.right, targetBounds.right + targetRadius);
+    final int titleHeight = titleLayout == null ? 0 : titleLayout.getHeight();
     final int centerY = onTop ?
-        targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight + titleLayout.getHeight()
+        targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight + titleHeight
         :
-        targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING + titleLayout.getHeight();
+        targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING + titleHeight;
 
-    return new int[]{(left + right) / 2, centerY};
+    return new int[] { (left + right) / 2, centerY };
   }
 
   int getTotalTextHeight() {
+    if (titleLayout == null) {
+      return 0;
+    }
+
     if (descriptionLayout == null) {
       return titleLayout.getHeight() + TEXT_SPACING;
     }
@@ -923,6 +935,10 @@ public class TapTargetView extends View {
   }
 
   int getTotalTextWidth() {
+    if (titleLayout == null) {
+      return 0;
+    }
+
     if (descriptionLayout == null) {
       return titleLayout.getWidth();
     }
