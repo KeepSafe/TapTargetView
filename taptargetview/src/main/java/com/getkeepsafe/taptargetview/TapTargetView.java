@@ -80,6 +80,7 @@ public class TapTargetView extends View {
   final int CIRCLE_PADDING;
   final int GUTTER_DIM;
   final int SHADOW_DIM;
+  final int SHADOW_JITTER_DIM;
 
   @Nullable
   final ViewGroup boundingParent;
@@ -388,6 +389,7 @@ public class TapTargetView extends View {
     TEXT_POSITIONING_BIAS = UiUtil.dp(context, 20);
     GUTTER_DIM = UiUtil.dp(context, 88);
     SHADOW_DIM = UiUtil.dp(context, 8);
+    SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
     TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
 
     outerCirclePath = new Path();
@@ -412,7 +414,9 @@ public class TapTargetView extends View {
     outerCircleShadowPaint = new Paint();
     outerCircleShadowPaint.setAntiAlias(true);
     outerCircleShadowPaint.setAlpha(50);
-    outerCircleShadowPaint.setShadowLayer(10.0f, 0.0f, 25.0f, Color.BLACK);
+    outerCircleShadowPaint.setStyle(Paint.Style.STROKE);
+    outerCircleShadowPaint.setStrokeWidth(SHADOW_JITTER_DIM);
+    outerCircleShadowPaint.setColor(Color.BLACK);
 
     targetCirclePaint = new Paint();
     targetCirclePaint.setAntiAlias(true);
@@ -511,7 +515,9 @@ public class TapTargetView extends View {
     shouldDrawShadow = target.drawShadow;
     cancelable = target.cancelable;
 
-    if (shouldDrawShadow && Build.VERSION.SDK_INT >= 21) {
+    // We can't clip out portions of a view outline, so if the user specified a transparent
+    // target, we need to fallback to drawing a jittered shadow approximation
+    if (shouldDrawShadow && Build.VERSION.SDK_INT >= 21 && !target.transparentTarget) {
       outlineProvider = new ViewOutlineProvider() {
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
@@ -531,7 +537,7 @@ public class TapTargetView extends View {
       setElevation(SHADOW_DIM);
     }
 
-    if ((shouldDrawShadow && outlineProvider == null) || Build.VERSION.SDK_INT < 18) {
+    if (shouldDrawShadow && outlineProvider == null && Build.VERSION.SDK_INT < 18) {
       setLayerType(LAYER_TYPE_SOFTWARE, null);
     } else {
       setLayerType(LAYER_TYPE_HARDWARE, null);
@@ -635,8 +641,7 @@ public class TapTargetView extends View {
       saveCount = c.save();
       {
         c.clipPath(outerCirclePath, Region.Op.DIFFERENCE);
-        outerCircleShadowPaint.setAlpha((int) (0.20f * outerCircleAlpha));
-        c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, outerCircleShadowPaint);
+        drawJitteredShadow(c);
       }
       c.restoreToCount(saveCount);
     }
@@ -749,6 +754,20 @@ public class TapTargetView extends View {
   /** Returns whether this view is visible or not **/
   public boolean isVisible() {
     return !isDismissed && visible;
+  }
+
+  void drawJitteredShadow(Canvas c) {
+    final float baseAlpha = 0.20f * outerCircleAlpha;
+    outerCircleShadowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+    outerCircleShadowPaint.setAlpha((int) baseAlpha);
+    c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM, outerCircleRadius, outerCircleShadowPaint);
+    outerCircleShadowPaint.setStyle(Paint.Style.STROKE);
+    final int numJitters = 7;
+    for (int i = numJitters - 1; i > 0; --i) {
+      outerCircleShadowPaint.setAlpha((int) ((i / (float) numJitters) * baseAlpha));
+      c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM ,
+          outerCircleRadius + (numJitters - i) * SHADOW_JITTER_DIM , outerCircleShadowPaint);
+    }
   }
 
   void drawDebugInformation(Canvas c) {
