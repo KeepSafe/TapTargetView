@@ -43,6 +43,8 @@ public class TapTarget {
   final CharSequence title;
   @Nullable
   final CharSequence description;
+
+  float outerCircleAlpha = 0.96f;
   int targetRadius = 44;
 
   Rect bounds;
@@ -215,6 +217,15 @@ public class TapTarget {
   // TODO(Hilal): In v2, this API should be cleaned up / torched
   public TapTarget outerCircleColorInt(@ColorInt int color) {
     this.outerCircleColor = color;
+    return this;
+  }
+
+  /** Specify the alpha value [0.0, 1.0] of the outer circle **/
+  public TapTarget outerCircleAlpha(float alpha) {
+    if (alpha < 0.0f || alpha > 1.0f) {
+      throw new IllegalArgumentException("Given an invalid alpha value: " + alpha);
+    }
+    this.outerCircleAlpha = alpha;
     return this;
   }
 
