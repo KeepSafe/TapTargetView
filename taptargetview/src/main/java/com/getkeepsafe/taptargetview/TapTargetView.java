@@ -233,7 +233,7 @@ public class TapTargetView extends View {
         calculateDrawingBounds();
       }
 
-      final float targetAlpha = 0.96f * 255;
+      final float targetAlpha = target.outerCircleAlpha * 255;
       outerCircleRadius = newOuterCircleRadius;
       outerCircleAlpha = (int) Math.min(targetAlpha, (lerpTime * 1.5f * targetAlpha));
       outerCirclePath.reset();
@@ -324,7 +324,7 @@ public class TapTargetView extends View {
         public void onUpdate(float lerpTime) {
           final float spedUpLerp = Math.min(1.0f, lerpTime * 2.0f);
           outerCircleRadius = calculatedOuterCircleRadius * (1.0f + (spedUpLerp * 0.2f));
-          outerCircleAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
+          outerCircleAlpha = (int) ((1.0f - spedUpLerp) * target.outerCircleAlpha * 255.0f);
           outerCirclePath.reset();
           outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
           targetCircleRadius = (1.0f - lerpTime) * TARGET_RADIUS;
@@ -409,7 +409,7 @@ public class TapTargetView extends View {
 
     outerCirclePaint = new Paint();
     outerCirclePaint.setAntiAlias(true);
-    outerCirclePaint.setAlpha((int) (0.96f * 255.0f));
+    outerCirclePaint.setAlpha((int) (target.outerCircleAlpha * 255.0f));
 
     outerCircleShadowPaint = new Paint();
     outerCircleShadowPaint.setAntiAlias(true);
