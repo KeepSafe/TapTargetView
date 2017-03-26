@@ -56,12 +56,12 @@ class ViewUtil {
     });
   }
 
+  @SuppressWarnings("deprecation")
   static void removeOnGlobalLayoutListener(ViewTreeObserver observer,
                                            ViewTreeObserver.OnGlobalLayoutListener listener) {
     if (Build.VERSION.SDK_INT >= 16) {
       observer.removeOnGlobalLayoutListener(listener);
     } else {
-      //noinspection deprecation
       observer.removeGlobalOnLayoutListener(listener);
     }
   }
