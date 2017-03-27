@@ -38,6 +38,7 @@ TapTargetView.showFor(this,                 // `this` is an Activity
     TapTarget.forView(findViewById(R.id.target), "This is a target", "We have the best targets, believe me")
         // All options below are optional
         .outerCircleColor(R.color.red)      // Specify a color for the outer circle
+	.outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
         .targetCircleColor(R.color.white)   // Specify a color for the target circle
         .titleTextSize(20)                  // Specify the size (in sp) of the title text
         .titleTextColor(R.color.white)      // Specify the color of the title text
