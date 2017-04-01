@@ -469,7 +469,7 @@ public class TapTarget {
 
   private int dimenOrSize(Context context, int size, @DimenRes int dimen) {
     if (dimen != -1) {
-      return context.getResources().getDimensionPixelSize(id);
+      return context.getResources().getDimensionPixelSize(dimen);
     }
 
     return UiUtil.sp(context, size);
