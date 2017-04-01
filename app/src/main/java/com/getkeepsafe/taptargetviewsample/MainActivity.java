@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.fab), "Hello, world!", spannedDesc)
                 .cancelable(false)
                 .drawShadow(true)
+                .titleTextDimen(R.dimen.title_text_size)
                 .tintTarget(false), new TapTargetView.Listener() {
             @Override
             public void onTargetClick(TapTargetView view) {
