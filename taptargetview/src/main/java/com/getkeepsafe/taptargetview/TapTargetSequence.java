@@ -16,6 +16,8 @@
 package com.getkeepsafe.taptargetview;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -31,7 +33,10 @@ import java.util.Queue;
 public class TapTargetSequence {
   private final Activity activity;
   private final Queue<TapTarget> targets;
-  private boolean started;
+  private boolean active;
+
+  @Nullable
+  private TapTargetView currentView;
 
   Listener listener;
   boolean considerOuterCircleCanceled;
@@ -101,18 +106,42 @@ public class TapTargetSequence {
   }
 
   /** Immediately starts the sequence and displays the first target from the queue **/
+  @UiThread
   public void start() {
-    if (targets.isEmpty() || started) {
+    if (targets.isEmpty() || active) {
       return;
     }
 
-    started = true;
+    active = true;
     showNext();
+  }
+
+  /**
+   * Cancels the sequence, if the current target is cancelable.
+   * When the sequence is canceled, the current target is dismissed and the remaining targets are
+   * removed from the sequence.
+   * @return whether the sequence was canceled or not
+   */
+  @UiThread
+  public boolean cancel() {
+    if (targets.isEmpty() || !active) {
+      return false;
+    }
+    if (currentView == null || !currentView.cancelable) {
+      return false;
+    }
+    currentView.dismiss(false);
+    active = false;
+    targets.clear();
+    if (listener != null) {
+      listener.onSequenceCanceled(currentView.target);
+    }
+    return true;
   }
 
   void showNext() {
     try {
-      TapTargetView.showFor(activity, targets.remove(), tapTargetListener);
+      currentView = TapTargetView.showFor(activity, targets.remove(), tapTargetListener);
     } catch (NoSuchElementException e) {
       // No more targets
       if (listener != null) {
