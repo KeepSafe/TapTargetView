@@ -658,7 +658,6 @@ public class TapTargetView extends View {
 
     saveCount = c.save();
     {
-      c.clipPath(outerCirclePath);
       c.translate(textBounds.left, textBounds.top);
       titlePaint.setAlpha(textAlpha);
       if (titleLayout != null) {
