@@ -23,6 +23,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +50,8 @@ public class TapTarget {
 
   Rect bounds;
   Drawable icon;
-  Typeface typeface;
+  Typeface titleTypeface;
+  Typeface descriptionTypeface;
 
   @ColorRes
   private int outerCircleColorRes = -1;
@@ -284,9 +286,14 @@ public class TapTarget {
   }
 
   /** Specify the typeface for all text **/
-  public TapTarget textTypeface(Typeface typeface) {
-    if (typeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
-    this.typeface = typeface;
+  public TapTarget textTypeface(@NonNull Typeface typeface) {
+    return textTypeface(typeface, typeface);
+  }
+
+  /** Specify the typeface for title and description text **/
+  public TapTarget textTypeface(@NonNull Typeface titleTypeface, @NonNull Typeface descriptionTypeface) {
+    this.titleTypeface = titleTypeface;
+    this.descriptionTypeface = descriptionTypeface;
     return this;
   }
 

@@ -589,9 +589,12 @@ public class TapTargetView extends View {
       descriptionPaint.setColor(titlePaint.getColor());
     }
 
-    if (target.typeface != null) {
-      titlePaint.setTypeface(target.typeface);
-      descriptionPaint.setTypeface(target.typeface);
+    if (target.titleTypeface != null) {
+      titlePaint.setTypeface(target.titleTypeface);
+    }
+
+    if (target.descriptionTypeface != null) {
+      descriptionPaint.setTypeface(target.descriptionTypeface);
     }
   }
 
