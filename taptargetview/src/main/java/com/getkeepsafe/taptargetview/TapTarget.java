@@ -23,7 +23,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -286,13 +285,23 @@ public class TapTarget {
   }
 
   /** Specify the typeface for all text **/
-  public TapTarget textTypeface(@NonNull Typeface typeface) {
-    return textTypeface(typeface, typeface);
+  public TapTarget textTypeface(Typeface typeface) {
+    if (typeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
+    titleTypeface = typeface;
+    descriptionTypeface = typeface;
+    return this;
   }
 
-  /** Specify the typeface for title and description text **/
-  public TapTarget textTypeface(@NonNull Typeface titleTypeface, @NonNull Typeface descriptionTypeface) {
+  /** Specify the typeface for title text **/
+  public TapTarget titleTypeface(Typeface titleTypeface) {
+    if (titleTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
     this.titleTypeface = titleTypeface;
+    return this;
+  }
+
+  /** Specify the typeface for description text **/
+  public TapTarget descriptionTypeface(Typeface descriptionTypeface) {
+    if (descriptionTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
     this.descriptionTypeface = descriptionTypeface;
     return this;
   }
