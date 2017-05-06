@@ -49,7 +49,8 @@ public class TapTarget {
 
   Rect bounds;
   Drawable icon;
-  Typeface typeface;
+  Typeface titleTypeface;
+  Typeface descriptionTypeface;
 
   @ColorRes
   private int outerCircleColorRes = -1;
@@ -286,7 +287,22 @@ public class TapTarget {
   /** Specify the typeface for all text **/
   public TapTarget textTypeface(Typeface typeface) {
     if (typeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
-    this.typeface = typeface;
+    titleTypeface = typeface;
+    descriptionTypeface = typeface;
+    return this;
+  }
+
+  /** Specify the typeface for title text **/
+  public TapTarget titleTypeface(Typeface titleTypeface) {
+    if (titleTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
+    this.titleTypeface = titleTypeface;
+    return this;
+  }
+
+  /** Specify the typeface for description text **/
+  public TapTarget descriptionTypeface(Typeface descriptionTypeface) {
+    if (descriptionTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
+    this.descriptionTypeface = descriptionTypeface;
     return this;
   }
 
