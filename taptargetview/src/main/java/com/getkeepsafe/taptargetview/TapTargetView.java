@@ -173,7 +173,7 @@ public class TapTargetView extends View {
 
     final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
     final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
-                                                                                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     final ViewGroup content = (ViewGroup) decor.findViewById(android.R.id.content);
     final TapTargetView tapTargetView = new TapTargetView(activity, decor, content, target, listener);
     decor.addView(tapTargetView, layoutParams);
@@ -286,119 +286,119 @@ public class TapTargetView extends View {
   };
 
   final ValueAnimator expandAnimation = new FloatValueAnimatorBuilder()
-                                                                                      .duration(250)
-                                                                                      .delayBy(250)
-                                                                                      .interpolator(new AccelerateDecelerateInterpolator())
-                                                                                      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
-                                                                                        @Override
-                                                                                        public void onUpdate(float lerpTime) {
-                                                                                          expandContractUpdateListener.onUpdate(lerpTime);
-                                                                                        }
-                                                                                      })
-                                                                                      .onEnd(new FloatValueAnimatorBuilder.EndListener() {
-                                                                                        @Override
-                                                                                        public void onEnd() {
-                                                                                          pulseAnimation.start();
-                                                                                        }
-                                                                                      })
-                                                                                      .build();
+      .duration(250)
+      .delayBy(250)
+      .interpolator(new AccelerateDecelerateInterpolator())
+      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
+        @Override
+        public void onUpdate(float lerpTime) {
+          expandContractUpdateListener.onUpdate(lerpTime);
+        }
+      })
+      .onEnd(new FloatValueAnimatorBuilder.EndListener() {
+        @Override
+        public void onEnd() {
+          pulseAnimation.start();
+        }
+      })
+      .build();
 
   final ValueAnimator pulseAnimation = new FloatValueAnimatorBuilder()
-                                                                                      .duration(1000)
-                                                                                      .repeat(ValueAnimator.INFINITE)
-                                                                                      .interpolator(new AccelerateDecelerateInterpolator())
-                                                                                      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
-                                                                                        @Override
-                                                                                        public void onUpdate(float lerpTime) {
-                                                                                          final float pulseLerp = delayedLerp(lerpTime, 0.5f);
-                                                                                          switch (shape) {
-                                                                                            case CIRCLE:
-                                                                                              targetCirclePulseRadius = (1.0f + pulseLerp) * TARGET_RADIUS;
-                                                                                              targetCircleRadius = TARGET_RADIUS + halfwayLerp(lerpTime) * TARGET_PULSE_RADIUS;
-                                                                                              break;
-                                                                                            case RECTANGLE:
-                                                                                              targetRectPulseWidth = (1.0f + pulseLerp) * TARGET_WIDTH;
-                                                                                              targetRectPulseHeight = (1.0f + pulseLerp) * TARGET_HEIGHT;
-                                                                                              targetRectWidth = TARGET_WIDTH + halfwayLerp(lerpTime) * TARGET_PULSE_WIDTH;
-                                                                                              targetRectHeight = TARGET_HEIGHT + halfwayLerp(lerpTime) * TARGET_PULSE_HEIGHT;
-                                                                                              targetRectPulseRadius = (1.0f + pulseLerp) * TARGET_RECT_RADIUS;
-                                                                                              targetRectRadius = TARGET_RECT_RADIUS + halfwayLerp(lerpTime) * TARGET_RECT_PULSE_RADIUS;
-                                                                                              break;
-                                                                                          }
-                                                                                          targetCirclePulseAlpha = (int) ((1.0f - pulseLerp) * 255);
+      .duration(1000)
+      .repeat(ValueAnimator.INFINITE)
+      .interpolator(new AccelerateDecelerateInterpolator())
+      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
+        @Override
+        public void onUpdate(float lerpTime) {
+          final float pulseLerp = delayedLerp(lerpTime, 0.5f);
+          switch (shape) {
+            case CIRCLE:
+              targetCirclePulseRadius = (1.0f + pulseLerp) * TARGET_RADIUS;
+              targetCircleRadius = TARGET_RADIUS + halfwayLerp(lerpTime) * TARGET_PULSE_RADIUS;
+              break;
+            case RECTANGLE:
+              targetRectPulseWidth = (1.0f + pulseLerp) * TARGET_WIDTH;
+              targetRectPulseHeight = (1.0f + pulseLerp) * TARGET_HEIGHT;
+              targetRectWidth = TARGET_WIDTH + halfwayLerp(lerpTime) * TARGET_PULSE_WIDTH;
+              targetRectHeight = TARGET_HEIGHT + halfwayLerp(lerpTime) * TARGET_PULSE_HEIGHT;
+              targetRectPulseRadius = (1.0f + pulseLerp) * TARGET_RECT_RADIUS;
+              targetRectRadius = TARGET_RECT_RADIUS + halfwayLerp(lerpTime) * TARGET_RECT_PULSE_RADIUS;
+              break;
+          }
+          targetCirclePulseAlpha = (int) ((1.0f - pulseLerp) * 255);
 
-                                                                                          if (outerCircleRadius != calculatedOuterCircleRadius) {
-                                                                                            outerCircleRadius = calculatedOuterCircleRadius;
-                                                                                          }
+          if (outerCircleRadius != calculatedOuterCircleRadius) {
+            outerCircleRadius = calculatedOuterCircleRadius;
+          }
 
-                                                                                          calculateDrawingBounds();
-                                                                                          invalidateViewAndOutline(drawingBounds);
-                                                                                        }
-                                                                                      })
-                                                                                      .build();
+          calculateDrawingBounds();
+          invalidateViewAndOutline(drawingBounds);
+        }
+      })
+      .build();
 
   final ValueAnimator dismissAnimation = new FloatValueAnimatorBuilder(true)
-                                                                                      .duration(250)
-                                                                                      .interpolator(new AccelerateDecelerateInterpolator())
-                                                                                      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
-                                                                                        @Override
-                                                                                        public void onUpdate(float lerpTime) {
-                                                                                          expandContractUpdateListener.onUpdate(lerpTime);
-                                                                                        }
-                                                                                      })
-                                                                                      .onEnd(new FloatValueAnimatorBuilder.EndListener() {
-                                                                                        @Override
-                                                                                        public void onEnd() {
-                                                                                          ViewUtil.removeView(parent, TapTargetView.this);
-                                                                                          onDismiss();
-                                                                                        }
-                                                                                      })
-                                                                                      .build();
+      .duration(250)
+      .interpolator(new AccelerateDecelerateInterpolator())
+      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
+        @Override
+        public void onUpdate(float lerpTime) {
+          expandContractUpdateListener.onUpdate(lerpTime);
+        }
+      })
+      .onEnd(new FloatValueAnimatorBuilder.EndListener() {
+        @Override
+        public void onEnd() {
+          ViewUtil.removeView(parent, TapTargetView.this);
+          onDismiss();
+        }
+      })
+      .build();
 
   private final ValueAnimator dismissConfirmAnimation = new FloatValueAnimatorBuilder()
-                                                                                      .duration(250)
-                                                                                      .interpolator(new AccelerateDecelerateInterpolator())
-                                                                                      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
-                                                                                        @Override
-                                                                                        public void onUpdate(float lerpTime) {
-                                                                                          final float spedUpLerp = Math.min(1.0f, lerpTime * 2.0f);
-                                                                                          outerCircleRadius = calculatedOuterCircleRadius * (1.0f + (spedUpLerp * 0.2f));
-                                                                                          outerCircleAlpha = (int) ((1.0f - spedUpLerp) * target.outerCircleAlpha * 255.0f);
-                                                                                          outerCirclePath.reset();
-                                                                                          outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
+      .duration(250)
+      .interpolator(new AccelerateDecelerateInterpolator())
+      .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
+        @Override
+        public void onUpdate(float lerpTime) {
+          final float spedUpLerp = Math.min(1.0f, lerpTime * 2.0f);
+          outerCircleRadius = calculatedOuterCircleRadius * (1.0f + (spedUpLerp * 0.2f));
+          outerCircleAlpha = (int) ((1.0f - spedUpLerp) * target.outerCircleAlpha * 255.0f);
+          outerCirclePath.reset();
+          outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
 
-                                                                                          switch (shape) {
-                                                                                            case CIRCLE:
-                                                                                              targetCircleRadius = (1.0f - lerpTime) * TARGET_RADIUS;
-                                                                                              targetCirclePulseRadius = (1.0f + lerpTime) * TARGET_RADIUS;
-                                                                                              break;
-                                                                                            case RECTANGLE:
-                                                                                              targetRectWidth = (1.0f - lerpTime) * TARGET_WIDTH;
-                                                                                              targetRectHeight = (1.0f - lerpTime) * TARGET_HEIGHT;
-                                                                                              targetRectPulseWidth = (1.0f + lerpTime) * TARGET_WIDTH;
-                                                                                              targetRectPulseHeight = (1.0f + lerpTime) * TARGET_HEIGHT;
-                                                                                              targetRectRadius = (1.0f + lerpTime) * TARGET_RECT_RADIUS;
-                                                                                              break;
-                                                                                          }
+          switch (shape) {
+            case CIRCLE:
+              targetCircleRadius = (1.0f - lerpTime) * TARGET_RADIUS;
+              targetCirclePulseRadius = (1.0f + lerpTime) * TARGET_RADIUS;
+              break;
+            case RECTANGLE:
+              targetRectWidth = (1.0f - lerpTime) * TARGET_WIDTH;
+              targetRectHeight = (1.0f - lerpTime) * TARGET_HEIGHT;
+              targetRectPulseWidth = (1.0f + lerpTime) * TARGET_WIDTH;
+              targetRectPulseHeight = (1.0f + lerpTime) * TARGET_HEIGHT;
+              targetRectRadius = (1.0f + lerpTime) * TARGET_RECT_RADIUS;
+              break;
+          }
 
-                                                                                          targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
-                                                                                          targetCirclePulseAlpha = (int) ((1.0f - lerpTime) * targetCirclePulseAlpha);
-                                                                                          textAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
-                                                                                          calculateDrawingBounds();
-                                                                                          invalidateViewAndOutline(drawingBounds);
-                                                                                        }
-                                                                                      })
-                                                                                      .onEnd(new FloatValueAnimatorBuilder.EndListener() {
-                                                                                        @Override
-                                                                                        public void onEnd() {
-                                                                                          ViewUtil.removeView(parent, TapTargetView.this);
-                                                                                          onDismiss();
-                                                                                        }
-                                                                                      })
-                                                                                      .build();
+          targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
+          targetCirclePulseAlpha = (int) ((1.0f - lerpTime) * targetCirclePulseAlpha);
+          textAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
+          calculateDrawingBounds();
+          invalidateViewAndOutline(drawingBounds);
+        }
+      })
+      .onEnd(new FloatValueAnimatorBuilder.EndListener() {
+        @Override
+        public void onEnd() {
+          ViewUtil.removeView(parent, TapTargetView.this);
+          onDismiss();
+        }
+      })
+      .build();
 
   private ValueAnimator[] animators = new ValueAnimator[]
-                                                                                      {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
+      {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
 
   private final ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
 
@@ -513,7 +513,7 @@ public class TapTargetView extends View {
 
             if (boundingParent != null) {
               final WindowManager windowManager
-                                                                                                  = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                  = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
               final DisplayMetrics displayMetrics = new DisplayMetrics();
               windowManager.getDefaultDisplay().getMetrics(displayMetrics);
 
@@ -560,7 +560,7 @@ public class TapTargetView extends View {
         }
 
         final double distanceToOuterCircleCenter = distance(outerCircleCenter[0], outerCircleCenter[1],
-                                                                                            (int) lastTouchX, (int) lastTouchY);
+            (int) lastTouchX, (int) lastTouchY);
         final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
 
         if (clickedInTarget) {
@@ -604,8 +604,8 @@ public class TapTargetView extends View {
         public void getOutline(View view, Outline outline) {
           if (outerCircleCenter == null) return;
           outline.setOval(
-                                                                                              (int) (outerCircleCenter[0] - outerCircleRadius), (int) (outerCircleCenter[1] - outerCircleRadius),
-                                                                                              (int) (outerCircleCenter[0] + outerCircleRadius), (int) (outerCircleCenter[1] + outerCircleRadius));
+              (int) (outerCircleCenter[0] - outerCircleRadius), (int) (outerCircleCenter[1] - outerCircleRadius),
+              (int) (outerCircleCenter[0] + outerCircleRadius), (int) (outerCircleCenter[1] + outerCircleRadius));
           outline.setAlpha(outerCircleAlpha / 255.0f);
           if (Build.VERSION.SDK_INT >= 22) {
             outline.offset(0, SHADOW_DIM);
@@ -783,11 +783,11 @@ public class TapTargetView extends View {
     {
       if (tintedTarget != null) {
         c.translate(targetBounds.centerX() - tintedTarget.getWidth() / 2,
-                                                                                            targetBounds.centerY() - tintedTarget.getHeight() / 2);
+            targetBounds.centerY() - tintedTarget.getHeight() / 2);
         c.drawBitmap(tintedTarget, 0, 0, targetCirclePaint);
       } else if (target.icon != null) {
         c.translate(targetBounds.centerX() - target.icon.getBounds().width() / 2,
-                                                                                            targetBounds.centerY() - target.icon.getBounds().height() / 2);
+            targetBounds.centerY() - target.icon.getBounds().height() / 2);
         target.icon.setAlpha(targetCirclePaint.getAlpha());
         target.icon.draw(c);
       }
@@ -819,7 +819,7 @@ public class TapTargetView extends View {
   @Override
   public boolean onKeyUp(int keyCode, KeyEvent event) {
     if (isVisible() && isInteractable && cancelable
-                                                                                        && keyCode == KeyEvent.KEYCODE_BACK && event.isTracking() && !event.isCanceled()) {
+        && keyCode == KeyEvent.KEYCODE_BACK && event.isTracking() && !event.isCanceled()) {
       isInteractable = false;
 
       if (listener != null) {
@@ -877,7 +877,7 @@ public class TapTargetView extends View {
     for (int i = numJitters - 1; i > 0; --i) {
       outerCircleShadowPaint.setAlpha((int) ((i / (float) numJitters) * baseAlpha));
       c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM,
-                                                                                          outerCircleRadius + (numJitters - i) * SHADOW_JITTER_DIM, outerCircleShadowPaint);
+          outerCircleRadius + (numJitters - i) * SHADOW_JITTER_DIM, outerCircleShadowPaint);
     }
   }
 
@@ -914,11 +914,11 @@ public class TapTargetView extends View {
     // Draw positions and dimensions
     debugPaint.setStyle(Paint.Style.FILL);
     final String debugText =
-                                                                                        "Text bounds: " + textBounds.toShortString() + "\n" +
-                                                                                                                                                                            "Target bounds: " + targetBounds.toShortString() + "\n" +
-                                                                                                                                                                            "Center: " + outerCircleCenter[0] + " " + outerCircleCenter[1] + "\n" +
-                                                                                                                                                                            "View size: " + getWidth() + " " + getHeight() + "\n" +
-                                                                                                                                                                            "Target bounds: " + targetBounds.toShortString();
+        "Text bounds: " + textBounds.toShortString() + "\n" +
+            "Target bounds: " + targetBounds.toShortString() + "\n" +
+            "Center: " + outerCircleCenter[0] + " " + outerCircleCenter[1] + "\n" +
+            "View size: " + getWidth() + " " + getHeight() + "\n" +
+            "Target bounds: " + targetBounds.toShortString();
 
     if (debugStringBuilder == null) {
       debugStringBuilder = new SpannableStringBuilder(debugText);
@@ -952,10 +952,10 @@ public class TapTargetView extends View {
     if (tintedTarget != null) return;
 
     tintedTarget = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(),
-                                                                                        Bitmap.Config.ARGB_8888);
+        Bitmap.Config.ARGB_8888);
     final Canvas canvas = new Canvas(tintedTarget);
     icon.setColorFilter(new PorterDuffColorFilter(
-                                                                                        outerCirclePaint.getColor(), PorterDuff.Mode.SRC_ATOP));
+        outerCirclePaint.getColor(), PorterDuff.Mode.SRC_ATOP));
     icon.draw(canvas);
     icon.setColorFilter(null);
   }
@@ -967,11 +967,11 @@ public class TapTargetView extends View {
     }
 
     titleLayout = new StaticLayout(title, titlePaint, textWidth,
-                                                                                        Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
     if (description != null) {
       descriptionLayout = new StaticLayout(description, descriptionPaint, textWidth,
-                                                                                          Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+          Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
     } else {
       descriptionLayout = null;
     }
@@ -1003,9 +1003,9 @@ public class TapTargetView extends View {
     drawingBounds.left = (int) Math.max(0, outerCircleCenter[0] - outerCircleRadius);
     drawingBounds.top = (int) Math.min(0, outerCircleCenter[1] - outerCircleRadius);
     drawingBounds.right = (int) Math.min(getWidth(),
-                                                                                        outerCircleCenter[0] + outerCircleRadius + CIRCLE_PADDING);
+        outerCircleCenter[0] + outerCircleRadius + CIRCLE_PADDING);
     drawingBounds.bottom = (int) Math.min(getHeight(),
-                                                                                        outerCircleCenter[1] + outerCircleRadius + CIRCLE_PADDING);
+        outerCircleCenter[1] + outerCircleRadius + CIRCLE_PADDING);
   }
 
   int getOuterCircleRadius(int centerX, int centerY, Rect textBounds, Rect targetBounds) {
@@ -1084,9 +1084,9 @@ public class TapTargetView extends View {
     final int right = Math.max(textBounds.right, targetBounds.right + targetRadius);
     final int titleHeight = titleLayout == null ? 0 : titleLayout.getHeight();
     final int centerY = onTop ?
-                                                                                        targetBounds.centerY() - topTarget - TARGET_PADDING - totalTextHeight + titleHeight
-                                                                                        :
-                                                                                        targetBounds.centerY() + topTarget + TARGET_PADDING + titleHeight;
+        targetBounds.centerY() - topTarget - TARGET_PADDING - totalTextHeight + titleHeight
+        :
+        targetBounds.centerY() + topTarget + TARGET_PADDING + titleHeight;
 
     return new int[]{(left + right) / 2, centerY};
   }

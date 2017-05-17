@@ -42,7 +42,7 @@ class ViewTapTarget extends TapTarget {
         final int[] location = new int[2];
         view.getLocationOnScreen(location);
         bounds = new Rect(location[0], location[1],
-                                                                                            location[0] + view.getWidth(), location[1] + view.getHeight());
+            location[0] + view.getWidth(), location[1] + view.getHeight());
 
         if (shape == SHAPE.RECTANGLE) {
           targetRectWidth = view.getWidth();

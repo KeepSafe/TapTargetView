@@ -31,7 +31,7 @@ class UiUtil {
    **/
   static int dp(Context context, int val) {
     return (int) TypedValue.applyDimension(
-                                                                                        TypedValue.COMPLEX_UNIT_DIP, val, context.getResources().getDisplayMetrics());
+        TypedValue.COMPLEX_UNIT_DIP, val, context.getResources().getDisplayMetrics());
   }
 
   static int fromDp(Context context, int val) {
@@ -44,7 +44,7 @@ class UiUtil {
    **/
   static int sp(Context context, int val) {
     return (int) TypedValue.applyDimension(
-                                                                                        TypedValue.COMPLEX_UNIT_SP, val, context.getResources().getDisplayMetrics());
+        TypedValue.COMPLEX_UNIT_SP, val, context.getResources().getDisplayMetrics());
   }
 
   /**
