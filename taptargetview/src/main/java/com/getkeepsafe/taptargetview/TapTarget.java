@@ -95,7 +95,8 @@ public class TapTarget {
 
   boolean useViewBounds = false;
 
-  /** Return a tap target for the overflow button from the given toolbar
+  /**
+   * Return a tap target for the overflow button from the given toolbar
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
@@ -147,7 +148,7 @@ public class TapTarget {
 
   /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
   public static TapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title,
-                                                          @Nullable CharSequence description) {
+                                                   @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, true, title, description);
   }
 
@@ -171,7 +172,7 @@ public class TapTarget {
 
   /** Return a tap target for the menu item from the given toolbar **/
   public static TapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
-                                             CharSequence title, @Nullable CharSequence description) {
+                                                    CharSequence title, @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, menuItemId, title, description);
   }
 
@@ -312,8 +313,7 @@ public class TapTarget {
 
   /** Specify the typeface for description text **/
   public TapTarget descriptionTypeface(Typeface descriptionTypeface) {
-    if (descriptionTypeface == null)
-      throw new IllegalArgumentException("Cannot use a null typeface");
+    if (descriptionTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
     this.descriptionTypeface = descriptionTypeface;
     return this;
   }
@@ -332,7 +332,8 @@ public class TapTarget {
     return this;
   }
 
-  /** Specify the text size for the title via a dimen resource
+  /**
+   * Specify the text size for the title via a dimen resource
    * <p>
    * Note: If set, this value will take precedence over the specified sp size
    */
@@ -341,7 +342,8 @@ public class TapTarget {
     return this;
   }
 
-  /** Specify the text size for the description via a dimen resource
+  /**
+   * Specify the text size for the description via a dimen resource
    * <p>
    * Note: If set, this value will take precedence over the specified sp size
    */
@@ -350,7 +352,8 @@ public class TapTarget {
     return this;
   }
 
-  /** Specify the color resource to use as a dim effect
+  /**
+   * Specify the color resource to use as a dim effect
    * <p>
    * <b>Note:</b> The given color will have its opacity modified to 30% automatically
    */

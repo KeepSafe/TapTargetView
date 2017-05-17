@@ -43,7 +43,7 @@ public class TapTargetSequence {
 
     /**
      * Called when moving onto the next tap target.
-     * @param lastTarget    The last displayed target
+     * @param lastTarget The last displayed target
      * @param targetClicked Whether the last displayed target was clicked (this will always be true
      *                      unless you have set {@link #continueOnCancel(boolean)} and the user
      *                      clicks outside of the target
