@@ -54,17 +54,6 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/calendar"
-        android:layout_width="220dp"
-        android:layout_height="250dp"
-        android:layout_gravity="center_horizontal">
-
-        <CalendarView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/educated"
         style="@style/TextAppearance.AppCompat.Display1"
