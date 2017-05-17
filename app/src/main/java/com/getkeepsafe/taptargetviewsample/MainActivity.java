@@ -14,6 +14,7 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +45,13 @@ public class MainActivity extends AppCompatActivity {
         final SpannableString sassyDesc = new SpannableString("It allows you to go back, sometimes");
         sassyDesc.setSpan(new StyleSpan(Typeface.ITALIC), sassyDesc.length() - "somtimes".length(), sassyDesc.length(), 0);
 
+        View calendar = findViewById(R.id.calendar);
+
         // We have a sequence of targets, so lets build it!
         final TapTargetSequence sequence = new TapTargetSequence(this)
                 .targets(
+                        TapTarget.forView(calendar,"Calendar","Just a example for the rectangle")
+                            .useRectangle(),
                         // This tap target will target the back button, we just need to pass its containing toolbar
                         TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc).id(1),
                         // Likewise, this tap target will target the search button
