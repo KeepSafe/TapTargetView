@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IdRes;
@@ -94,8 +95,7 @@ public class TapTarget {
 
   boolean useViewBounds = false;
 
-  /**
-   * Return a tap target for the overflow button from the given toolbar
+  /** Return a tap target for the overflow button from the given toolbar
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
@@ -103,18 +103,16 @@ public class TapTarget {
     return forToolbarOverflow(toolbar, title, null);
   }
 
-  /**
-   * Return a tap target for the overflow button from the given toolbar
+  /** Return a tap target for the overflow button from the given toolbar
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
   public static TapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title,
-                                             @Nullable CharSequence description) {
+                                                    @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, false, title, description);
   }
 
-  /**
-   * Return a tap target for the overflow button from the given toolbar
+  /** Return a tap target for the overflow button from the given toolbar
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
@@ -122,102 +120,77 @@ public class TapTarget {
     return forToolbarOverflow(toolbar, title, null);
   }
 
-  /**
-   * Return a tap target for the overflow button from the given toolbar
+  /** Return a tap target for the overflow button from the given toolbar
    * <p>
    * <b>Note:</b> This is currently experimental, use at your own risk
    */
   public static TapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title,
-                                             @Nullable CharSequence description) {
+                                                    @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, false, title, description);
   }
 
-  /**
-   * Return a tap target for the navigation button (back, up, etc) from the given toolbar
-   **/
+  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
   public static TapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title) {
     return forToolbarNavigationIcon(toolbar, title, null);
   }
 
-  /**
-   * Return a tap target for the navigation button (back, up, etc) from the given toolbar
-   **/
+  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
   public static TapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title,
-                                                   @Nullable CharSequence description) {
+                                                          @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, true, title, description);
   }
 
-  /**
-   * Return a tap target for the navigation button (back, up, etc) from the given toolbar
-   **/
+  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
   public static TapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title) {
     return forToolbarNavigationIcon(toolbar, title, null);
   }
 
-  /**
-   * Return a tap target for the navigation button (back, up, etc) from the given toolbar
-   **/
+  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
   public static TapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title,
-                                                   @Nullable CharSequence description) {
+                                                          @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, true, title, description);
   }
 
-  /**
-   * Return a tap target for the menu item from the given toolbar
-   **/
+  /** Return a tap target for the menu item from the given toolbar **/
   public static TapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
                                              CharSequence title) {
     return forToolbarMenuItem(toolbar, menuItemId, title, null);
   }
 
-  /**
-   * Return a tap target for the menu item from the given toolbar
-   **/
+  /** Return a tap target for the menu item from the given toolbar **/
   public static TapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
                                              CharSequence title, @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, menuItemId, title, description);
   }
 
-  /**
-   * Return a tap target for the menu item from the given toolbar
-   **/
+  /** Return a tap target for the menu item from the given toolbar **/
   public static TapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
                                              CharSequence title) {
     return forToolbarMenuItem(toolbar, menuItemId, title, null);
   }
 
-  /**
-   * Return a tap target for the menu item from the given toolbar
-   **/
+  /** Return a tap target for the menu item from the given toolbar **/
   public static TapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
                                              CharSequence title, @Nullable CharSequence description) {
     return new ToolbarTapTarget(toolbar, menuItemId, title, description);
   }
 
-  /**
-   * Return a tap target for the specified view
-   **/
+  /** Return a tap target for the specified view **/
   public static TapTarget forView(View view, CharSequence title) {
     return forView(view, title, null);
   }
 
-  /**
-   * Return a tap target for the specified view
-   **/
+  /** Return a tap target for the specified view **/
   public static TapTarget forView(View view, CharSequence title, @Nullable CharSequence description) {
     return new ViewTapTarget(view, title, description);
   }
 
-  /**
-   * Return a tap target for the specified bounds
-   **/
+  /** Return a tap target for the specified bounds **/
   public static TapTarget forBounds(Rect bounds, CharSequence title) {
     return forBounds(bounds, title, null);
   }
 
-  /**
-   * Return a tap target for the specified bounds
-   **/
+  /** Return a tap target for the specified bounds **/
   public static TapTarget forBounds(Rect bounds, CharSequence title, @Nullable CharSequence description) {
     return new TapTarget(bounds, title, description);
   }
@@ -240,26 +213,26 @@ public class TapTarget {
     this.description = description;
   }
 
-  /**
-   * Specify whether the target should be transparent
-   **/
+  /** Specify whether the target should be transparent **/
   public TapTarget transparentTarget(boolean transparent) {
     this.transparentTarget = transparent;
     return this;
   }
 
-  /**
-   * Specify the color resource for the outer circle
-   **/
+  /** Specify the color resource for the outer circle **/
   public TapTarget outerCircleColor(@ColorRes int color) {
     this.outerCircleColorRes = color;
     return this;
   }
 
+  /** Specify the color value for the outer circle **/
+  // TODO(Hilal): In v2, this API should be cleaned up / torched
+  public TapTarget outerCircleColorInt(@ColorInt int color) {
+    this.outerCircleColor = color;
+    return this;
+  }
 
-  /**
-   * Specify the alpha value [0.0, 1.0] of the outer circle
-   **/
+  /** Specify the alpha value [0.0, 1.0] of the outer circle **/
   public TapTarget outerCircleAlpha(float alpha) {
     if (alpha < 0.0f || alpha > 1.0f) {
       throw new IllegalArgumentException("Given an invalid alpha value: " + alpha);
@@ -268,42 +241,61 @@ public class TapTarget {
     return this;
   }
 
-  /**
-   * Specify the color resource for the target circle
-   **/
+  /** Specify the color resource for the target circle **/
   public TapTarget targetCircleColor(@ColorRes int color) {
     this.targetCircleColorRes = color;
     return this;
   }
 
-  /**
-   * Specify the color resource for all text
-   **/
+  /** Specify the color value for the target circle **/
+  // TODO(Hilal): In v2, this API should be cleaned up / torched
+  public TapTarget targetCircleColorInt(@ColorInt int color) {
+    this.targetCircleColor = color;
+    return this;
+  }
+
+  /** Specify the color resource for all text **/
   public TapTarget textColor(@ColorRes int color) {
     this.titleTextColorRes = color;
     this.descriptionTextColorRes = color;
     return this;
   }
 
-  /**
-   * Specify the color resource for the title text
-   **/
+  /** Specify the color value for all text **/
+  // TODO(Hilal): In v2, this API should be cleaned up / torched
+  public TapTarget textColorInt(@ColorInt int color) {
+    this.titleTextColor = color;
+    this.descriptionTextColor = color;
+    return this;
+  }
+
+  /** Specify the color resource for the title text **/
   public TapTarget titleTextColor(@ColorRes int color) {
     this.titleTextColorRes = color;
     return this;
   }
 
-  /**
-   * Specify the color resource for the description text
-   **/
+  /** Specify the color value for the title text **/
+  // TODO(Hilal): In v2, this API should be cleaned up / torched
+  public TapTarget titleTextColorInt(@ColorInt int color) {
+    this.titleTextColor = color;
+    return this;
+  }
+
+  /** Specify the color resource for the description text **/
   public TapTarget descriptionTextColor(@ColorRes int color) {
     this.descriptionTextColorRes = color;
     return this;
   }
 
-  /**
-   * Specify the typeface for all text
-   **/
+  /** Specify the color value for the description text **/
+  // TODO(Hilal): In v2, this API should be cleaned up / torched
+  public TapTarget descriptionTextColorInt(@ColorInt int color) {
+    this.descriptionTextColor = color;
+    return this;
+  }
+
+  /** Specify the typeface for all text **/
   public TapTarget textTypeface(Typeface typeface) {
     if (typeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
     titleTypeface = typeface;
@@ -311,18 +303,14 @@ public class TapTarget {
     return this;
   }
 
-  /**
-   * Specify the typeface for title text
-   **/
+  /** Specify the typeface for title text **/
   public TapTarget titleTypeface(Typeface titleTypeface) {
     if (titleTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
     this.titleTypeface = titleTypeface;
     return this;
   }
 
-  /**
-   * Specify the typeface for description text
-   **/
+  /** Specify the typeface for description text **/
   public TapTarget descriptionTypeface(Typeface descriptionTypeface) {
     if (descriptionTypeface == null)
       throw new IllegalArgumentException("Cannot use a null typeface");
@@ -330,26 +318,21 @@ public class TapTarget {
     return this;
   }
 
-  /**
-   * Specify the text size for the title in SP
-   **/
+  /** Specify the text size for the title in SP **/
   public TapTarget titleTextSize(int sp) {
     if (sp < 0) throw new IllegalArgumentException("Given negative text size");
     this.titleTextSize = sp;
     return this;
   }
 
-  /**
-   * Specify the text size for the description in SP
-   **/
+  /** Specify the text size for the description in SP **/
   public TapTarget descriptionTextSize(int sp) {
     if (sp < 0) throw new IllegalArgumentException("Given negative text size");
     this.descriptionTextSize = sp;
     return this;
   }
 
-  /**
-   * Specify the text size for the title via a dimen resource
+  /** Specify the text size for the title via a dimen resource
    * <p>
    * Note: If set, this value will take precedence over the specified sp size
    */
@@ -358,8 +341,7 @@ public class TapTarget {
     return this;
   }
 
-  /**
-   * Specify the text size for the description via a dimen resource
+  /** Specify the text size for the description via a dimen resource
    * <p>
    * Note: If set, this value will take precedence over the specified sp size
    */
@@ -368,8 +350,7 @@ public class TapTarget {
     return this;
   }
 
-  /**
-   * Specify the color resource to use as a dim effect
+  /** Specify the color resource to use as a dim effect
    * <p>
    * <b>Note:</b> The given color will have its opacity modified to 30% automatically
    */
@@ -379,43 +360,45 @@ public class TapTarget {
   }
 
   /**
-   * Specify whether or not to draw a drop shadow around the outer circle
-   **/
+   * Specify the color value to use as a dim effect
+   * <p>
+   * <b>Note:</b> The given color will have its opacity modified to 30% automatically
+   */
+  // TODO(Hilal): In v2, this API should be cleaned up / torched
+  public TapTarget dimColorInt(@ColorInt int color) {
+    this.dimColor = color;
+    return this;
+  }
+
+  /** Specify whether or not to draw a drop shadow around the outer circle **/
   public TapTarget drawShadow(boolean draw) {
     this.drawShadow = draw;
     return this;
   }
 
-  /**
-   * Specify whether or not the target should be cancelable
-   **/
+  /** Specify whether or not the target should be cancelable **/
   public TapTarget cancelable(boolean status) {
     this.cancelable = status;
     return this;
   }
 
-  /**
-   * Specify whether to tint the target's icon with the outer circle's color
-   **/
+  /** Specify whether to tint the target's icon with the outer circle's color **/
   public TapTarget tintTarget(boolean tint) {
     this.tintTarget = tint;
     return this;
   }
 
-  /**
-   * Specify the icon that will be drawn in the center of the target bounds
-   **/
+  /** Specify the icon that will be drawn in the center of the target bounds **/
   public TapTarget icon(Drawable icon) {
     return icon(icon, false);
   }
 
   /**
    * Specify the icon that will be drawn in the center of the target bounds
-   *
    * @param hasSetBounds Whether the drawable already has its bounds correctly set. If the
    *                     drawable does not have its bounds set, then the following bounds will
    *                     be applied: <br/>
-   *                     <code>(0, 0, intrinsic-width, intrinsic-height)</code>
+   *                      <code>(0, 0, intrinsic-width, intrinsic-height)</code>
    */
   public TapTarget icon(Drawable icon, boolean hasSetBounds) {
     if (icon == null) throw new IllegalArgumentException("Cannot use null drawable");
@@ -428,17 +411,13 @@ public class TapTarget {
     return this;
   }
 
-  /**
-   * Specify a unique identifier for this target.
-   **/
+  /** Specify a unique identifier for this target. **/
   public TapTarget id(int id) {
     this.id = id;
     return this;
   }
 
-  /**
-   * Specify the target radius in dp.
-   **/
+  /** Specify the target radius in dp. **/
   public TapTarget targetRadius(int targetRadius) {
     this.targetRadius = targetRadius;
     return this;
@@ -478,9 +457,7 @@ public class TapTarget {
     return this;
   }
 
-  /**
-   * Return the id associated with this tap target
-   **/
+  /** Return the id associated with this tap target **/
   public int id() {
     return id;
   }
