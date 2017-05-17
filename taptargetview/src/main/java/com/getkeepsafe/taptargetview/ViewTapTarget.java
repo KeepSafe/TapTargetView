@@ -44,11 +44,16 @@ class ViewTapTarget extends TapTarget {
         bounds = new Rect(location[0], location[1],
             location[0] + view.getWidth(), location[1] + view.getHeight());
 
-        if (shape == SHAPE.RECTANGLE) {
-          targetRectWidth = view.getWidth();
-          targetRectHeight = view.getHeight();
-        } else {
-          targetRadius = (int) (Math.sqrt(view.getWidth() * view.getWidth() + view.getHeight() * view.getHeight())) / 2;
+        if (useViewBounds) {
+          switch (shape) {
+            case RECTANGLE:
+              targetRectWidth = view.getWidth();
+              targetRectHeight = view.getHeight();
+              break;
+            case CIRCLE:
+              targetRadius = (int) (Math.sqrt(view.getWidth() * view.getWidth() + view.getHeight() * view.getHeight())) / 2;
+              break;
+          }
         }
 
         if (icon == null && view.getWidth() > 0 && view.getHeight() > 0) {

@@ -207,37 +207,28 @@ public class TapTargetView extends View {
   }
 
   public static class Listener {
-    /**
-     * Signals that the user has clicked inside of the target
-     **/
+    /** Signals that the user has clicked inside of the target **/
     public void onTargetClick(TapTargetView view) {
       view.dismiss(true);
     }
 
-    /**
-     * Signals that the user has long clicked inside of the target
-     **/
+    /** Signals that the user has long clicked inside of the target **/
     public void onTargetLongClick(TapTargetView view) {
       onTargetClick(view);
     }
 
-    /**
-     * If cancelable, signals that the user has clicked outside of the outer circle
-     **/
+    /** If cancelable, signals that the user has clicked outside of the outer circle **/
     public void onTargetCancel(TapTargetView view) {
       view.dismiss(false);
     }
 
-    /**
-     * Signals that the user clicked on the outer circle portion of the tap target
-     **/
+    /** Signals that the user clicked on the outer circle portion of the tap target **/
     public void onOuterCircleClick(TapTargetView view) {
       // no-op as default
     }
 
     /**
      * Signals that the tap target has been dismissed
-     *
      * @param userInitiated Whether the user caused this action
      */
     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
@@ -264,15 +255,29 @@ public class TapTargetView extends View {
       targetCircleAlpha = (int) Math.min(255.0f, (lerpTime * 1.5f * 255.0f));
 
       if (expanding) {
-        targetCircleRadius = TARGET_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
-        targetRectWidth = TARGET_WIDTH * Math.min(1.0f, lerpTime * 1.5f);
-        targetRectHeight = TARGET_HEIGHT * Math.min(1.0f, lerpTime * 1.5f);
-        targetRectRadius = TARGET_RECT_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
+        switch (shape){
+          case RECTANGLE:
+            targetRectWidth = TARGET_WIDTH * Math.min(1.0f, lerpTime * 1.5f);
+            targetRectHeight = TARGET_HEIGHT * Math.min(1.0f, lerpTime * 1.5f);
+            targetRectRadius = TARGET_RECT_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
+            break;
+          case CIRCLE:
+          default:
+            targetCircleRadius = TARGET_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
+            break;
+        }
       } else {
-        targetCircleRadius = TARGET_RADIUS * lerpTime;
-        targetRectWidth = TARGET_WIDTH * lerpTime;
-        targetRectHeight = TARGET_HEIGHT * lerpTime;
-        targetRectRadius = TARGET_RECT_RADIUS * lerpTime;
+        switch (shape){
+          case RECTANGLE:
+            targetRectWidth = TARGET_WIDTH * lerpTime;
+            targetRectHeight = TARGET_HEIGHT * lerpTime;
+            targetRectRadius = TARGET_RECT_RADIUS * lerpTime;
+            break;
+          case CIRCLE:
+          default:
+            targetCircleRadius = TARGET_RADIUS * lerpTime;
+            break;
+        }
       }
 
       textAlpha = (int) (delayedLerp(lerpTime, 0.7f) * 255);
@@ -406,16 +411,16 @@ public class TapTargetView extends View {
    * This constructor should only be used directly for very specific use cases not covered by
    * the static factory methods.
    *
-   * @param context        The host context
-   * @param parent         The parent that this TapTargetView will become a child of. This parent should
-   *                       allow the largest possible area for this view to utilize
+   * @param context The host context
+   * @param parent The parent that this TapTargetView will become a child of. This parent should
+   *               allow the largest possible area for this view to utilize
    * @param boundingParent Optional. Will be used to calculate boundaries if needed. For example,
    *                       if your view is added to the decor view of your Window, then you want
    *                       to adjust for system ui like the navigation bar or status bar, and so
    *                       you would pass in the content view (which doesn't include system ui)
    *                       here.
-   * @param target         The {@link TapTarget} to target
-   * @param userListener   Optional. The {@link Listener} instance for this view
+   * @param target The {@link TapTarget} to target
+   * @param userListener Optional. The {@link Listener} instance for this view
    */
   public TapTargetView(final Context context,
                        final ViewManager parent,
@@ -736,24 +741,22 @@ public class TapTargetView extends View {
     if (targetCirclePulseAlpha > 0) {
       targetCirclePulsePaint.setAlpha(targetCirclePulseAlpha);
       switch (shape) {
-        case CIRCLE:
-          c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), targetCirclePulseRadius, targetCirclePulsePaint);
-          break;
         case RECTANGLE:
-
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             c.drawRoundRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetRectPulseRadius, targetRectPulseRadius, targetCirclePulsePaint);
           } else {
             c.drawRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetCirclePulsePaint);
           }
           break;
+        case CIRCLE:
+        default:
+          c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), targetCirclePulseRadius, targetCirclePulsePaint);
+          break;
+
       }
     }
 
     switch (shape) {
-      case CIRCLE:
-        c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), targetCircleRadius, targetCirclePaint);
-        break;
       case RECTANGLE:
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           c.drawRoundRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetRectRadius, targetRectRadius, targetCirclePaint);
@@ -761,6 +764,11 @@ public class TapTargetView extends View {
           c.drawRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetCirclePaint);
         }
         break;
+      case CIRCLE:
+      default:
+        c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), targetCircleRadius, targetCirclePaint);
+        break;
+
     }
 
     saveCount = c.save();
@@ -836,7 +844,6 @@ public class TapTargetView extends View {
 
   /**
    * Dismiss this view
-   *
    * @param tappedTarget If the user tapped the target or not
    *                     (results in different dismiss animations)
    */
@@ -850,9 +857,7 @@ public class TapTargetView extends View {
     }
   }
 
-  /**
-   * Specify whether to draw a wireframe around the view, useful for debugging
-   **/
+  /** Specify whether to draw a wireframe around the view, useful for debugging **/
   public void setDrawDebug(boolean status) {
     if (debug != status) {
       debug = status;
@@ -860,9 +865,7 @@ public class TapTargetView extends View {
     }
   }
 
-  /**
-   * Returns whether this view is visible or not
-   **/
+  /** Returns whether this view is visible or not **/
   public boolean isVisible() {
     return !isDismissed && visible;
   }
@@ -914,7 +917,7 @@ public class TapTargetView extends View {
     // Draw positions and dimensions
     debugPaint.setStyle(Paint.Style.FILL);
     final String debugText =
-        "Text bounds: " + textBounds.toShortString() + "\n" +
+            "Text bounds: " + textBounds.toShortString() + "\n" +
             "Target bounds: " + targetBounds.toShortString() + "\n" +
             "Center: " + outerCircleCenter[0] + " " + outerCircleCenter[1] + "\n" +
             "View size: " + getWidth() + " " + getHeight() + "\n" +
@@ -967,11 +970,11 @@ public class TapTargetView extends View {
     }
 
     titleLayout = new StaticLayout(title, titlePaint, textWidth,
-        Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+            Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
     if (description != null) {
       descriptionLayout = new StaticLayout(description, descriptionPaint, textWidth,
-          Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+              Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
     } else {
       descriptionLayout = null;
     }
