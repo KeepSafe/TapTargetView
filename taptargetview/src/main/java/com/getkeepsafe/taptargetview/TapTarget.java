@@ -68,6 +68,7 @@ public class TapTarget {
     private Integer titleTextColor = null;
     private Integer descriptionTextColor = null;
 
+    int targetRectRadius;
     int targetRectWidth = 44;
     int targetRectHeight = 44;
     SHAPE shape = SHAPE.CIRCLE;
@@ -448,6 +449,22 @@ public class TapTarget {
         return this;
     }
 
+    public TapTarget useRectangle(int targetRectWidth, int targetRectHeight){
+        this.targetRectWidth = targetRectWidth;
+        this.targetRectHeight = targetRectHeight;
+        return useRectangle();
+    }
+
+    public TapTarget useRoundedRectangle(int targetRectRadius){
+        this.targetRectRadius = targetRectRadius;
+        return useRectangle();
+    }
+
+    public TapTarget useRoundedRectangle(int targetRectRadius,int targetRectWidth, int targetRectHeight){
+        this.targetRectRadius = targetRectRadius;
+        return useRectangle(targetRectWidth, targetRectHeight);
+    }
+
     public TapTarget useCircle(){
         this.shape = SHAPE.CIRCLE;
         return this;
@@ -458,24 +475,6 @@ public class TapTarget {
         this.targetRadius = targetRadius;
         return this;
     }
-
-    public TapTarget useRectangle(int targetRectWidth, int targetRectHeight){
-        this.shape = SHAPE.RECTANGLE;
-        this.targetRectWidth = targetRectWidth;
-        this.targetRectHeight = targetRectHeight;
-        return this;
-    }
-
-    public TapTarget targetWidth(int targetRectWidth){
-        this.targetRectWidth = targetRectWidth;
-        return this;
-    }
-
-    public TapTarget targetHeight(int targetRectHeight){
-        this.targetRectHeight = targetRectHeight;
-        return this;
-    }
-
 
     /**
      * Return the id associated with this tap target

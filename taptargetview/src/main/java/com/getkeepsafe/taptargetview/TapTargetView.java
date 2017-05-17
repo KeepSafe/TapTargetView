@@ -85,6 +85,8 @@ public class TapTargetView extends View {
     int TARGET_HEIGHT;
     int TARGET_PULSE_WIDTH;
     int TARGET_PULSE_HEIGHT;
+    final int TARGET_RECT_PULSE_RADIUS;
+    final int TARGET_RECT_RADIUS;
 
     @Nullable
     final ViewGroup boundingParent;
@@ -133,11 +135,13 @@ public class TapTargetView extends View {
     int[] outerCircleCenter;
     int outerCircleAlpha;
 
+    float targetRectPulseRadius;
     float targetRectPulseWidth;
     float targetRectPulseHeight;
     float targetCirclePulseRadius;
     int targetCirclePulseAlpha;
 
+    float targetRectRadius;
     float targetRectWidth;
     float targetRectHeight;
     float targetCircleRadius;
@@ -263,10 +267,12 @@ public class TapTargetView extends View {
                 targetCircleRadius = TARGET_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
                 targetRectWidth = TARGET_WIDTH * Math.min(1.0f, lerpTime * 1.5f);
                 targetRectHeight = TARGET_HEIGHT * Math.min(1.0f, lerpTime * 1.5f);
+                targetRectRadius = TARGET_RECT_RADIUS * Math.min(1.0f, lerpTime * 1.5f);
             } else {
                 targetCircleRadius = TARGET_RADIUS * lerpTime;
                 targetRectWidth = TARGET_WIDTH * lerpTime;
                 targetRectHeight = TARGET_HEIGHT * lerpTime;
+                targetRectRadius = TARGET_RECT_RADIUS * lerpTime;
             }
 
             textAlpha = (int) (delayedLerp(lerpTime, 0.7f) * 255);
@@ -315,6 +321,7 @@ public class TapTargetView extends View {
                             targetRectPulseHeight = (1.0f + pulseLerp) * TARGET_HEIGHT;
                             targetRectWidth = TARGET_WIDTH + halfwayLerp(lerpTime) * TARGET_PULSE_WIDTH;
                             targetRectHeight = TARGET_HEIGHT + halfwayLerp(lerpTime) * TARGET_PULSE_HEIGHT;
+                            targetRectRadius = TARGET_RECT_RADIUS + halfwayLerp(lerpTime) * TARGET_RECT_PULSE_RADIUS;
                             break;
                     }
                     targetCirclePulseAlpha = (int) ((1.0f - pulseLerp) * 255);
@@ -369,6 +376,7 @@ public class TapTargetView extends View {
                             targetRectHeight = (1.0f - lerpTime) * TARGET_HEIGHT;
                             targetRectPulseWidth = (1.0f + lerpTime) * TARGET_WIDTH;
                             targetRectPulseHeight = (1.0f + lerpTime) * TARGET_HEIGHT;
+                            targetRectRadius = (1.0f + lerpTime) * TARGET_RECT_RADIUS;
                             break;
                     }
 
@@ -434,10 +442,12 @@ public class TapTargetView extends View {
         SHADOW_DIM = UiUtil.dp(context, 8);
         SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
         TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
+        TARGET_RECT_RADIUS = UiUtil.dp(context, target.targetRectRadius);
         TARGET_WIDTH = UiUtil.dp(context, target.targetRectWidth);
         TARGET_HEIGHT = UiUtil.dp(context, target.targetRectHeight);
         TARGET_PULSE_WIDTH = (int) (0.1f * TARGET_WIDTH);
         TARGET_PULSE_HEIGHT = (int) (0.1f * TARGET_HEIGHT);
+        TARGET_RECT_PULSE_RADIUS = (int) (0.1f * TARGET_RECT_RADIUS);
 
         shape = target.shape;
 
@@ -486,8 +496,8 @@ public class TapTargetView extends View {
 
                         targetBounds.set(target.bounds());
                         if(target.shape == TapTarget.SHAPE.RECTANGLE && target.useViewBounds) {
-                            TARGET_WIDTH = target.targetRectWidth/2;
-                            TARGET_HEIGHT = target.targetRectHeight/2;
+                            TARGET_WIDTH = target.targetRectWidth/2 + TARGET_PADDING;
+                            TARGET_HEIGHT = target.targetRectHeight/2 + TARGET_PADDING;
                             TARGET_PULSE_WIDTH = (int) (0.1f * TARGET_WIDTH);
                             TARGET_PULSE_HEIGHT = (int) (0.1f * TARGET_HEIGHT);
                         }
@@ -724,7 +734,12 @@ public class TapTargetView extends View {
                     c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), targetCirclePulseRadius, targetCirclePulsePaint);
                     break;
                 case RECTANGLE:
-                    c.drawRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetCirclePulsePaint);
+
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                        c.drawRoundRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetRectPulseRadius, targetRectPulseRadius, targetCirclePulsePaint);
+//                    } else {
+                        c.drawRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetCirclePulsePaint);
+//                    }
                     break;
             }
         }
@@ -734,7 +749,11 @@ public class TapTargetView extends View {
                 c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), targetCircleRadius, targetCirclePaint);
                 break;
             case RECTANGLE:
-                c.drawRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetCirclePaint);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                    c.drawRoundRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetRectRadius, targetRectRadius, targetCirclePulsePaint);
+//                } else {
+                    c.drawRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetCirclePaint);
+//                }
                 break;
         }
 

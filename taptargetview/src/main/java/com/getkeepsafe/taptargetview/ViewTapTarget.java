@@ -64,9 +64,13 @@ class ViewTapTarget extends TapTarget {
 
     @Override
     public TapTarget useRectangle(){
-        super.useRectangle();
         useViewBounds = true;
+        return super.useRectangle();
+    }
 
-        return this;
+    @Override
+    public TapTarget useRoundedRectangle(int targetRectRadius){
+        useViewBounds = true;
+        return super.useRoundedRectangle(targetRectRadius);
     }
 }

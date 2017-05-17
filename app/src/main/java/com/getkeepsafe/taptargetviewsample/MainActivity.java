@@ -50,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
         // We have a sequence of targets, so lets build it!
         final TapTargetSequence sequence = new TapTargetSequence(this)
                 .targets(
-                        TapTarget.forView(calendar,"Calendar","Just a example for the rectangle")
-                            .useRectangle(),
+                        TapTarget.forView(calendar, "Calendar", "Just a example for the rectangle")
+                                .useRoundedRectangle(10)
+                                .cancelable(false)
+                                .drawShadow(true)
+                                .tintTarget(false),
                         // This tap target will target the back button, we just need to pass its containing toolbar
                         TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc).id(1),
                         // Likewise, this tap target will target the search button
