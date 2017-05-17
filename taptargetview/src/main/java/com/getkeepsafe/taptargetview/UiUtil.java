@@ -23,8 +23,8 @@ import android.support.annotation.DimenRes;
 import android.util.TypedValue;
 
 class UiUtil {
-    UiUtil() {
-    }
+  UiUtil() {
+  }
 
     /**
      * Returns the given pixel value in dp
