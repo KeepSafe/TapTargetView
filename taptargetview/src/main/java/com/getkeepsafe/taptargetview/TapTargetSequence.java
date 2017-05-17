@@ -38,12 +38,15 @@ public class TapTargetSequence {
   boolean continueOnCancel;
 
   public interface Listener {
-    /** Called when there are no more tap targets to display */
+    /**
+     * Called when there are no more tap targets to display
+     */
     void onSequenceFinish();
 
     /**
      * Called when moving onto the next tap target.
-     * @param lastTarget The last displayed target
+     *
+     * @param lastTarget    The last displayed target
      * @param targetClicked Whether the last displayed target was clicked (this will always be true
      *                      unless you have set {@link #continueOnCancel(boolean)} and the user
      *                      clicks outside of the target
@@ -53,6 +56,7 @@ public class TapTargetSequence {
     /**
      * Called when the user taps outside of the current target, the target is cancelable, and
      * {@link #continueOnCancel(boolean)} is not set.
+     *
      * @param lastTarget The last displayed target
      */
     void onSequenceCanceled(TapTarget lastTarget);
@@ -64,43 +68,57 @@ public class TapTargetSequence {
     this.targets = new LinkedList<>();
   }
 
-  /** Adds the given targets, in order, to the pending queue of {@link TapTarget}s */
+  /**
+   * Adds the given targets, in order, to the pending queue of {@link TapTarget}s
+   */
   public TapTargetSequence targets(List<TapTarget> targets) {
     this.targets.addAll(targets);
     return this;
   }
 
-  /** Adds the given targets, in order, to the pending queue of {@link TapTarget}s */
+  /**
+   * Adds the given targets, in order, to the pending queue of {@link TapTarget}s
+   */
   public TapTargetSequence targets(TapTarget... targets) {
     Collections.addAll(this.targets, targets);
     return this;
   }
 
-  /** Adds the given target to the pending queue of {@link TapTarget}s */
+  /**
+   * Adds the given target to the pending queue of {@link TapTarget}s
+   */
   public TapTargetSequence target(TapTarget target) {
     this.targets.add(target);
     return this;
   }
 
-  /** Whether or not to continue the sequence when a {@link TapTarget} is canceled **/
+  /**
+   * Whether or not to continue the sequence when a {@link TapTarget} is canceled
+   **/
   public TapTargetSequence continueOnCancel(boolean status) {
     this.continueOnCancel = status;
     return this;
   }
 
-  /** Whether or not to consider taps on the outer circle as a cancellation **/
+  /**
+   * Whether or not to consider taps on the outer circle as a cancellation
+   **/
   public TapTargetSequence considerOuterCircleCanceled(boolean status) {
     this.considerOuterCircleCanceled = status;
     return this;
   }
 
-  /** Specify the listener for this sequence **/
+  /**
+   * Specify the listener for this sequence
+   **/
   public TapTargetSequence listener(Listener listener) {
     this.listener = listener;
     return this;
   }
 
-  /** Immediately starts the sequence and displays the first target from the queue **/
+  /**
+   * Immediately starts the sequence and displays the first target from the queue
+   **/
   public void start() {
     if (targets.isEmpty() || started) {
       return;

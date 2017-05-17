@@ -71,8 +71,8 @@ public class TapTargetView extends View {
     private boolean isInteractable = true;
 
     final int TARGET_PADDING;
-    final int TARGET_RADIUS;
-    final int TARGET_PULSE_RADIUS;
+    int TARGET_RADIUS;
+    int TARGET_PULSE_RADIUS;
     final int TEXT_PADDING;
     final int TEXT_SPACING;
     final int TEXT_MAX_WIDTH;
@@ -321,6 +321,7 @@ public class TapTargetView extends View {
                             targetRectPulseHeight = (1.0f + pulseLerp) * TARGET_HEIGHT;
                             targetRectWidth = TARGET_WIDTH + halfwayLerp(lerpTime) * TARGET_PULSE_WIDTH;
                             targetRectHeight = TARGET_HEIGHT + halfwayLerp(lerpTime) * TARGET_PULSE_HEIGHT;
+                            targetRectPulseRadius = (1.0f + pulseLerp) * TARGET_RECT_RADIUS;
                             targetRectRadius = TARGET_RECT_RADIUS + halfwayLerp(lerpTime) * TARGET_RECT_PULSE_RADIUS;
                             break;
                     }
@@ -495,11 +496,16 @@ public class TapTargetView extends View {
                         final int[] offset = new int[2];
 
                         targetBounds.set(target.bounds());
-                        if(target.shape == TapTarget.SHAPE.RECTANGLE && target.useViewBounds) {
-                            TARGET_WIDTH = target.targetRectWidth/2 + TARGET_PADDING;
-                            TARGET_HEIGHT = target.targetRectHeight/2 + TARGET_PADDING;
-                            TARGET_PULSE_WIDTH = (int) (0.1f * TARGET_WIDTH);
-                            TARGET_PULSE_HEIGHT = (int) (0.1f * TARGET_HEIGHT);
+                        if (target.useViewBounds) {
+                            if(target.shape == TapTarget.SHAPE.RECTANGLE) {
+                                TARGET_WIDTH = (target.targetRectWidth + TARGET_PADDING) / 2;
+                                TARGET_HEIGHT = (target.targetRectHeight + TARGET_PADDING) / 2;
+                                TARGET_PULSE_WIDTH = (int) (0.1f * TARGET_WIDTH);
+                                TARGET_PULSE_HEIGHT = (int) (0.1f * TARGET_HEIGHT);
+                            } else if (target.shape == TapTarget.SHAPE.CIRCLE) {
+                                TARGET_RADIUS = target.targetRadius;
+                                TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
+                            }
                         }
 
                         getLocationOnScreen(offset);
@@ -543,9 +549,9 @@ public class TapTargetView extends View {
                 if (listener == null || outerCircleCenter == null || !isInteractable) return;
 
                 final boolean clickedInTarget;
-                switch (shape){
+                switch (shape) {
                     case RECTANGLE:
-                        Rect clickArea = new Rect(targetBounds.centerX()-TARGET_WIDTH, targetBounds.centerY()-TARGET_HEIGHT, targetBounds.centerX()+TARGET_WIDTH, targetBounds.centerY()+TARGET_HEIGHT);
+                        Rect clickArea = new Rect(targetBounds.centerX() - TARGET_WIDTH, targetBounds.centerY() - TARGET_HEIGHT, targetBounds.centerX() + TARGET_WIDTH, targetBounds.centerY() + TARGET_HEIGHT);
                         clickedInTarget = clickArea.contains((int) lastTouchX, (int) lastTouchY);
                         break;
                     case CIRCLE:
@@ -735,11 +741,11 @@ public class TapTargetView extends View {
                     break;
                 case RECTANGLE:
 
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                        c.drawRoundRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetRectPulseRadius, targetRectPulseRadius, targetCirclePulsePaint);
-//                    } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        c.drawRoundRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetRectPulseRadius, targetRectPulseRadius, targetCirclePulsePaint);
+                    } else {
                         c.drawRect(x - targetRectPulseWidth, y - targetRectPulseHeight, x + targetRectPulseWidth, y + targetRectPulseHeight, targetCirclePulsePaint);
-//                    }
+                    }
                     break;
             }
         }
@@ -749,11 +755,11 @@ public class TapTargetView extends View {
                 c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), targetCircleRadius, targetCirclePaint);
                 break;
             case RECTANGLE:
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                    c.drawRoundRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetRectRadius, targetRectRadius, targetCirclePulsePaint);
-//                } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    c.drawRoundRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetRectRadius, targetRectRadius, targetCirclePaint);
+                } else {
                     c.drawRect(x - targetRectWidth, y - targetRectHeight, x + targetRectWidth, y + targetRectHeight, targetCirclePaint);
-//                }
+                }
                 break;
         }
 
@@ -895,9 +901,9 @@ public class TapTargetView extends View {
         c.drawRect(targetBounds, debugPaint);
         c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], 10, debugPaint);
         c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], calculatedOuterCircleRadius - CIRCLE_PADDING, debugPaint);
-        switch (shape){
+        switch (shape) {
             case RECTANGLE:
-                c.drawRect(targetBounds.centerX()-TARGET_WIDTH-TARGET_PADDING, targetBounds.centerY()-TARGET_HEIGHT-TARGET_PADDING, targetBounds.centerX()+TARGET_WIDTH+TARGET_PADDING, targetBounds.centerY()+TARGET_HEIGHT+TARGET_PADDING, debugPaint);
+                c.drawRect(targetBounds.centerX() - TARGET_WIDTH - TARGET_PADDING, targetBounds.centerY() - TARGET_HEIGHT - TARGET_PADDING, targetBounds.centerX() + TARGET_WIDTH + TARGET_PADDING, targetBounds.centerY() + TARGET_HEIGHT + TARGET_PADDING, debugPaint);
                 break;
             case CIRCLE:
             default:

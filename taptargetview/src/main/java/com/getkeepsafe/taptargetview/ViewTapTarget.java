@@ -44,9 +44,11 @@ class ViewTapTarget extends TapTarget {
                 bounds = new Rect(location[0], location[1],
                         location[0] + view.getWidth(), location[1] + view.getHeight());
 
-                if(shape == SHAPE.RECTANGLE) {
+                if (shape == SHAPE.RECTANGLE) {
                     targetRectWidth = view.getWidth();
                     targetRectHeight = view.getHeight();
+                } else {
+                    targetRadius = (int) (Math.sqrt(view.getWidth() * view.getWidth() + view.getHeight() * view.getHeight()))/2;
                 }
 
                 if (icon == null && view.getWidth() > 0 && view.getHeight() > 0) {
@@ -60,17 +62,5 @@ class ViewTapTarget extends TapTarget {
                 runnable.run();
             }
         });
-    }
-
-    @Override
-    public TapTarget useRectangle(){
-        useViewBounds = true;
-        return super.useRectangle();
-    }
-
-    @Override
-    public TapTarget useRoundedRectangle(int targetRectRadius){
-        useViewBounds = true;
-        return super.useRoundedRectangle(targetRectRadius);
     }
 }

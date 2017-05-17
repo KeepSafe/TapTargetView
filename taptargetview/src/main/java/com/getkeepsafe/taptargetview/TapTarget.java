@@ -444,33 +444,35 @@ public class TapTarget {
         return this;
     }
 
-    public TapTarget useRectangle(){
+    public TapTarget useRectangle(boolean useViewBounds) {
+        this.useViewBounds = useViewBounds;
         this.shape = SHAPE.RECTANGLE;
         return this;
     }
 
-    public TapTarget useRectangle(int targetRectWidth, int targetRectHeight){
+    public TapTarget useRectangle(int targetRectWidth, int targetRectHeight) {
         this.targetRectWidth = targetRectWidth;
         this.targetRectHeight = targetRectHeight;
-        return useRectangle();
+        return useRectangle(false);
     }
 
-    public TapTarget useRoundedRectangle(int targetRectRadius){
+    public TapTarget useRoundedRectangle(int targetRectRadius, boolean useViewBounds) {
         this.targetRectRadius = targetRectRadius;
-        return useRectangle();
+        return useRectangle(useViewBounds);
     }
 
-    public TapTarget useRoundedRectangle(int targetRectRadius,int targetRectWidth, int targetRectHeight){
+    public TapTarget useRoundedRectangle(int targetRectRadius, int targetRectWidth, int targetRectHeight) {
         this.targetRectRadius = targetRectRadius;
         return useRectangle(targetRectWidth, targetRectHeight);
     }
 
-    public TapTarget useCircle(){
+    public TapTarget useCircle(boolean useViewBounds) {
+        this.useViewBounds = useViewBounds;
         this.shape = SHAPE.CIRCLE;
         return this;
     }
 
-    public TapTarget useCircle(int targetRadius){
+    public TapTarget useCircle(int targetRadius) {
         this.shape = SHAPE.CIRCLE;
         this.targetRadius = targetRadius;
         return this;
