@@ -40,7 +40,7 @@ class ViewTapTarget extends TapTarget {
       public void run() {
         // Cache bounds
         final int[] location = new int[2];
-        view.getLocationOnScreen(location);
+        view.getLocationInWindow(location);
         bounds = new Rect(location[0], location[1],
             location[0] + view.getWidth(), location[1] + view.getHeight());
 
