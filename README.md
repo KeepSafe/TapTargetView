@@ -66,6 +66,8 @@ You may also choose to target your own custom `Rect` with `TapTarget.forBounds(R
 
 Additionally, each color can be specified via a `@ColorRes` or a `@ColorInt`. Functions that have the suffix `Int` take a `@ColorInt`.
 
+*Tip: When targeting a Toolbar item, be careful with Proguard and ensure you're keeping certain fields. See [#180](https://github.com/KeepSafe/TapTargetView/issues/180)*
+
 ### Sequences
 
 You can easily create a sequence of tap targets with `TapTargetSequence`:
