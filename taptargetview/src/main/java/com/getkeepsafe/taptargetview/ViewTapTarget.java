@@ -44,6 +44,18 @@ class ViewTapTarget extends TapTarget {
         bounds = new Rect(location[0], location[1],
             location[0] + view.getWidth(), location[1] + view.getHeight());
 
+        if (useViewBounds) {
+          switch (shape) {
+            case RECTANGLE:
+              targetRectWidth = view.getWidth();
+              targetRectHeight = view.getHeight();
+              break;
+            case CIRCLE:
+              targetRadius = (int) (Math.sqrt(view.getWidth() * view.getWidth() + view.getHeight() * view.getHeight())) / 2;
+              break;
+          }
+        }
+
         if (icon == null && view.getWidth() > 0 && view.getHeight() > 0) {
           final Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
           final Canvas canvas = new Canvas(viewBitmap);

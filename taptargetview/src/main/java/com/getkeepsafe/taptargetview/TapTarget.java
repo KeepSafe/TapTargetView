@@ -69,6 +69,16 @@ public class TapTarget {
   private Integer titleTextColor = null;
   private Integer descriptionTextColor = null;
 
+  int targetRectRadius;
+  int targetRectWidth = 44;
+  int targetRectHeight = 44;
+  SHAPE shape = SHAPE.CIRCLE;
+
+  enum SHAPE {
+    CIRCLE,
+    RECTANGLE
+  }
+
   @DimenRes
   private int titleTextDimen = -1;
   @DimenRes
@@ -76,12 +86,14 @@ public class TapTarget {
 
   private int titleTextSize = 20;
   private int descriptionTextSize = 18;
-  int id = -1;
+  private int id = -1;
 
   boolean drawShadow = false;
   boolean cancelable = true;
   boolean tintTarget = true;
   boolean transparentTarget = false;
+
+  boolean useViewBounds = false;
 
   /**
    * Return a tap target for the overflow button from the given toolbar
@@ -414,6 +426,39 @@ public class TapTarget {
     return this;
   }
 
+  public TapTarget useRectangle(boolean useViewBounds) {
+    this.useViewBounds = useViewBounds;
+    this.shape = SHAPE.RECTANGLE;
+    return this;
+  }
+
+  public TapTarget useRectangle(int targetRectWidth, int targetRectHeight) {
+    this.targetRectWidth = targetRectWidth;
+    this.targetRectHeight = targetRectHeight;
+    return useRectangle(false);
+  }
+
+  public TapTarget useRoundedRectangle(int targetRectRadius, boolean useViewBounds) {
+    this.targetRectRadius = targetRectRadius;
+    return useRectangle(useViewBounds);
+  }
+
+  public TapTarget useRoundedRectangle(int targetRectRadius, int targetRectWidth, int targetRectHeight) {
+    this.targetRectRadius = targetRectRadius;
+    return useRectangle(targetRectWidth, targetRectHeight);
+  }
+
+  public TapTarget useCircle(boolean useViewBounds) {
+    this.useViewBounds = useViewBounds;
+    this.shape = SHAPE.CIRCLE;
+    return this;
+  }
+
+  public TapTarget useCircle(int targetRadius) {
+    this.shape = SHAPE.CIRCLE;
+    this.targetRadius = targetRadius;
+    return this;
+  }
 
   /** Return the id associated with this tap target **/
   public int id() {
