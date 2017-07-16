@@ -106,6 +106,10 @@ A sequence is started via a call to `start()` on the `TapTargetSequence` instanc
 
 For more examples of usage, please look at the included sample app.
 
+## Xamarin
+
+Thanks to @btripp, you may now use this library via a Xamarin Binding located [here](https://www.nuget.org/packages/Xamarin.TapTargetView).
+
 ## License
 
     Copyright 2016 Keepsafe Software Inc.
