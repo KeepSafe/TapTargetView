@@ -102,7 +102,7 @@ class ToolbarTapTarget extends ViewTapTarget {
       }
     }
 
-    throw new IllegalStateException("Could not find navigation view for Toolbar!", e);
+    throw new IllegalStateException("Could not find navigation view for Toolbar!");
   }
 
   private static View findOverflowView(Object instance) {
