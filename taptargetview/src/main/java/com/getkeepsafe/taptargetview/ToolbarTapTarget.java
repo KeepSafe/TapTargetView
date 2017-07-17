@@ -87,29 +87,22 @@ class ToolbarTapTarget extends ViewTapTarget {
 
     // If that doesn't work, we try to grab it via matching its drawable
     final Drawable navigationIcon = toolbar.getNavigationIcon();
-    if (navigationIcon != null) {
-      final int size = toolbar.getChildCount();
-      for (int i = 0; i < size; ++i) {
-        final View child = toolbar.getChildAt(i);
-        if (child instanceof ImageButton) {
-          final Drawable childDrawable = ((ImageButton) child).getDrawable();
-          if (childDrawable == navigationIcon) {
-            return child;
-          }
+    if (navigationIcon == null) {
+      throw new IllegalStateException("Toolbar does not have a navigation view set!");
+    }
+
+    final int size = toolbar.getChildCount();
+    for (int i = 0; i < size; ++i) {
+      final View child = toolbar.getChildAt(i);
+      if (child instanceof ImageButton) {
+        final Drawable childDrawable = ((ImageButton) child).getDrawable();
+        if (childDrawable == navigationIcon) {
+          return child;
         }
       }
     }
 
-    // If that doesn't work, we fall-back to our last resort solution: Reflection
-    // Both the appcompat and standard Toolbar implementations utilize a variable
-    // "mNavButtonView" to represent the navigation icon
-    try {
-      return (View) ReflectUtil.getPrivateField(toolbar.internalToolbar(), "mNavButtonView");
-    } catch (NoSuchFieldException e) {
-      throw new IllegalStateException("Could not find navigation view for Toolbar!", e);
-    } catch (IllegalAccessException e) {
-      throw new IllegalStateException("Unable to access navigation view for Toolbar!", e);
-    }
+    throw new IllegalStateException("Could not find navigation view for Toolbar!", e);
   }
 
   private static View findOverflowView(Object instance) {
