@@ -45,9 +45,9 @@ class ViewTapTarget extends TapTarget {
             location[0] + view.getWidth(), location[1] + view.getHeight());
 
         if (icon == null && view.getWidth() > 0 && view.getHeight() > 0) {
-          final Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-          final Canvas canvas = new Canvas(viewBitmap);
-          view.draw(canvas);
+            final Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            final Canvas canvas = new Canvas(viewBitmap);
+            view.draw(canvas);
           icon = new BitmapDrawable(view.getContext().getResources(), viewBitmap);
           icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
         }
