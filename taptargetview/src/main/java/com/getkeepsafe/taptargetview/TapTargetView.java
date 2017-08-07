@@ -194,37 +194,28 @@ public class TapTargetView extends View {
   }
 
   public static class Listener {
-    /**
-     * Signals that the user has clicked inside of the target
-     **/
+    /** Signals that the user has clicked inside of the targe **/
     public void onTargetClick(TapTargetView view) {
       view.dismiss(true);
     }
 
-    /**
-     * Signals that the user has long clicked inside of the target
-     **/
+    /** Signals that the user has long clicked inside of the target **/
     public void onTargetLongClick(TapTargetView view) {
       onTargetClick(view);
     }
 
-    /**
-     * If cancelable, signals that the user has clicked outside of the outer circle
-     **/
+    /** If cancelable, signals that the user has clicked outside of the outer circle **/
     public void onTargetCancel(TapTargetView view) {
       view.dismiss(false);
     }
 
-    /**
-     * Signals that the user clicked on the outer circle portion of the tap target
-     **/
+    /** Signals that the user clicked on the outer circle portion of the tap target **/
     public void onOuterCircleClick(TapTargetView view) {
       // no-op as default
     }
 
     /**
      * Signals that the tap target has been dismissed
-     *
      * @param userInitiated Whether the user caused this action
      */
     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
@@ -364,12 +355,12 @@ public class TapTargetView extends View {
    *
    * @param context The host context
    * @param parent The parent that this TapTargetView will become a child of. This parent should
-   * allow the largest possible area for this view to utilize
+   *               allow the largest possible area for this view to utilize
    * @param boundingParent Optional. Will be used to calculate boundaries if needed. For example,
-   * if your view is added to the decor view of your Window, then you want
-   * to adjust for system ui like the navigation bar or status bar, and so
-   * you would pass in the content view (which doesn't include system ui)
-   * here.
+   *                       if your view is added to the decor view of your Window, then you want
+   *                       to adjust for system ui like the navigation bar or status bar, and so
+   *                       you would pass in the content view (which doesn't include system ui)
+   *                       here.
    * @param target The {@link TapTarget} to target
    * @param userListener Optional. The {@link Listener} instance for this view
    */
@@ -738,9 +729,8 @@ public class TapTargetView extends View {
 
   /**
    * Dismiss this view
-   *
    * @param tappedTarget If the user tapped the target or not
-   * (results in different dismiss animations)
+   *                     (results in different dismiss animations)
    */
   public void dismiss(boolean tappedTarget) {
     pulseAnimation.cancel();
@@ -752,9 +742,7 @@ public class TapTargetView extends View {
     }
   }
 
-  /**
-   * Specify whether to draw a wireframe around the view, useful for debugging
-   **/
+  /** Specify whether to draw a wireframe around the view, useful for debugging **/
   public void setDrawDebug(boolean status) {
     if (debug != status) {
       debug = status;
@@ -762,9 +750,7 @@ public class TapTargetView extends View {
     }
   }
 
-  /**
-   * Returns whether this view is visible or not
-   **/
+  /** Returns whether this view is visible or not **/
   public boolean isVisible() {
     return !isDismissed && visible;
   }
@@ -808,7 +794,7 @@ public class TapTargetView extends View {
     // Draw positions and dimensions
     debugPaint.setStyle(Paint.Style.FILL);
     final String debugText =
-        "Text bounds: " + textBounds.toShortString() + "\n" +
+            "Text bounds: " + textBounds.toShortString() + "\n" +
             "Target bounds: " + targetBounds.toShortString() + "\n" +
             "Center: " + outerCircleCenter[0] + " " + outerCircleCenter[1] + "\n" +
             "View size: " + getWidth() + " " + getHeight() + "\n" +
