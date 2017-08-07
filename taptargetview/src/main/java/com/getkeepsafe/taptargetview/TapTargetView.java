@@ -764,8 +764,8 @@ public class TapTargetView extends View {
     final int numJitters = 7;
     for (int i = numJitters - 1; i > 0; --i) {
       outerCircleShadowPaint.setAlpha((int) ((i / (float) numJitters) * baseAlpha));
-      c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM,
-          outerCircleRadius + (numJitters - i) * SHADOW_JITTER_DIM, outerCircleShadowPaint);
+      c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM ,
+          outerCircleRadius + (numJitters - i) * SHADOW_JITTER_DIM , outerCircleShadowPaint);
     }
   }
 
