@@ -194,7 +194,7 @@ public class TapTargetView extends View {
   }
 
   public static class Listener {
-    /** Signals that the user has clicked inside of the targe **/
+    /** Signals that the user has clicked inside of the target **/
     public void onTargetClick(TapTargetView view) {
       view.dismiss(true);
     }
@@ -847,11 +847,11 @@ public class TapTargetView extends View {
     }
 
     titleLayout = new StaticLayout(title, titlePaint, textWidth,
-        Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+            Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
     if (description != null) {
       descriptionLayout = new StaticLayout(description, descriptionPaint, textWidth,
-          Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+              Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
     } else {
       descriptionLayout = null;
     }
@@ -937,7 +937,7 @@ public class TapTargetView extends View {
         :
         targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING + titleHeight;
 
-    return new int[]{(left + right) / 2, centerY};
+    return new int[] { (left + right) / 2, centerY };
   }
 
   int getTotalTextHeight() {
