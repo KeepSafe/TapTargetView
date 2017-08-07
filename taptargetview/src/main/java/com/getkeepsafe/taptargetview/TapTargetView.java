@@ -362,16 +362,16 @@ public class TapTargetView extends View {
    * This constructor should only be used directly for very specific use cases not covered by
    * the static factory methods.
    *
-   * @param context        The host context
-   * @param parent         The parent that this TapTargetView will become a child of. This parent should
-   *                       allow the largest possible area for this view to utilize
+   * @param context The host context
+   * @param parent The parent that this TapTargetView will become a child of. This parent should
+   * allow the largest possible area for this view to utilize
    * @param boundingParent Optional. Will be used to calculate boundaries if needed. For example,
-   *                       if your view is added to the decor view of your Window, then you want
-   *                       to adjust for system ui like the navigation bar or status bar, and so
-   *                       you would pass in the content view (which doesn't include system ui)
-   *                       here.
-   * @param target         The {@link TapTarget} to target
-   * @param userListener   Optional. The {@link Listener} instance for this view
+   * if your view is added to the decor view of your Window, then you want
+   * to adjust for system ui like the navigation bar or status bar, and so
+   * you would pass in the content view (which doesn't include system ui)
+   * here.
+   * @param target The {@link TapTarget} to target
+   * @param userListener Optional. The {@link Listener} instance for this view
    */
   public TapTargetView(final Context context,
                        final ViewManager parent,
@@ -740,7 +740,7 @@ public class TapTargetView extends View {
    * Dismiss this view
    *
    * @param tappedTarget If the user tapped the target or not
-   *                     (results in different dismiss animations)
+   * (results in different dismiss animations)
    */
   public void dismiss(boolean tappedTarget) {
     pulseAnimation.cancel();
