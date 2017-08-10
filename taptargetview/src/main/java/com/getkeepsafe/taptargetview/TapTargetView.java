@@ -467,14 +467,9 @@ public class TapTargetView extends View {
   }
 
   @Override
-  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    updateTextLayouts();
-  }
-
-  @Override
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
+    updateTextLayouts();
     target.onReady(new Runnable() {
       @Override
       public void run() {
