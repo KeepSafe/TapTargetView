@@ -16,6 +16,7 @@
 package com.getkeepsafe.taptargetview;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
@@ -31,7 +32,8 @@ import java.util.Queue;
  * Internally, a FIFO queue is held to dictate which {@link TapTarget} will be shown.
  */
 public class TapTargetSequence {
-  private final Activity activity;
+  private final @Nullable Activity activity;
+  private final @Nullable Dialog dialog;
   private final Queue<TapTarget> targets;
   private boolean active;
 
@@ -66,6 +68,14 @@ public class TapTargetSequence {
   public TapTargetSequence(Activity activity) {
     if (activity == null) throw new IllegalArgumentException("Activity is null");
     this.activity = activity;
+    this.dialog = null;
+    this.targets = new LinkedList<>();
+  }
+
+  public TapTargetSequence(Dialog dialog) {
+    if (dialog == null) throw new IllegalArgumentException("Given null Dialog");
+    this.dialog = dialog;
+    this.activity = null;
     this.targets = new LinkedList<>();
   }
 
@@ -141,7 +151,12 @@ public class TapTargetSequence {
 
   void showNext() {
     try {
-      currentView = TapTargetView.showFor(activity, targets.remove(), tapTargetListener);
+      TapTarget tapTarget = targets.remove();
+      if (activity != null) {
+        currentView = TapTargetView.showFor(activity, tapTarget, tapTargetListener);
+      } else {
+        currentView = TapTargetView.showFor(dialog, tapTarget, tapTargetListener);
+      }
     } catch (NoSuchElementException e) {
       // No more targets
       if (listener != null) {
