@@ -82,6 +82,7 @@ public class TapTarget {
   boolean cancelable = true;
   boolean tintTarget = true;
   boolean transparentTarget = false;
+  boolean keyPressSupport = false;
 
   /**
    * Return a tap target for the overflow button from the given toolbar
@@ -370,6 +371,12 @@ public class TapTarget {
   /** Specify whether or not the target should be cancelable **/
   public TapTarget cancelable(boolean status) {
     this.cancelable = status;
+    return this;
+  }
+
+  /** Specify whether or not the target must manage to key press action **/
+  public TapTarget keyPressSupport(boolean support) {
+    this.keyPressSupport = support;
     return this;
   }
 
