@@ -108,6 +108,7 @@ public class TapTargetView extends View {
   boolean shouldDrawShadow;
   boolean cancelable;
   boolean visible;
+  boolean keyPressSupport;
 
   // Debug related variables
   @Nullable
@@ -495,6 +496,23 @@ public class TapTargetView extends View {
       }
     });
 
+    setOnKeyListener(new OnKeyListener() {
+      @Override
+      public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyPressSupport) {
+          if (KeyEvent.KEYCODE_ENTER == keyCode || KeyEvent.KEYCODE_DPAD_CENTER == event.getKeyCode()) {
+            if (KeyEvent.ACTION_UP == event.getAction()) {
+              if (listener != null && outerCircleCenter != null && isInteractable) {
+                listener.onTargetClick(TapTargetView.this);
+              }
+            }
+            return true;
+          }
+        }
+        return false;
+      }
+    });
+
     setOnLongClickListener(new OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
@@ -514,6 +532,7 @@ public class TapTargetView extends View {
     shouldTintTarget = target.tintTarget;
     shouldDrawShadow = target.drawShadow;
     cancelable = target.cancelable;
+    keyPressSupport = target.keyPressSupport;
 
     // We can't clip out portions of a view outline, so if the user specified a transparent
     // target, we need to fallback to drawing a jittered shadow approximation
