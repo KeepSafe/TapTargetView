@@ -82,8 +82,7 @@ public class TapTarget {
   boolean cancelable = true;
   boolean tintTarget = true;
   boolean transparentTarget = false;
-  // This variable is used for configuring alpha of description text.
-  float descriptionTextAlpha = 0;
+  float descriptionTextAlpha = 0.54f;
 
   /**
    * Return a tap target for the overflow button from the given toolbar
@@ -332,6 +331,15 @@ public class TapTarget {
     return this;
   }
 
+  /** Specify the alpha value [0.0, 1.0] of the description text **/
+  public TapTarget descriptionTextAlpha(float descriptionTextAlpha) {
+    if (descriptionTextAlpha < 0 || descriptionTextAlpha > 1f) {
+      throw new IllegalArgumentException("Given an invalid alpha value: " + descriptionTextAlpha);
+    }
+    this.descriptionTextAlpha = descriptionTextAlpha;
+    return this;
+  }
+
   /**
    * Specify the text size for the description via a dimen resource
    * <p>
@@ -413,18 +421,6 @@ public class TapTarget {
   /** Specify the target radius in dp. **/
   public TapTarget targetRadius(int targetRadius) {
     this.targetRadius = targetRadius;
-    return this;
-  }
-
-  /**
-  * @param descriptionTextAlpha is used to define alpha of description text, should be [0..255].
-  * @return TapTarget object with defined alpha for description text.
-  */
-  public TapTarget descriptionTextAlpha(float descriptionTextAlpha) {
-    if (descriptionTextAlpha < 0 || descriptionTextAlpha > 255) {
-      throw new IllegalArgumentException("Alpha is out of allowed bounds");
-    }
-    this.descriptionTextAlpha = descriptionTextAlpha;
     return this;
   }
 
