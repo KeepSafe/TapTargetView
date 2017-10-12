@@ -348,7 +348,6 @@ public class TapTargetView extends View {
   private ValueAnimator[] animators = new ValueAnimator[]
       {expandAnimation, pulseAnimation, dismissConfirmAnimation, dismissAnimation};
 
-  private final ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
 
   /**
    * This constructor should only be used directly for very specific use cases not covered by
@@ -426,49 +425,6 @@ public class TapTargetView extends View {
 
     applyTargetOptions(context);
 
-    globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-      @Override
-      public void onGlobalLayout() {
-        updateTextLayouts();
-        target.onReady(new Runnable() {
-          @Override
-          public void run() {
-            final int[] offset = new int[2];
-
-            targetBounds.set(target.bounds());
-
-            getLocationOnScreen(offset);
-            targetBounds.offset(-offset[0], -offset[1]);
-
-            if (boundingParent != null) {
-              final WindowManager windowManager
-                  = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-              final DisplayMetrics displayMetrics = new DisplayMetrics();
-              windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-
-              final Rect rect = new Rect();
-              boundingParent.getWindowVisibleDisplayFrame(rect);
-
-              // We bound the boundaries to be within the screen's coordinates to
-              // handle the case where the layout bounds do not match
-              // (like when FLAG_LAYOUT_NO_LIMITS is specified)
-              topBoundary = Math.max(0, rect.top);
-              bottomBoundary = Math.min(rect.bottom, displayMetrics.heightPixels);
-            }
-
-            drawTintedTarget();
-            requestFocus();
-            calculateDimensions();
-            if (!visible) {
-              expandAnimation.start();
-              visible = true;
-            }
-          }
-        });
-      }
-    };
-
-    getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
 
     setFocusableInTouchMode(true);
     setClickable(true);
@@ -506,6 +462,47 @@ public class TapTargetView extends View {
         }
 
         return false;
+      }
+    });
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    updateTextLayouts();
+    target.onReady(new Runnable() {
+      @Override
+      public void run() {
+        final int[] offset = new int[2];
+
+        targetBounds.set(target.bounds());
+
+        getLocationOnScreen(offset);
+        targetBounds.offset(-offset[0], -offset[1]);
+
+        if (boundingParent != null) {
+          final WindowManager windowManager
+              = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+          final DisplayMetrics displayMetrics = new DisplayMetrics();
+          windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+
+          final Rect rect = new Rect();
+          boundingParent.getWindowVisibleDisplayFrame(rect);
+
+          // We bound the boundaries to be within the screen's coordinates to
+          // handle the case where the layout bounds do not match
+          // (like when FLAG_LAYOUT_NO_LIMITS is specified)
+          topBoundary = Math.max(0, rect.top);
+          bottomBoundary = Math.min(rect.bottom, displayMetrics.heightPixels);
+        }
+
+        drawTintedTarget();
+        requestFocus();
+        calculateDimensions();
+        if (!visible) {
+          expandAnimation.start();
+          visible = true;
+        }
       }
     });
   }
@@ -614,7 +611,6 @@ public class TapTargetView extends View {
       animator.removeAllUpdateListeners();
     }
 
-    ViewUtil.removeOnGlobalLayoutListener(getViewTreeObserver(), globalLayoutListener);
     visible = false;
 
     if (listener != null) {
@@ -840,7 +836,7 @@ public class TapTargetView extends View {
   }
 
   void updateTextLayouts() {
-    final int textWidth = Math.min(getWidth(), TEXT_MAX_WIDTH) - TEXT_PADDING * 2;
+    final int textWidth = Math.min(getMeasuredWidth(), TEXT_MAX_WIDTH) - TEXT_PADDING * 2;
     if (textWidth <= 0) {
       return;
     }
