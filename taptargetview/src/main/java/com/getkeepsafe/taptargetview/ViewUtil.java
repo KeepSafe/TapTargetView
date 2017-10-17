@@ -73,7 +73,7 @@ class ViewUtil {
 
     try {
       parent.removeView(child);
-    } catch (NullPointerException ignored) {
+    } catch (Exception ignored) {
       // This catch exists for modified versions of Android that have a buggy ViewGroup
       // implementation. See b.android.com/77639, #121 and #49
     }
