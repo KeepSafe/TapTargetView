@@ -126,6 +126,46 @@ public class TapTargetSequence {
     showNext();
   }
 
+  /** Immediately starts the sequence from the given targetId's position in the queue */
+  public void startWith(int targetId) {
+    if (active) {
+      return;
+    }
+
+    while (targets.peek() != null && targets.peek().id() != targetId) {
+      targets.poll();
+    }
+
+    TapTarget peekedTarget = targets.peek();
+    if (peekedTarget == null || peekedTarget.id() != targetId) {
+      throw new IllegalStateException("Given target " + targetId + " not in sequence");
+    }
+
+    start();
+  }
+
+  /** Immediately starts the sequence at the specified zero-based index in the queue */
+  public void startAt(int index) {
+    if (active) {
+      return;
+    }
+
+    if (index < 0 || index >= targets.size()) {
+      throw new IllegalArgumentException("Given invalid index " + index);
+    }
+
+    final int expectedSize = targets.size() - index;
+    while (targets.peek() != null && targets.size() != expectedSize) {
+      targets.poll();
+    }
+
+    if (targets.size() != expectedSize) {
+      throw new IllegalStateException("Given index " + index + " not in sequence");
+    }
+
+    start();
+  }
+
   /**
    * Cancels the sequence, if the current target is cancelable.
    * When the sequence is canceled, the current target is dismissed and the remaining targets are
