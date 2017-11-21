@@ -13,11 +13,6 @@ An implementation of tap targets from [Google's Material Design guidelines on fe
 
 **Min SDK:** 14
 
-## React Native
-If you want to use this library with [React Native](https://github.com/facebook/react-native) project, please use below bridge plugin for the same:
-
-[React Native TapTargetView](https://github.com/prscX/react-native-taptargetview)
-
 ## Installation
 
 TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftware/Android/TapTargetView/view).
@@ -112,6 +107,12 @@ new TapTargetSequence(this)
 A sequence is started via a call to `start()` on the `TapTargetSequence` instance
 
 For more examples of usage, please look at the included sample app.
+
+## React Native
+You may now use this library for [React Native](https://github.com/facebook/react-native) projects as well. Please use below bridge plugin for the same:
+
+[React Native TapTargetView](https://github.com/prscX/react-native-taptargetview)
+
 
 ## Xamarin
 
