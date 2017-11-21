@@ -108,14 +108,12 @@ A sequence is started via a call to `start()` on the `TapTargetSequence` instanc
 
 For more examples of usage, please look at the included sample app.
 
-## React Native
-You may now use this library for [React Native](https://github.com/facebook/react-native) projects as well. Please use below bridge plugin for the same:
+## Third Party Bindings
 
-[React Native TapTargetView](https://github.com/prscX/react-native-taptargetview)
+### React Native
+Thanks to @prscX, you may now use this library with [React Native](https://github.com/facebook/react-native) via the module [here](https://github.com/prscX/react-native-taptargetview)
 
-
-## Xamarin
-
+### Xamarin
 Thanks to @btripp, you may now use this library via a Xamarin Binding located [here](https://www.nuget.org/packages/Xamarin.TapTargetView).
 
 ## License
