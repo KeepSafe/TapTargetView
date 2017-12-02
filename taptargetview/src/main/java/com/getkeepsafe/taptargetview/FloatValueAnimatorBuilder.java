@@ -20,9 +20,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 
-/**
- * A small wrapper around {@link ValueAnimator} to provide a builder-like interface
- */
+/** A small wrapper around {@link ValueAnimator} to provide a builder-like interface */
 class FloatValueAnimatorBuilder {
   final ValueAnimator animator;
 

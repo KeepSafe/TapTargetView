@@ -18,7 +18,6 @@ package com.getkeepsafe.taptargetview;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -59,7 +58,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
  * guidelines.
  * <p>
  * This class should not be instantiated directly. Instead, please use the
- * {@link #showFor(Activity, TapTarget, Listener)} static factory method instead.
+ * {@link #showFor(Context, TapTarget, Listener)} static factory method instead.
  * <p>
  * More information can be found here:
  * https://material.google.com/growth-communications/feature-discovery.html#feature-discovery-design
