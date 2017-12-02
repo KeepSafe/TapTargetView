@@ -19,7 +19,6 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -152,33 +151,21 @@ public class TapTargetView extends View {
   @Nullable
   ViewOutlineProvider outlineProvider;
 
-  public static TapTargetView showFor(Activity activity, TapTarget target) {
-    return showFor(activity, target, null);
+  public static TapTargetView showFor(Context context, TapTarget target) {
+    return showFor(context, target, null);
   }
 
-  public static TapTargetView showFor(Activity activity, TapTarget target, Listener listener) {
-    if (activity == null) throw new IllegalArgumentException("Activity is null");
+  public static TapTargetView showFor(
+      Context context, TapTarget target, @Nullable Listener listener) {
+    if (context == null) throw new IllegalArgumentException("Context is null");
+    if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
-    final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
-    final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    final ViewGroup content = (ViewGroup) decor.findViewById(android.R.id.content);
-    final TapTargetView tapTargetView = new TapTargetView(activity, decor, content, target, listener);
-    decor.addView(tapTargetView, layoutParams);
+    WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    if (windowManager == null) {
+      throw new IllegalStateException("Could not retrieve window manager from context");
+    }
 
-    return tapTargetView;
-  }
-
-  public static TapTargetView showFor(Dialog dialog, TapTarget target) {
-    return showFor(dialog, target, null);
-  }
-
-  public static TapTargetView showFor(Dialog dialog, TapTarget target, Listener listener) {
-    if (dialog == null) throw new IllegalArgumentException("Dialog is null");
-
-    final Context context = dialog.getContext();
-    final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+    WindowManager.LayoutParams params = new WindowManager.LayoutParams();
     params.type = WindowManager.LayoutParams.TYPE_APPLICATION;
     params.format = PixelFormat.RGBA_8888;
     params.flags = 0;
@@ -188,7 +175,7 @@ public class TapTargetView extends View {
     params.width = WindowManager.LayoutParams.MATCH_PARENT;
     params.height = WindowManager.LayoutParams.MATCH_PARENT;
 
-    final TapTargetView tapTargetView = new TapTargetView(context, windowManager, null, target, listener);
+    TapTargetView tapTargetView = new TapTargetView(context, windowManager, null, target, listener);
     windowManager.addView(tapTargetView, params);
 
     return tapTargetView;

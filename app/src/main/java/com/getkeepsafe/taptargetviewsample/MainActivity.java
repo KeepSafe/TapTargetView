@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Uh oh")
                 .setMessage("You canceled the sequence")
                 .setPositiveButton("Oops", null).show();
-            TapTargetView.showFor(dialog,
+            TapTargetView.showFor(MainActivity.this,
                 TapTarget.forView(dialog.getButton(DialogInterface.BUTTON_POSITIVE), "Uh oh!", "You canceled the sequence at step " + lastTarget.id())
                     .cancelable(false)
                     .tintTarget(false), new TapTargetView.Listener() {
