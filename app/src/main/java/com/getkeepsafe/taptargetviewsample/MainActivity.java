@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             TapTargetView.showFor(MainActivity.this,
                 TapTarget.forView(dialog.getButton(DialogInterface.BUTTON_POSITIVE), "Uh oh!", "You canceled the sequence at step " + lastTarget.id())
                     .cancelable(false)
-                    .tintTarget(false), new TapTargetView.Listener() {
+                    .tintTarget(false), new TapTargetView.BaseListener() {
                   @Override
                   public void onTargetClick(TapTargetView view) {
                     super.onTargetClick(view);
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         .cancelable(false)
         .drawShadow(true)
         .titleTextDimen(R.dimen.title_text_size)
-        .tintTarget(false), new TapTargetView.Listener() {
+        .tintTarget(false), new TapTargetView.BaseListener() {
       @Override
       public void onTargetClick(TapTargetView view) {
         super.onTargetClick(view);

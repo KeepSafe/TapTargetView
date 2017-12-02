@@ -35,6 +35,7 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.text.DynamicLayout;
 import android.text.Layout;
@@ -180,32 +181,48 @@ public class TapTargetView extends View {
     return tapTargetView;
   }
 
-  public static class Listener {
+  public interface Listener {
     /** Signals that the user has clicked inside of the target **/
-    public void onTargetClick(TapTargetView view) {
-      view.dismiss(true);
-    }
+    void onTargetClick(TapTargetView view);
 
     /** Signals that the user has long clicked inside of the target **/
-    public void onTargetLongClick(TapTargetView view) {
-      onTargetClick(view);
-    }
+    void onTargetLongClick(TapTargetView view);
 
     /** If cancelable, signals that the user has clicked outside of the outer circle **/
-    public void onTargetCancel(TapTargetView view) {
-      view.dismiss(false);
-    }
+    void onTargetCancel(TapTargetView view);
 
     /** Signals that the user clicked on the outer circle portion of the tap target **/
-    public void onOuterCircleClick(TapTargetView view) {
-      // no-op as default
-    }
+    void onOuterCircleClick(TapTargetView view);
 
     /**
      * Signals that the tap target has been dismissed
      * @param userInitiated Whether the user caused this action
      */
+    void onTargetDismissed(TapTargetView view, boolean userInitiated);
+  }
+
+  public static class BaseListener implements Listener {
+    @CallSuper
+    public void onTargetClick(TapTargetView view) {
+      view.dismiss(true);
+    }
+
+    @CallSuper
+    public void onTargetLongClick(TapTargetView view) {
+      onTargetClick(view);
+    }
+
+    @CallSuper
+    public void onTargetCancel(TapTargetView view) {
+      view.dismiss(false);
+    }
+
+    public void onOuterCircleClick(TapTargetView view) {
+      // no-op as default
+    }
+
     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+      // no-op as default
     }
   }
 
@@ -365,7 +382,7 @@ public class TapTargetView extends View {
     this.target = target;
     this.parent = parent;
     this.boundingParent = boundingParent;
-    this.listener = userListener != null ? userListener : new Listener();
+    this.listener = userListener != null ? userListener : new BaseListener();
     this.title = target.title;
     this.description = target.description;
 
@@ -709,14 +726,16 @@ public class TapTargetView extends View {
 
   @Override
   public boolean onKeyUp(int keyCode, KeyEvent event) {
-    if (isVisible() && isInteractable && cancelable
-        && keyCode == KeyEvent.KEYCODE_BACK && event.isTracking() && !event.isCanceled()) {
+    if (isVisible()
+        && isInteractable
+        && cancelable
+        && keyCode == KeyEvent.KEYCODE_BACK
+        && event.isTracking()
+        && !event.isCanceled()) {
       isInteractable = false;
 
       if (listener != null) {
         listener.onTargetCancel(this);
-      } else {
-        new Listener().onTargetCancel(this);
       }
 
       return true;

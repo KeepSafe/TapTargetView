@@ -191,7 +191,7 @@ public class TapTargetSequence {
     }
   }
 
-  private final TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+  private final TapTargetView.Listener tapTargetListener = new TapTargetView.BaseListener() {
     @Override
     public void onTargetClick(TapTargetView view) {
       super.onTargetClick(view);
