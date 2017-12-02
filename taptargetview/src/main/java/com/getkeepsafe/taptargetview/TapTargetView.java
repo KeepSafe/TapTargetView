@@ -353,11 +353,12 @@ public class TapTargetView extends View {
    * @param target The {@link TapTarget} to target
    * @param userListener Optional. The {@link Listener} instance for this view
    */
-  public TapTargetView(final Context context,
-                       final ViewManager parent,
-                       @Nullable final ViewGroup boundingParent,
-                       final TapTarget target,
-                       @Nullable final Listener userListener) {
+  public TapTargetView(
+      final Context context,
+      final ViewManager parent,
+      @Nullable final ViewGroup boundingParent,
+      final TapTarget target,
+      @Nullable final Listener userListener) {
     super(context);
     if (target == null) throw new IllegalArgumentException("Target cannot be null");
 

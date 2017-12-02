@@ -17,7 +17,7 @@ package com.getkeepsafe.taptargetview;
 
 import java.lang.reflect.Field;
 
-class ReflectUtil {
+final class ReflectUtil {
   ReflectUtil() {
   }
 

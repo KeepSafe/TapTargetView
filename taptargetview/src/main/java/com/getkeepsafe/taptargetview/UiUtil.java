@@ -17,25 +17,24 @@ package com.getkeepsafe.taptargetview;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Build;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
 import android.util.TypedValue;
 
-class UiUtil {
+final class UiUtil {
   UiUtil() {
   }
 
   /** Returns the given pixel value in dp **/
   static int dp(Context context, int val) {
-    return (int) TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, val, context.getResources().getDisplayMetrics());
+    return Math.round(
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, val, context.getResources().getDisplayMetrics()));
   }
 
   /** Returns the given pixel value in sp **/
   static int sp(Context context, int val) {
-    return (int) TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP, val, context.getResources().getDisplayMetrics());
+    return Math.round(
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, val, context.getResources().getDisplayMetrics()));
   }
 
   /** Returns the value of the desired theme integer attribute, or -1 if not found **/

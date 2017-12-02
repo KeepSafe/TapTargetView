@@ -21,12 +21,12 @@ import android.view.View;
 import android.view.ViewManager;
 import android.view.ViewTreeObserver;
 
-class ViewUtil {
+final class ViewUtil {
   ViewUtil() {
   }
 
   /** Returns whether or not the view has been laid out **/
-  private static boolean isLaidOut(View view) {
+  static boolean isLaidOut(View view) {
     return ViewCompat.isLaidOut(view) && view.getWidth() > 0 && view.getHeight() > 0;
   }
 
@@ -57,8 +57,8 @@ class ViewUtil {
   }
 
   @SuppressWarnings("deprecation")
-  static void removeOnGlobalLayoutListener(ViewTreeObserver observer,
-                                           ViewTreeObserver.OnGlobalLayoutListener listener) {
+  static void removeOnGlobalLayoutListener(
+      ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener) {
     if (Build.VERSION.SDK_INT >= 16) {
       observer.removeOnGlobalLayoutListener(listener);
     } else {
