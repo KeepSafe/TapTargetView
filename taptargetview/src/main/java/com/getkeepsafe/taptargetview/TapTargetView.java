@@ -120,7 +120,7 @@ public class TapTargetView extends View {
   float targetCircleRadius;
   int targetCircleAlpha;
 
-  int textAlpha;
+  float textAlpha;
 
   float lastTouchX;
   float lastTouchY;
@@ -241,7 +241,7 @@ public class TapTargetView extends View {
             targetCirclePulseRadius *= lerpTime;
           }
 
-          textAlpha = (int) (delayedLerp(lerpTime, 0.7f) * 255);
+          textAlpha = delayedLerp(lerpTime, 0.7f);
 
           if (expanding) {
             calculateDrawingBounds();
@@ -327,7 +327,7 @@ public class TapTargetView extends View {
           targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
           targetCirclePulseRadius = (1.0f + lerpTime) * TARGET_RADIUS;
           targetCirclePulseAlpha = (int) ((1.0f - lerpTime) * targetCirclePulseAlpha);
-          textAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
+          textAlpha = 1.0f - spedUpLerp;
           calculateDrawingBounds();
           invalidateViewAndOutline(drawingBounds);
         }
@@ -631,14 +631,16 @@ public class TapTargetView extends View {
 
     saveCount = c.save();
     c.translate(textBounds.left, textBounds.top);
-    titlePaint.setAlpha(textAlpha);
+    titlePaint.setAlpha((int) (Color.alpha(target.param.title.color) * textAlpha));
     if (titleLayout != null) {
       titleLayout.draw(c);
     }
 
-    if (descriptionLayout != null && titleLayout != null) {
-      c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
-      descriptionPaint.setAlpha(Color.alpha(descriptionPaint.getColor()) * textAlpha);
+    if (descriptionLayout != null) {
+      if (titleLayout != null) {
+        c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
+      }
+      descriptionPaint.setAlpha((int) (Color.alpha(target.param.description.color) * textAlpha));
       descriptionLayout.draw(c);
     }
     c.restoreToCount(saveCount);
