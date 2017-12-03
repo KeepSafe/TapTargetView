@@ -31,24 +31,8 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 class ToolbarTapTarget extends ViewTapTarget {
-  ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
-                   CharSequence title, @Nullable CharSequence description) {
-    super(toolbar.findViewById(menuItemId), title, description);
-  }
-
-  ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
-                   CharSequence title, @Nullable CharSequence description) {
-    super(toolbar.findViewById(menuItemId), title, description);
-  }
-
-  ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
-                   CharSequence title, @Nullable CharSequence description) {
-    super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
-  }
-
-  ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
-                   CharSequence title, @Nullable CharSequence description) {
-    super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
+  ToolbarTapTarget(View target, Parameters parameters) {
+    super(target, parameters);
   }
 
   private static ToolbarProxy proxyOf(Object instance) {
@@ -265,6 +249,29 @@ class ToolbarTapTarget extends ViewTapTarget {
     @Override
     public Object internalToolbar() {
       return toolbar;
+    }
+  }
+
+  public static class Builder extends ViewTapTarget.Builder {
+    Builder(Toolbar toolbar, @IdRes int menuItemId) {
+      super(toolbar.findViewById(menuItemId));
+    }
+
+    Builder(android.widget.Toolbar toolbar, @IdRes int menuItemId) {
+      super(toolbar.findViewById(menuItemId));
+    }
+
+    Builder(Toolbar toolbar, boolean findNavView) {
+      super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar));
+    }
+
+    Builder(android.widget.Toolbar toolbar, boolean findNavView) {
+      super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar));
+    }
+
+    @Override
+    public ToolbarTapTarget build() {
+      return new ToolbarTapTarget(view, parameters);
     }
   }
 }

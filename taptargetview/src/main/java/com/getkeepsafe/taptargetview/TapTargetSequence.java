@@ -117,17 +117,17 @@ public class TapTargetSequence {
   }
 
   /** Immediately starts the sequence from the given targetId's position in the queue */
-  public void startWith(int targetId) {
-    if (active) {
+  public void startWith(String targetId) {
+    if (active || targetId == null) {
       return;
     }
 
-    while (targets.peek() != null && targets.peek().id() != targetId) {
+    while (targets.peek() != null && !targetId.equals(targets.peek().param.id)) {
       targets.poll();
     }
 
     TapTarget peekedTarget = targets.peek();
-    if (peekedTarget == null || peekedTarget.id() != targetId) {
+    if (peekedTarget == null || !targetId.equals(peekedTarget.param.id)) {
       throw new IllegalStateException("Given target " + targetId + " not in sequence");
     }
 
@@ -167,7 +167,7 @@ public class TapTargetSequence {
     if (targets.isEmpty() || !active) {
       return false;
     }
-    if (currentView == null || !currentView.cancelable) {
+    if (currentView == null || !currentView.target.param.cancelable) {
       return false;
     }
     currentView.dismiss(false);

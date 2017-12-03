@@ -19,41 +19,88 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 class ViewTapTarget extends TapTarget {
-  final View view;
+  private final int[] location = new int[2];
+  private final View view;
+  private final View.OnLayoutChangeListener layoutChangeListener =
+      new View.OnLayoutChangeListener() {
+        @Override
+        public void onLayoutChange(
+            View v,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            int oldLeft,
+            int oldTop,
+            int oldRight,
+            int oldBottom) {
+          if (!isReady()) {
+            return;
+          }
 
-  ViewTapTarget(View view, CharSequence title, @Nullable CharSequence description) {
-    super(title, description);
+          view.getLocationOnScreen(location);
+          Rect bounds =
+              new Rect(
+                  location[0],
+                  location[1],
+                  location[0] + view.getWidth(),
+                  location[1] + view.getHeight());
+          if (param.icon == null) {
+            createAndSetIcon();
+          }
+          setBounds(bounds);
+        }
+      };
+
+  ViewTapTarget(View view, Parameters parameters) {
+    super(parameters);
     if (view == null) {
       throw new IllegalArgumentException("Given null view to target");
     }
     this.view = view;
   }
 
+  protected void createAndSetIcon() {
+    Bitmap viewBitmap =
+        Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(viewBitmap);
+    view.draw(canvas);
+    param.icon = new BitmapDrawable(view.getContext().getResources(), viewBitmap);
+    param.icon.setBounds(
+        0, 0, param.icon.getIntrinsicWidth(), param.icon.getIntrinsicHeight());
+  }
+
   @Override
-  public void onReady(final Runnable runnable) {
-    ViewUtil.onLaidOut(view, new Runnable() {
-      @Override
-      public void run() {
-        // Cache bounds
-        final int[] location = new int[2];
-        view.getLocationOnScreen(location);
-        bounds = new Rect(location[0], location[1],
-            location[0] + view.getWidth(), location[1] + view.getHeight());
+  public void attach(TapTargetView parent) {
+    super.attach(parent);
+    view.addOnLayoutChangeListener(layoutChangeListener);
+  }
 
-        if (icon == null && view.getWidth() > 0 && view.getHeight() > 0) {
-          final Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-          final Canvas canvas = new Canvas(viewBitmap);
-          view.draw(canvas);
-          icon = new BitmapDrawable(view.getContext().getResources(), viewBitmap);
-          icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-        }
+  @Override
+  public boolean isReady() {
+    return ViewUtil.isLaidOut(view);
+  }
 
-        runnable.run();
-      }
-    });
+  @Override
+  protected void detach() {
+    super.detach();
+    view.removeOnLayoutChangeListener(layoutChangeListener);
+  }
+
+  public static class Builder extends TapTarget.Builder {
+    protected final View view;
+
+    Builder(View view) {
+      super(view.getContext());
+      this.view = view;
+    }
+
+    @Override
+    public ViewTapTarget build() {
+      return new ViewTapTarget(view, parameters);
+    }
   }
 }

@@ -23,6 +23,11 @@ final class UiUtil {
   UiUtil() {
   }
 
+  static boolean isDarkTheme(Context context) {
+    Resources.Theme theme = context.getTheme();
+    return themeIntAttr(context, "isLightTheme") == 0;
+  }
+
   /** Returns the given pixel value in dp **/
   static int dp(Context context, int val) {
     return Math.round(

@@ -16,14 +16,21 @@
 package com.getkeepsafe.taptargetview;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.CallSuper;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
+import android.support.annotation.Dimension;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.Px;
+import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -40,463 +47,348 @@ import android.view.View;
  * @see ViewTapTarget ViewTapTarget for targeting standard Android views
  */
 public class TapTarget {
-  final CharSequence title;
-  @Nullable
-  final CharSequence description;
+  private final Rect bounds;
 
-  float outerCircleAlpha = 0.96f;
-  int targetRadius = 44;
+  protected final Parameters param;
 
-  Rect bounds;
-  Drawable icon;
-  Typeface titleTypeface;
-  Typeface descriptionTypeface;
+  private @Nullable TapTargetView parent;
 
-  @ColorRes
-  private int outerCircleColorRes = -1;
-  @ColorRes
-  private int targetCircleColorRes = -1;
-  @ColorRes
-  private int dimColorRes = -1;
-  @ColorRes
-  private int titleTextColorRes = -1;
-  @ColorRes
-  private int descriptionTextColorRes = -1;
-
-  private Integer outerCircleColor = null;
-  private Integer targetCircleColor = null;
-  private Integer dimColor = null;
-  private Integer titleTextColor = null;
-  private Integer descriptionTextColor = null;
-
-  @DimenRes
-  private int titleTextDimen = -1;
-  @DimenRes
-  private int descriptionTextDimen = -1;
-
-  private int titleTextSize = 20;
-  private int descriptionTextSize = 18;
-  int id = -1;
-
-  boolean drawShadow = false;
-  boolean cancelable = true;
-  boolean tintTarget = true;
-  boolean transparentTarget = false;
-  float descriptionTextAlpha = 0.54f;
-
-  /**
-   * Return a tap target for the overflow button from the given toolbar
-   * <p>
-   * <b>Note:</b> This is currently experimental, use at your own risk
-   */
-  public static TapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title) {
-    return forToolbarOverflow(toolbar, title, null);
+  /** Returns a tap target builder for the overflow button from the given toolbar */
+  public static ToolbarTapTarget.Builder forToolbarOverflow(Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, false);
   }
 
-  /** Return a tap target for the overflow button from the given toolbar
-   * <p>
-   * <b>Note:</b> This is currently experimental, use at your own risk
-   */
-  public static TapTarget forToolbarOverflow(Toolbar toolbar, CharSequence title,
-                                                    @Nullable CharSequence description) {
-    return new ToolbarTapTarget(toolbar, false, title, description);
-  }
-
-  /** Return a tap target for the overflow button from the given toolbar
-   * <p>
-   * <b>Note:</b> This is currently experimental, use at your own risk
-   */
-  public static TapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title) {
-    return forToolbarOverflow(toolbar, title, null);
-  }
-
-  /** Return a tap target for the overflow button from the given toolbar
-   * <p>
-   * <b>Note:</b> This is currently experimental, use at your own risk
-   */
-  public static TapTarget forToolbarOverflow(android.widget.Toolbar toolbar, CharSequence title,
-                                                    @Nullable CharSequence description) {
-    return new ToolbarTapTarget(toolbar, false, title, description);
-  }
-
-  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static TapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title) {
-    return forToolbarNavigationIcon(toolbar, title, null);
-  }
-
-  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static TapTarget forToolbarNavigationIcon(Toolbar toolbar, CharSequence title,
-                                                          @Nullable CharSequence description) {
-    return new ToolbarTapTarget(toolbar, true, title, description);
-  }
-
-  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static TapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title) {
-    return forToolbarNavigationIcon(toolbar, title, null);
-  }
-
-  /** Return a tap target for the navigation button (back, up, etc) from the given toolbar **/
-  public static TapTarget forToolbarNavigationIcon(android.widget.Toolbar toolbar, CharSequence title,
-                                                   @Nullable CharSequence description) {
-    return new ToolbarTapTarget(toolbar, true, title, description);
-  }
-
-  /** Return a tap target for the menu item from the given toolbar **/
-  public static TapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
-                                             CharSequence title) {
-    return forToolbarMenuItem(toolbar, menuItemId, title, null);
-  }
-
-  /** Return a tap target for the menu item from the given toolbar **/
-  public static TapTarget forToolbarMenuItem(Toolbar toolbar, @IdRes int menuItemId,
-                                             CharSequence title, @Nullable CharSequence description) {
-    return new ToolbarTapTarget(toolbar, menuItemId, title, description);
-  }
-
-  /** Return a tap target for the menu item from the given toolbar **/
-  public static TapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
-                                             CharSequence title) {
-    return forToolbarMenuItem(toolbar, menuItemId, title, null);
-  }
-
-  /** Return a tap target for the menu item from the given toolbar **/
-  public static TapTarget forToolbarMenuItem(android.widget.Toolbar toolbar, @IdRes int menuItemId,
-                                                    CharSequence title, @Nullable CharSequence description) {
-    return new ToolbarTapTarget(toolbar, menuItemId, title, description);
-  }
-
-  /** Return a tap target for the specified view **/
-  public static TapTarget forView(View view, CharSequence title) {
-    return forView(view, title, null);
-  }
-
-  /** Return a tap target for the specified view **/
-  public static TapTarget forView(View view, CharSequence title, @Nullable CharSequence description) {
-    return new ViewTapTarget(view, title, description);
-  }
-
-  /** Return a tap target for the specified bounds **/
-  public static TapTarget forBounds(Rect bounds, CharSequence title) {
-    return forBounds(bounds, title, null);
-  }
-
-  /** Return a tap target for the specified bounds **/
-  public static TapTarget forBounds(Rect bounds, CharSequence title, @Nullable CharSequence description) {
-    return new TapTarget(bounds, title, description);
-  }
-
-  protected TapTarget(Rect bounds, CharSequence title, @Nullable CharSequence description) {
-    this(title, description);
-    if (bounds == null) {
-      throw new IllegalArgumentException("Cannot pass null bounds or title");
-    }
-
-    this.bounds = bounds;
-  }
-
-  protected TapTarget(CharSequence title, @Nullable CharSequence description) {
-    if (title == null) {
-      throw new IllegalArgumentException("Cannot pass null title");
-    }
-
-    this.title = title;
-    this.description = description;
-  }
-
-  /** Specify whether the target should be transparent **/
-  public TapTarget transparentTarget(boolean transparent) {
-    this.transparentTarget = transparent;
-    return this;
-  }
-
-  /** Specify the color resource for the outer circle **/
-  public TapTarget outerCircleColor(@ColorRes int color) {
-    this.outerCircleColorRes = color;
-    return this;
-  }
-
-  /** Specify the color value for the outer circle **/
-  // TODO(Hilal): In v2, this API should be cleaned up / torched
-  public TapTarget outerCircleColorInt(@ColorInt int color) {
-    this.outerCircleColor = color;
-    return this;
-  }
-
-  /** Specify the alpha value [0.0, 1.0] of the outer circle **/
-  public TapTarget outerCircleAlpha(float alpha) {
-    if (alpha < 0.0f || alpha > 1.0f) {
-      throw new IllegalArgumentException("Given an invalid alpha value: " + alpha);
-    }
-    this.outerCircleAlpha = alpha;
-    return this;
-  }
-
-  /** Specify the color resource for the target circle **/
-  public TapTarget targetCircleColor(@ColorRes int color) {
-    this.targetCircleColorRes = color;
-    return this;
-  }
-
-  /** Specify the color value for the target circle **/
-  // TODO(Hilal): In v2, this API should be cleaned up / torched
-  public TapTarget targetCircleColorInt(@ColorInt int color) {
-    this.targetCircleColor = color;
-    return this;
-  }
-
-  /** Specify the color resource for all text **/
-  public TapTarget textColor(@ColorRes int color) {
-    this.titleTextColorRes = color;
-    this.descriptionTextColorRes = color;
-    return this;
-  }
-
-  /** Specify the color value for all text **/
-  // TODO(Hilal): In v2, this API should be cleaned up / torched
-  public TapTarget textColorInt(@ColorInt int color) {
-    this.titleTextColor = color;
-    this.descriptionTextColor = color;
-    return this;
-  }
-
-  /** Specify the color resource for the title text **/
-  public TapTarget titleTextColor(@ColorRes int color) {
-    this.titleTextColorRes = color;
-    return this;
-  }
-
-  /** Specify the color value for the title text **/
-  // TODO(Hilal): In v2, this API should be cleaned up / torched
-  public TapTarget titleTextColorInt(@ColorInt int color) {
-    this.titleTextColor = color;
-    return this;
-  }
-
-  /** Specify the color resource for the description text **/
-  public TapTarget descriptionTextColor(@ColorRes int color) {
-    this.descriptionTextColorRes = color;
-    return this;
-  }
-
-  /** Specify the color value for the description text **/
-  // TODO(Hilal): In v2, this API should be cleaned up / torched
-  public TapTarget descriptionTextColorInt(@ColorInt int color) {
-    this.descriptionTextColor = color;
-    return this;
-  }
-
-  /** Specify the typeface for all text **/
-  public TapTarget textTypeface(Typeface typeface) {
-    if (typeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
-    titleTypeface = typeface;
-    descriptionTypeface = typeface;
-    return this;
-  }
-
-  /** Specify the typeface for title text **/
-  public TapTarget titleTypeface(Typeface titleTypeface) {
-    if (titleTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
-    this.titleTypeface = titleTypeface;
-    return this;
-  }
-
-  /** Specify the typeface for description text **/
-  public TapTarget descriptionTypeface(Typeface descriptionTypeface) {
-    if (descriptionTypeface == null) throw new IllegalArgumentException("Cannot use a null typeface");
-    this.descriptionTypeface = descriptionTypeface;
-    return this;
-  }
-
-  /** Specify the text size for the title in SP **/
-  public TapTarget titleTextSize(int sp) {
-    if (sp < 0) throw new IllegalArgumentException("Given negative text size");
-    this.titleTextSize = sp;
-    return this;
-  }
-
-  /** Specify the text size for the description in SP **/
-  public TapTarget descriptionTextSize(int sp) {
-    if (sp < 0) throw new IllegalArgumentException("Given negative text size");
-    this.descriptionTextSize = sp;
-    return this;
+  /** Returns a tap target builder for the overflow button from the given toolbar */
+  public static ToolbarTapTarget.Builder forToolbarOverflow(android.widget.Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, false);
   }
 
   /**
-   * Specify the text size for the title via a dimen resource
-   * <p>
-   * Note: If set, this value will take precedence over the specified sp size
+   * Returns a tap target builder for the navigation button (back, up, etc) from the given toolbar
    */
-  public TapTarget titleTextDimen(@DimenRes int dimen) {
-    this.titleTextDimen = dimen;
-    return this;
+  public static ToolbarTapTarget.Builder forToolbarNavigationIcon(Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, true);
   }
 
-  /** Specify the alpha value [0.0, 1.0] of the description text **/
-  public TapTarget descriptionTextAlpha(float descriptionTextAlpha) {
-    if (descriptionTextAlpha < 0 || descriptionTextAlpha > 1f) {
-      throw new IllegalArgumentException("Given an invalid alpha value: " + descriptionTextAlpha);
+  /**
+   * Returns a tap target builder for the navigation button (back, up, etc) from the given toolbar
+   */
+  public static ToolbarTapTarget.Builder forToolbarNavigationIcon(android.widget.Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, true);
+  }
+
+  /** Returns a tap target builder for the menu item from the given toolbar **/
+  public static ToolbarTapTarget.Builder forToolbarMenuItem(
+      Toolbar toolbar, @IdRes int menuItemId) {
+    return new ToolbarTapTarget.Builder(toolbar, menuItemId);
+  }
+
+  /** Returns a tap target builder for the menu item from the given toolbar **/
+  public static ToolbarTapTarget.Builder forToolbarMenuItem(
+      android.widget.Toolbar toolbar, @IdRes int menuItemId) {
+    return new ToolbarTapTarget.Builder(toolbar, menuItemId);
+  }
+
+  /** Returns a tap target builder for the specified view **/
+  public static ViewTapTarget.Builder forView(View view) {
+    return new ViewTapTarget.Builder(view);
+  }
+
+  /** Returns a tap target builder for the specified bounds **/
+  public static TapTarget.Builder forBounds(Context context, Rect bounds) {
+    return new BoundsTapTarget.Builder(context, bounds);
+  }
+
+  TapTarget(Parameters parameters) {
+    // TODO: Ensure required params
+    this.param = parameters;
+    this.bounds = new Rect();
+  }
+
+  @UiThread
+  public void setBounds(Rect bounds) {
+    this.bounds.set(bounds);
+    if (!isReady()) {
+      return;
     }
-    this.descriptionTextAlpha = descriptionTextAlpha;
-    return this;
-  }
-
-  /**
-   * Specify the text size for the description via a dimen resource
-   * <p>
-   * Note: If set, this value will take precedence over the specified sp size
-   */
-  public TapTarget descriptionTextDimen(@DimenRes int dimen) {
-    this.descriptionTextDimen = dimen;
-    return this;
-  }
-
-  /**
-   * Specify the color resource to use as a dim effect
-   * <p>
-   * <b>Note:</b> The given color will have its opacity modified to 30% automatically
-   */
-  public TapTarget dimColor(@ColorRes int color) {
-    this.dimColorRes = color;
-    return this;
-  }
-
-  /**
-   * Specify the color value to use as a dim effect
-   * <p>
-   * <b>Note:</b> The given color will have its opacity modified to 30% automatically
-   */
-  // TODO(Hilal): In v2, this API should be cleaned up / torched
-  public TapTarget dimColorInt(@ColorInt int color) {
-    this.dimColor = color;
-    return this;
-  }
-
-  /** Specify whether or not to draw a drop shadow around the outer circle **/
-  public TapTarget drawShadow(boolean draw) {
-    this.drawShadow = draw;
-    return this;
-  }
-
-  /** Specify whether or not the target should be cancelable **/
-  public TapTarget cancelable(boolean status) {
-    this.cancelable = status;
-    return this;
-  }
-
-  /** Specify whether to tint the target's icon with the outer circle's color **/
-  public TapTarget tintTarget(boolean tint) {
-    this.tintTarget = tint;
-    return this;
-  }
-
-  /** Specify the icon that will be drawn in the center of the target bounds **/
-  public TapTarget icon(Drawable icon) {
-    return icon(icon, false);
-  }
-
-  /**
-   * Specify the icon that will be drawn in the center of the target bounds
-   * @param hasSetBounds Whether the drawable already has its bounds correctly set. If the
-   *                     drawable does not have its bounds set, then the following bounds will
-   *                     be applied: <br/>
-   *                      <code>(0, 0, intrinsic-width, intrinsic-height)</code>
-   */
-  public TapTarget icon(Drawable icon, boolean hasSetBounds) {
-    if (icon == null) throw new IllegalArgumentException("Cannot use null drawable");
-    this.icon = icon;
-
-    if (!hasSetBounds) {
-      this.icon.setBounds(new Rect(0, 0, this.icon.getIntrinsicWidth(), this.icon.getIntrinsicHeight()));
+    if (parent != null) {
+      parent.onNewTargetBounds(bounds);
     }
-
-    return this;
   }
 
-  /** Specify a unique identifier for this target. **/
-  public TapTarget id(int id) {
-    this.id = id;
-    return this;
-  }
-
-  /** Specify the target radius in dp. **/
-  public TapTarget targetRadius(int targetRadius) {
-    this.targetRadius = targetRadius;
-    return this;
-  }
-
-  /** Return the id associated with this tap target **/
-  public int id() {
-    return id;
-  }
-
-  /**
-   * In case your target needs time to be ready (laid out in your view, not created, etc), the
-   * runnable passed here will be invoked when the target is ready.
-   */
-  public void onReady(Runnable runnable) {
-    runnable.run();
-  }
-
-  /**
-   * Returns the target bounds. Throws an exception if they are not set
-   * (target may not be ready)
-   * <p>
-   * This will only be called internally when {@link #onReady(Runnable)} invokes its runnable
-   */
-  public Rect bounds() {
-    if (bounds == null) {
-      throw new IllegalStateException("Requesting bounds that are not set! Make sure your target is ready");
+  @CallSuper
+  @UiThread
+  protected void attach(TapTargetView parent) {
+    if (parent == null) {
+      throw new IllegalArgumentException("Cannot attach to null parent");
     }
-    return bounds;
+    if (this.parent != null) {
+      detach();
+    }
+    this.parent = parent;
   }
 
-  @Nullable
-  Integer outerCircleColorInt(Context context) {
-    return colorResOrInt(context, outerCircleColor, outerCircleColorRes);
+  @CallSuper
+  @UiThread
+  protected void detach() {
+    this.parent = null;
   }
 
-  @Nullable
-  Integer targetCircleColorInt(Context context) {
-    return colorResOrInt(context, targetCircleColor, targetCircleColorRes);
+  public @Nullable String id() {
+    return param.id;
   }
 
-  @Nullable
-  Integer dimColorInt(Context context) {
-    return colorResOrInt(context, dimColor, dimColorRes);
+  public boolean isReady() {
+    return true;
   }
 
-  @Nullable
-  Integer titleTextColorInt(Context context) {
-    return colorResOrInt(context, titleTextColor, titleTextColorRes);
+  protected static class TextParameters {
+    public @Nullable CharSequence text;
+    public Typeface typeface;
+    public @ColorInt int color;
+    public int size;
   }
 
-  @Nullable
-  Integer descriptionTextColorInt(Context context) {
-    return colorResOrInt(context, descriptionTextColor, descriptionTextColorRes);
+  protected static class CircleParameters {
+    public @ColorInt int color;
   }
 
-  int titleTextSizePx(Context context) {
-    return dimenOrSize(context, titleTextSize, titleTextDimen);
+  protected static class Parameters {
+    public TextParameters title;
+    public TextParameters description;
+
+    public CircleParameters outerCircle;
+    public CircleParameters targetCircle;
+
+    public @Nullable String id;
+    public @Nullable Drawable icon;
+
+    public @ColorInt int dimColor;
+
+    public boolean shadow;
+    public boolean cancelable;
+    public boolean tint;
+    public boolean targetCircleTransparent;
   }
 
-  int descriptionTextSizePx(Context context) {
-    return dimenOrSize(context, descriptionTextSize, descriptionTextDimen);
-  }
+  public static class Builder {
+    private final Context context;
+    protected final Parameters parameters;
 
-  @Nullable
-  private Integer colorResOrInt(Context context, @Nullable Integer value, @ColorRes int resource) {
-    if (resource != -1) {
-      return ContextCompat.getColor(context, resource);
+    Builder(Context context) {
+      if (context == null) {
+        throw new IllegalArgumentException("Given null Context");
+      }
+      this.context = context;
+
+      // Setup defaults
+      final boolean isDark = UiUtil.isDarkTheme(context);
+      parameters = new Parameters();
+      parameters.title = new TextParameters();
+      parameters.title.color = isDark ? Color.BLACK : Color.WHITE;
+      parameters.title.size = UiUtil.sp(context, 20);
+      parameters.title.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL);
+
+      parameters.description = new TextParameters();
+      parameters.description.color = UiUtil.setAlpha(isDark ? Color.BLACK : Color.WHITE, 0.54f);
+      parameters.description.size = UiUtil.sp(context, 18);
+      parameters.description.typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+
+      final Resources.Theme theme = context.getTheme();
+      final int outerCircleColor =
+          (theme != null) ? UiUtil.themeIntAttr(context, "colorPrimary") : Color.WHITE;
+      parameters.outerCircle = new CircleParameters();
+      parameters.outerCircle.color = UiUtil.setAlpha(outerCircleColor, 0.96f);
+
+      parameters.targetCircle= new CircleParameters();
+      parameters.targetCircle.color = isDark ? Color.BLACK : Color.WHITE;
+
+      parameters.dimColor = UiUtil.setAlpha(Color.BLACK, 0.3f);
+      parameters.shadow = false;
+      parameters.cancelable = true;
+      parameters.tint = true;
+      parameters.targetCircleTransparent = false;
     }
 
-    return value;
-  }
-
-  private int dimenOrSize(Context context, int size, @DimenRes int dimen) {
-    if (dimen != -1) {
-      return context.getResources().getDimensionPixelSize(dimen);
+    /** Specify the color resource for the outer circle */
+    public Builder outerCircleColorRes(@ColorRes int colorRes) {
+      return outerCircleColor(ContextCompat.getColor(context, colorRes));
     }
 
-    return UiUtil.sp(context, size);
+    /** Specify the color value for the outer circle */
+    public Builder outerCircleColor(@ColorInt int color) {
+      parameters.outerCircle.color = color;
+      return this;
+    }
+
+    /** Specify the color resource for the target circle */
+    public Builder targetCircleColorRes(@ColorRes int colorRes) {
+      return targetCircleColor(ContextCompat.getColor(context, colorRes));
+    }
+
+    /** Specify the color value for the target circle */
+    public Builder targetCircleColor(@ColorInt int color) {
+      parameters.targetCircle.color = color;
+      return this;
+    }
+
+    /** Specify whether the target circle should be transparent */
+    public Builder targetCircleIsTransparent(boolean status) {
+      parameters.targetCircleTransparent = status;
+      return this;
+    }
+
+    /** Specify the title text */
+    public Builder titleText(CharSequence title) {
+      parameters.title.text = title;
+      return this;
+    }
+
+    /** Specify the color resource for the title text */
+    public Builder titleTextColorRes(@ColorRes int colorRes) {
+      return titleTextColor(ContextCompat.getColor(context, colorRes));
+    }
+
+    /** Specify the color value for the title text */
+    public Builder titleTextColor(@ColorInt int color) {
+      parameters.title.color = color;
+      return this;
+    }
+
+    /** Specify the typeface for title text */
+    public Builder titleTextTypeface(Typeface typeface) {
+      checkNotNull(typeface, "title typeface");
+      parameters.title.typeface = typeface;
+      return this;
+    }
+
+    /** Specify the text size for the title from a dimension resource */
+    public Builder titleTextSizeDimen(@DimenRes int dimen) {
+      return titleTextSize(context.getResources().getDimensionPixelSize(dimen));
+    }
+
+    /** Specify the text size for the title in SP */
+    public Builder titleTextSizeSp(@Dimension(unit = Dimension.SP) int sp) {
+      return titleTextSize(UiUtil.sp(context, sp));
+    }
+
+    /** Specify the text size for the title in pixels */
+    public Builder titleTextSize(@Px int px) {
+      checkTextSize(px);
+      parameters.title.size = px;
+      return this;
+    }
+
+    /** Specify the description text */
+    public Builder descriptionText(CharSequence description) {
+      parameters.description.text = description;
+      return this;
+    }
+
+    /** Specify the color resource for the description text */
+    public Builder descriptionTextColorRes(@ColorRes int colorRes) {
+      return descriptionTextColor(ContextCompat.getColor(context, colorRes));
+    }
+
+    /** Specify the color value for the description text */
+    public Builder descriptionTextColor(@ColorInt int color) {
+      parameters.description.color = color;
+      return this;
+    }
+
+    /** Specify the typeface for description text */
+    public Builder descriptionTextTypeface(Typeface typeface) {
+      checkNotNull(typeface, "description typeface");
+      parameters.description.typeface = typeface;
+      return this;
+    }
+
+    /** Specify the text size for the description from a dimension resource */
+    public Builder descriptionTextSizeDimen(@DimenRes int dimen) {
+      return descriptionTextSize(context.getResources().getDimensionPixelSize(dimen));
+    }
+
+    /** Specify the text size for the description in SP */
+    public Builder descriptionTextSizeSp(@Dimension(unit = Dimension.SP) int sp) {
+      return descriptionTextSize(UiUtil.sp(context, sp));
+    }
+
+    /** Specify the text size for the description in pixels */
+    public Builder descriptionTextSize(@Px int px) {
+      checkTextSize(px);
+      parameters.description.size = px;
+      return this;
+    }
+
+    /** Specify the color resource to use as a dim effect */
+    public Builder dimColorRes(@ColorRes int colorRes) {
+      return dimColor(ContextCompat.getColor(context, colorRes));
+    }
+
+    /** Specify the color value to use as a dim effect */
+    public Builder dimColor(@ColorInt int color) {
+      parameters.dimColor = color;
+      return this;
+    }
+
+    public Builder shadow(boolean status) {
+      parameters.shadow = status;
+      return this;
+    }
+
+    public Builder cancelable(boolean status) {
+      parameters.cancelable = status;
+      return this;
+    }
+
+    public Builder tintTarget(boolean status) {
+      parameters.tint = status;
+      return this;
+    }
+
+    /** Specify the icon resource that will be drawn in the center of the target bounds */
+    public Builder iconRes(@DrawableRes int drawableRes) {
+      return icon(ContextCompat.getDrawable(context, drawableRes));
+    }
+
+    /** Specify the icon that will be drawn in the center of the target bounds */
+    public Builder icon(Drawable icon) {
+      return icon(icon, false);
+    }
+
+    /**
+     * Specify the icon that will be drawn in the center of the target bounds
+     * @param hasSetBounds Whether the drawable already has its bounds correctly set. If the
+     *                     drawable does not have its bounds set, then the following bounds will
+     *                     be applied: <code>(0, 0, intrinsic-width, intrinsic-height)</code>
+     */
+    public Builder icon(Drawable icon, boolean hasSetBounds) {
+      checkNotNull(icon, "icon");
+      icon.mutate();
+      if (!hasSetBounds) {
+        icon.setBounds(new Rect(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight()));
+      }
+
+      parameters.icon = icon;
+      return this;
+    }
+
+    /** Specify a unique identifier for this target */
+    public Builder id(String id) {
+      parameters.id = id;
+      return this;
+    }
+
+    void checkNotNull(Object object, String name) {
+      if (object == null) throw new IllegalArgumentException("Given " + name + " is null");
+    }
+
+    void checkTextSize(int size) {
+      if (size < 0) throw new IllegalArgumentException("Given negative text size");
+    }
+
+    public TapTarget build() {
+      return new TapTarget(parameters);
+    }
   }
 }
