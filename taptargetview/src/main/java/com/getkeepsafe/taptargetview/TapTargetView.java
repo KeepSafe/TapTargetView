@@ -65,6 +65,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
  */
 @SuppressLint("ViewConstructor")
 public class TapTargetView extends View {
+  private static final long EXPAND_DURATION = 250L;
   private boolean isDismissed = false;
   private boolean isDismissing = false;
   private boolean isInteractable = true;
@@ -252,7 +253,7 @@ public class TapTargetView extends View {
       };
 
   final ValueAnimator expandAnimation = new FloatValueAnimatorBuilder()
-      .duration(250)
+      .duration(EXPAND_DURATION)
       .delayBy(250)
       .interpolator(new AccelerateDecelerateInterpolator())
       .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
@@ -293,7 +294,7 @@ public class TapTargetView extends View {
       .build();
 
   final ValueAnimator dismissAnimation = new FloatValueAnimatorBuilder(true)
-      .duration(250)
+      .duration(EXPAND_DURATION)
       .interpolator(new AccelerateDecelerateInterpolator())
       .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
         @Override
@@ -311,7 +312,7 @@ public class TapTargetView extends View {
       .build();
 
   private final ValueAnimator dismissConfirmAnimation = new FloatValueAnimatorBuilder()
-      .duration(250)
+      .duration(EXPAND_DURATION)
       .interpolator(new AccelerateDecelerateInterpolator())
       .onUpdate(new FloatValueAnimatorBuilder.UpdateListener() {
         @Override
@@ -319,7 +320,7 @@ public class TapTargetView extends View {
           float spedUpLerp = Math.min(1.0f, lerpTime * 2.0f);
           int targetOuterCircleAlpha = Color.alpha(target.param.outerCircle.color);
           outerCircleRadius = calculatedOuterCircleRadius * (1.0f + (spedUpLerp * 0.2f));
-          outerCircleAlpha = (int) ((1.0f - spedUpLerp) * targetOuterCircleAlpha * 255.0f);
+          outerCircleAlpha = (int) ((1.0f - spedUpLerp) * targetOuterCircleAlpha);
           outerCirclePath.reset();
           outerCirclePath.addCircle(
               outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);

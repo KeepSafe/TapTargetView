@@ -24,7 +24,6 @@ final class UiUtil {
   }
 
   static boolean isDarkTheme(Context context) {
-    Resources.Theme theme = context.getTheme();
     return themeIntAttr(context, "isLightTheme") == 0;
   }
 
