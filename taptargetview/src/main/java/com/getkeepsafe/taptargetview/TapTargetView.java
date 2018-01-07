@@ -68,6 +68,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 @SuppressLint("ViewConstructor")
 public class TapTargetView extends View {
   private boolean isDismissed = false;
+  private boolean isDismissing = false;
   private boolean isInteractable = true;
 
   final int TARGET_PADDING;
@@ -429,6 +430,9 @@ public class TapTargetView extends View {
     globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
       @Override
       public void onGlobalLayout() {
+        if (isDismissing) {
+          return;
+        }
         updateTextLayouts();
         target.onReady(new Runnable() {
           @Override
@@ -607,6 +611,7 @@ public class TapTargetView extends View {
   void onDismiss(boolean userInitiated) {
     if (isDismissed) return;
 
+    isDismissing = false;
     isDismissed = true;
 
     for (final ValueAnimator animator : animators) {
@@ -732,6 +737,7 @@ public class TapTargetView extends View {
    *                     (results in different dismiss animations)
    */
   public void dismiss(boolean tappedTarget) {
+    isDismissing = true;
     pulseAnimation.cancel();
     expandAnimation.cancel();
     if (tappedTarget) {
