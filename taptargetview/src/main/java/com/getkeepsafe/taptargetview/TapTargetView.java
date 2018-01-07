@@ -885,6 +885,11 @@ public class TapTargetView extends View {
   }
 
   void calculateDrawingBounds() {
+    if (outerCircleCenter == null) {
+      // Called dismiss before we got a chance to display the tap target
+      // So we have no center -> cant determine the drawing bounds
+      return;
+    }
     drawingBounds.left = (int) Math.max(0, outerCircleCenter[0] - outerCircleRadius);
     drawingBounds.top = (int) Math.min(0, outerCircleCenter[1] - outerCircleRadius);
     drawingBounds.right = (int) Math.min(getWidth(),
