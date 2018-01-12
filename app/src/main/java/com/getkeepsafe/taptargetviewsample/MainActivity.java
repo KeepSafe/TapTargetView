@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     droidTarget.offset(display.getWidth() / 2, display.getHeight() / 2);
 
     final SpannableString sassyDesc = new SpannableString("It allows you to go back, sometimes");
-    sassyDesc.setSpan(new StyleSpan(Typeface.ITALIC), sassyDesc.length() - "somtimes".length(), sassyDesc.length(), 0);
+    sassyDesc.setSpan(new StyleSpan(Typeface.ITALIC), sassyDesc.length() - "sometimes".length(), sassyDesc.length(), 0);
 
     // We have a sequence of targets, so lets build it!
     final TapTargetSequence sequence = new TapTargetSequence(this)
