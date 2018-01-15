@@ -43,6 +43,15 @@ public class TapTargetSequence {
   Listener listener;
   boolean considerOuterCircleCanceled;
   boolean continueOnCancel;
+  boolean showSequencePagination = false;
+  int totalTargetsCount = 0;
+
+  @Nullable
+  CharSequence skipText = null;
+  @Nullable
+  CharSequence nextText = null;
+  @Nullable
+  CharSequence doneText = null;
 
   public interface Listener {
     /** Called when there are no more tap targets to display */
