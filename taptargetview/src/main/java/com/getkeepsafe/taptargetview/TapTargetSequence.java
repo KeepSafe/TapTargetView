@@ -222,10 +222,19 @@ public class TapTargetSequence {
   void showNext() {
     try {
       TapTarget tapTarget = targets.remove();
+
+      if (showSequencePagination) {
+        tapTarget.showSequencePagination = true;
+        tapTarget.sequenceCurrentTargetIndex = totalTargetsCount - targets.size();
+        tapTarget.sequenceTargetCount = totalTargetsCount;
+      }
+
       if (activity != null) {
-        currentView = TapTargetView.showFor(activity, tapTarget, tapTargetListener);
+        currentView = TapTargetView.showFor(activity, tapTarget, tapTargetListener,
+            this.skipText, this.nextText, this.doneText);
       } else {
-        currentView = TapTargetView.showFor(dialog, tapTarget, tapTargetListener);
+        currentView = TapTargetView.showFor(dialog, tapTarget, tapTargetListener,
+            this.skipText, this.nextText, this.doneText);
       }
     } catch (NoSuchElementException e) {
       // No more targets
