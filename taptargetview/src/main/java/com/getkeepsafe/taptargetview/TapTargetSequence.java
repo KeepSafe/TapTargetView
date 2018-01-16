@@ -118,6 +118,26 @@ public class TapTargetSequence {
     return this;
   }
 
+  /** Adds bullets pagination and buttons to the sequence **/
+  public TapTargetSequence showPagination(@Nullable CharSequence skipText, @Nullable CharSequence nextText, @Nullable CharSequence doneText) {
+    this.skipText = skipText;
+    this.nextText = nextText;
+    this.doneText = doneText;
+    this.showSequencePagination = true;
+    if (!targets.isEmpty()) this.totalTargetsCount = targets.size();
+    return this;
+  }
+
+  /** Removes bullets pagination and buttons to the sequence **/
+  public TapTargetSequence hidePagination() {
+    this.skipText = null;
+    this.nextText = null;
+    this.doneText = null;
+    this.showSequencePagination = false;
+    this.totalTargetsCount = 0;
+    return this;
+  }
+
   /** Specify the listener for this sequence **/
   public TapTargetSequence listener(Listener listener) {
     this.listener = listener;
