@@ -801,9 +801,9 @@ public class TapTargetView extends View {
           }
 
         } else if (doneLayout != null) {
-          c.translate(textBounds.right - spacingBulletsTexts - doneLayout.getWidth(), 0);
+          c.translate(doneLayout.getWidth(), 0);
           doneLayout.draw(c);
-          doneTextPosition = textBounds.right - doneLayout.getWidth();
+          doneTextPosition = textBounds.left + spacingBulletsTexts + TEXT_PADDING;
         }
       }
     }
