@@ -82,6 +82,11 @@ public class TapTargetView extends View {
   final int GUTTER_DIM;
   final int SHADOW_DIM;
   final int SHADOW_JITTER_DIM;
+  final int BUTTON_PADDING;
+  final int BULLETS_MAX_NUMBERS;
+  final int BULLETS_PADDING;
+  final int BULLETS_SPACING;
+  final int BULLETS_RADIUS;
 
   @Nullable
   final ViewGroup boundingParent;
@@ -91,6 +96,8 @@ public class TapTargetView extends View {
 
   final TextPaint titlePaint;
   final TextPaint descriptionPaint;
+  final TextPaint paginationMainPaint;
+  final TextPaint paginationSecondayPaint;
   final Paint outerCirclePaint;
   final Paint outerCircleShadowPaint;
   final Paint targetCirclePaint;
@@ -103,6 +110,18 @@ public class TapTargetView extends View {
   CharSequence description;
   @Nullable
   StaticLayout descriptionLayout;
+  @Nullable
+  CharSequence skipText;
+  @Nullable
+  StaticLayout skipLayout;
+  @Nullable
+  CharSequence nextText;
+  @Nullable
+  StaticLayout nextLayout;
+  @Nullable
+  CharSequence doneText;
+  @Nullable
+  StaticLayout doneLayout;
   boolean isDark;
   boolean debug;
   boolean shouldTintTarget;
@@ -144,6 +163,9 @@ public class TapTargetView extends View {
 
   int topBoundary;
   int bottomBoundary;
+  int skipTextXPosition;
+  int nextTextPosition;
+  int doneTextPosition;
 
   Bitmap tintedTarget;
 
