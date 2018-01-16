@@ -1056,7 +1056,25 @@ public class TapTargetView extends View {
       return titleLayout.getHeight() + TEXT_SPACING;
     }
 
-    return titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
+    if (target.sequenceTargetCount == 0) {
+      return titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
+    }
+
+
+    int sequenceMaxHeight = 0;
+    if (target.sequenceCurrentTargetIndex < target.sequenceTargetCount) {
+      if (skipLayout != null && nextLayout != null) {
+        sequenceMaxHeight = Math.max(skipLayout.getHeight(), nextLayout.getHeight());
+      } else if (skipLayout != null) {
+        sequenceMaxHeight = skipLayout.getHeight();
+      } else {
+        sequenceMaxHeight = nextLayout.getHeight();
+      }
+    } else {
+      if (doneLayout != null) sequenceMaxHeight = doneLayout.getHeight();
+    }
+
+    return titleLayout.getHeight() + descriptionLayout.getHeight() + sequenceMaxHeight + (TEXT_SPACING * 2);
   }
 
   int getTotalTextWidth() {
