@@ -179,13 +179,18 @@ public class TapTargetView extends View {
   }
 
   public static TapTargetView showFor(Activity activity, TapTarget target, Listener listener) {
+    return showFor(activity, target, listener, null, null, null);
+  }
+
+  public static TapTargetView showFor(Activity activity, TapTarget target, Listener listener, @Nullable CharSequence skipText, @Nullable CharSequence nextText, @Nullable CharSequence doneText) {
     if (activity == null) throw new IllegalArgumentException("Activity is null");
 
     final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
     final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     final ViewGroup content = (ViewGroup) decor.findViewById(android.R.id.content);
-    final TapTargetView tapTargetView = new TapTargetView(activity, decor, content, target, listener);
+    final TapTargetView tapTargetView = new TapTargetView(activity, decor, content, target, listener,
+        skipText, nextText, doneText);
     decor.addView(tapTargetView, layoutParams);
 
     return tapTargetView;
@@ -196,6 +201,10 @@ public class TapTargetView extends View {
   }
 
   public static TapTargetView showFor(Dialog dialog, TapTarget target, Listener listener) {
+    return showFor(dialog, target, listener, null, null, null);
+  }
+
+  public static TapTargetView showFor(Dialog dialog, TapTarget target, Listener listener, @Nullable CharSequence skipText, @Nullable CharSequence nextText, @Nullable CharSequence doneText) {
     if (dialog == null) throw new IllegalArgumentException("Dialog is null");
 
     final Context context = dialog.getContext();
@@ -210,7 +219,8 @@ public class TapTargetView extends View {
     params.width = WindowManager.LayoutParams.MATCH_PARENT;
     params.height = WindowManager.LayoutParams.MATCH_PARENT;
 
-    final TapTargetView tapTargetView = new TapTargetView(context, windowManager, null, target, listener);
+    final TapTargetView tapTargetView = new TapTargetView(context, windowManager, null, target, listener,
+        skipText, nextText, doneText);
     windowManager.addView(tapTargetView, params);
 
     return tapTargetView;
@@ -392,7 +402,10 @@ public class TapTargetView extends View {
                        final ViewManager parent,
                        @Nullable final ViewGroup boundingParent,
                        final TapTarget target,
-                       @Nullable final Listener userListener) {
+                       @Nullable final Listener userListener,
+                       @Nullable CharSequence skipText,
+                       @Nullable CharSequence nextText,
+                       @Nullable CharSequence doneText) {
     super(context);
     if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
