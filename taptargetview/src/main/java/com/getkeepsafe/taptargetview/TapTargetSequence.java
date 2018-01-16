@@ -151,6 +151,7 @@ public class TapTargetSequence {
       return;
     }
 
+    if (showSequencePagination) totalTargetsCount = targets.size();
     active = true;
     showNext();
   }
