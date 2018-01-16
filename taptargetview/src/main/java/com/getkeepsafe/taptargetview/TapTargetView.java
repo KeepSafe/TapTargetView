@@ -447,12 +447,15 @@ public class TapTargetView extends View {
     titlePaint.setTextSize(target.titleTextSizePx(context));
     titlePaint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     titlePaint.setAntiAlias(true);
+    paginationMainPaint = titlePaint;
+    paginationMainPaint.setTextSize(target.descriptionTextSizePx(context));
 
     descriptionPaint = new TextPaint();
     descriptionPaint.setTextSize(target.descriptionTextSizePx(context));
     descriptionPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
     descriptionPaint.setAntiAlias(true);
     descriptionPaint.setAlpha((int) (0.54f * 255.0f));
+    paginationSecondayPaint = descriptionPaint;
 
     outerCirclePaint = new Paint();
     outerCirclePaint.setAntiAlias(true);
@@ -628,23 +631,29 @@ public class TapTargetView extends View {
     final Integer titleTextColor = target.titleTextColorInt(context);
     if (titleTextColor != null) {
       titlePaint.setColor(titleTextColor);
+      paginationMainPaint.setColor(titleTextColor);
     } else {
       titlePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
+      paginationMainPaint.setColor(isDark ? Color.BLACK : Color.WHITE);
     }
 
     final Integer descriptionTextColor = target.descriptionTextColorInt(context);
     if (descriptionTextColor != null) {
       descriptionPaint.setColor(descriptionTextColor);
+      paginationSecondayPaint.setColor(descriptionTextColor);
     } else {
       descriptionPaint.setColor(titlePaint.getColor());
+      paginationSecondayPaint.setColor(titlePaint.getColor());
     }
 
     if (target.titleTypeface != null) {
       titlePaint.setTypeface(target.titleTypeface);
+      paginationMainPaint.setTypeface(target.titleTypeface);
     }
 
     if (target.descriptionTypeface != null) {
       descriptionPaint.setTypeface(target.descriptionTypeface);
+      paginationSecondayPaint.setTypeface(target.descriptionTypeface);
     }
   }
 
@@ -710,6 +719,7 @@ public class TapTargetView extends View {
     {
       c.translate(textBounds.left, textBounds.top);
       titlePaint.setAlpha(textAlpha);
+      paginationMainPaint.setAlpha(textAlpha);
       if (titleLayout != null) {
         titleLayout.draw(c);
       }
@@ -717,6 +727,7 @@ public class TapTargetView extends View {
       if (descriptionLayout != null && titleLayout != null) {
         c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
         descriptionPaint.setAlpha((int) (target.descriptionTextAlpha * textAlpha));
+        paginationSecondayPaint.setAlpha((int) (target.descriptionTextAlpha * textAlpha));
         descriptionLayout.draw(c);
       }
     }
