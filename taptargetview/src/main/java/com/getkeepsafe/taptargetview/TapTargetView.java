@@ -536,6 +536,46 @@ public class TapTargetView extends View {
             (int) lastTouchX, (int) lastTouchY);
         final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
 
+        if (target.showSequencePagination && clickedInsideOfOuterCircle) {
+          if (target.sequenceCurrentTargetIndex < target.sequenceTargetCount) {
+
+            int buttonHeight;
+            if (skipLayout != null && nextLayout != null) {
+              buttonHeight = Math.max(skipLayout.getHeight(), nextLayout.getHeight());
+            } else if (skipLayout != null) {
+              buttonHeight = skipLayout.getHeight();
+            } else {
+              buttonHeight = nextLayout.getHeight();
+            }
+
+            boolean clickedInSkipText = skipLayout != null &&
+                (lastTouchX > (skipTextXPosition - BUTTON_PADDING) && lastTouchX < (nextTextPosition + BUTTON_PADDING))
+                && (lastTouchY > (textBounds.bottom - buttonHeight - BUTTON_PADDING) && lastTouchY < (textBounds.bottom + BUTTON_PADDING));
+
+
+            boolean clickedInNextText = nextLayout != null &&
+                (lastTouchX > (nextTextPosition - BUTTON_PADDING) && lastTouchX < (textBounds.right + BUTTON_PADDING))
+                && (lastTouchY > (textBounds.bottom - buttonHeight - BUTTON_PADDING) && lastTouchY < (textBounds.bottom + BUTTON_PADDING));
+
+            if (clickedInNextText) {
+              isInteractable = false;
+              listener.onTargetClick(TapTargetView.this);
+            } else if (clickedInSkipText && cancelable) {
+              isInteractable = false;
+              listener.onTargetCancel(TapTargetView.this);
+            }
+          } else {
+            final boolean clickedInDoneText = doneLayout != null &&
+                (lastTouchX > (doneTextPosition - BUTTON_PADDING) && lastTouchX < (textBounds.right + BUTTON_PADDING))
+                && (lastTouchY > (textBounds.bottom - doneLayout.getHeight() - BUTTON_PADDING) && lastTouchY < (textBounds.bottom + BUTTON_PADDING));
+
+            if (clickedInDoneText) {
+              isInteractable = false;
+              listener.onTargetClick(TapTargetView.this);
+            }
+          }
+        }
+
         if (clickedInTarget) {
           isInteractable = false;
           listener.onTargetClick(TapTargetView.this);
