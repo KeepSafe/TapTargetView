@@ -415,6 +415,9 @@ public class TapTargetView extends View {
     this.listener = userListener != null ? userListener : new Listener();
     this.title = target.title;
     this.description = target.description;
+    this.skipText = skipText;
+    this.nextText = nextText;
+    this.doneText = doneText;
 
     TARGET_PADDING = UiUtil.dp(context, 20);
     CIRCLE_PADDING = UiUtil.dp(context, 40);
@@ -427,10 +430,18 @@ public class TapTargetView extends View {
     SHADOW_DIM = UiUtil.dp(context, 8);
     SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
     TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
+    BUTTON_PADDING = UiUtil.dp(context, 8);
+    BULLETS_MAX_NUMBERS = 5;
+    BULLETS_PADDING = UiUtil.dp(getContext(), 4);
+    BULLETS_SPACING = UiUtil.dp(getContext(), 12);
+    BULLETS_RADIUS = UiUtil.dp(getContext(), 4);
 
     outerCirclePath = new Path();
     targetBounds = new Rect();
     drawingBounds = new Rect();
+    skipTextXPosition = 0;
+    nextTextPosition = 0;
+    doneTextPosition = 0;
 
     titlePaint = new TextPaint();
     titlePaint.setTextSize(target.titleTextSizePx(context));
