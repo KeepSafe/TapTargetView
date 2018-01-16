@@ -770,6 +770,42 @@ public class TapTargetView extends View {
         paginationSecondayPaint.setAlpha((int) (target.descriptionTextAlpha * textAlpha));
         descriptionLayout.draw(c);
       }
+
+      if (target.showSequencePagination) {
+        c.translate(UiUtil.dp(getContext(), 2), 0);
+        if (descriptionLayout != null) {
+          c.translate(0, descriptionLayout.getHeight() + (TEXT_SPACING * 2));
+        } else if (titleLayout != null) {
+          c.translate(0, titleLayout.getHeight() + (TEXT_SPACING * 2));
+        }
+
+        final boolean extensiveSequence = target.sequenceTargetCount > BULLETS_MAX_NUMBERS;
+        if (!extensiveSequence) drawDefaultBullets(c, 1, target.sequenceTargetCount);
+        else drawExtensivePaginationIndicatorBullets(c);
+
+        c.translate(0, -TEXT_SPACING);
+        final int spacingBulletsTexts = BULLETS_SPACING * Math.min(target.sequenceTargetCount, BULLETS_MAX_NUMBERS);
+
+        if (target.sequenceCurrentTargetIndex < target.sequenceTargetCount) {
+          c.translate(TEXT_PADDING, 0);
+
+          if (skipLayout != null && target.cancelable) {
+            skipLayout.draw(c);
+          }
+          skipTextXPosition = textBounds.left + spacingBulletsTexts + TEXT_PADDING;
+
+          if (nextLayout != null) {
+            c.translate(nextLayout.getWidth() + TEXT_SPACING, 0);
+            nextLayout.draw(c);
+            nextTextPosition = skipTextXPosition + nextLayout.getWidth() + TEXT_SPACING;
+          }
+
+        } else if (doneLayout != null) {
+          c.translate(textBounds.right - spacingBulletsTexts - doneLayout.getWidth(), 0);
+          doneLayout.draw(c);
+          doneTextPosition = textBounds.right - doneLayout.getWidth();
+        }
+      }
     }
     c.restoreToCount(saveCount);
 
@@ -790,6 +826,42 @@ public class TapTargetView extends View {
 
     if (debug) {
       drawDebugInformation(c);
+    }
+  }
+
+  private void drawDefaultBullets(Canvas c, int initialBulletIndex, int bulletsNumber) {
+    for (int i = initialBulletIndex; i <= bulletsNumber; i++) {
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS,
+          (i == target.sequenceCurrentTargetIndex) ? paginationMainPaint : paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+    }
+  }
+
+  private void drawExtensivePaginationIndicatorBullets(Canvas c) {
+    if (target.sequenceCurrentTargetIndex < BULLETS_MAX_NUMBERS - 3) {
+      drawDefaultBullets(c, 1, 3);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 1, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+    } else if (target.sequenceCurrentTargetIndex > target.sequenceTargetCount - 3) {
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 1, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      drawDefaultBullets(c, target.sequenceTargetCount - 2, target.sequenceTargetCount);
+    } else {
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      drawDefaultBullets(c, target.sequenceCurrentTargetIndex - 1, target.sequenceCurrentTargetIndex + 1);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
     }
   }
 
