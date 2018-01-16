@@ -957,6 +957,31 @@ public class TapTargetView extends View {
     } else {
       descriptionLayout = null;
     }
+
+    if (target.showSequencePagination) {
+      if (skipText != null) {
+        skipLayout = new StaticLayout(this.skipText, paginationSecondayPaint, textWidth / 3,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+      } else {
+        skipLayout = null;
+      }
+
+      if (nextText != null) {
+        nextLayout = new StaticLayout(this.nextText, paginationMainPaint, textWidth / 3,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+      } else {
+        nextLayout = null;
+      }
+
+      if (doneText != null) {
+        doneLayout = new StaticLayout(this.doneText, paginationMainPaint, textWidth / 3,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+      } else {
+        doneLayout = null;
+      }
+    } else {
+      nextLayout = null;
+    }
   }
 
   float halfwayLerp(float lerp) {
