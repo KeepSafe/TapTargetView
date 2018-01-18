@@ -441,23 +441,18 @@ public class TapTargetView extends View {
 
             targetBounds.set(target.bounds());
 
-            getLocationOnScreen(offset);
+            getLocationInWindow(offset);
             targetBounds.offset(-offset[0], -offset[1]);
 
             if (boundingParent != null) {
-              final WindowManager windowManager
-                  = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-              final DisplayMetrics displayMetrics = new DisplayMetrics();
-              windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-
-              final Rect rect = new Rect();
-              boundingParent.getWindowVisibleDisplayFrame(rect);
+              int[] viewLocation = new int[2];
+              boundingParent.getLocationInWindow(viewLocation);
 
               // We bound the boundaries to be within the screen's coordinates to
               // handle the case where the layout bounds do not match
               // (like when FLAG_LAYOUT_NO_LIMITS is specified)
-              topBoundary = Math.max(0, rect.top);
-              bottomBoundary = Math.min(rect.bottom, displayMetrics.heightPixels);
+              topBoundary = Math.max(0, viewLocation[1]);
+              bottomBoundary = viewLocation[1] + boundingParent.getHeight();
             }
 
             drawTintedTarget();
