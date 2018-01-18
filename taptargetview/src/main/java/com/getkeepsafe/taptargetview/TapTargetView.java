@@ -82,6 +82,11 @@ public class TapTargetView extends View {
   final int GUTTER_DIM;
   final int SHADOW_DIM;
   final int SHADOW_JITTER_DIM;
+  final int BUTTON_PADDING;
+  final int BULLETS_MAX_NUMBERS;
+  final int BULLETS_PADDING;
+  final int BULLETS_SPACING;
+  final int BULLETS_RADIUS;
 
   @Nullable
   final ViewGroup boundingParent;
@@ -91,6 +96,8 @@ public class TapTargetView extends View {
 
   final TextPaint titlePaint;
   final TextPaint descriptionPaint;
+  final TextPaint paginationMainPaint;
+  final TextPaint paginationSecondayPaint;
   final Paint outerCirclePaint;
   final Paint outerCircleShadowPaint;
   final Paint targetCirclePaint;
@@ -103,6 +110,18 @@ public class TapTargetView extends View {
   CharSequence description;
   @Nullable
   StaticLayout descriptionLayout;
+  @Nullable
+  CharSequence skipText;
+  @Nullable
+  StaticLayout skipLayout;
+  @Nullable
+  CharSequence nextText;
+  @Nullable
+  StaticLayout nextLayout;
+  @Nullable
+  CharSequence doneText;
+  @Nullable
+  StaticLayout doneLayout;
   boolean isDark;
   boolean debug;
   boolean shouldTintTarget;
@@ -144,6 +163,9 @@ public class TapTargetView extends View {
 
   int topBoundary;
   int bottomBoundary;
+  int skipTextXPosition;
+  int nextTextPosition;
+  int doneTextPosition;
 
   Bitmap tintedTarget;
 
@@ -157,13 +179,18 @@ public class TapTargetView extends View {
   }
 
   public static TapTargetView showFor(Activity activity, TapTarget target, Listener listener) {
+    return showFor(activity, target, listener, null, null, null);
+  }
+
+  public static TapTargetView showFor(Activity activity, TapTarget target, Listener listener, @Nullable CharSequence skipText, @Nullable CharSequence nextText, @Nullable CharSequence doneText) {
     if (activity == null) throw new IllegalArgumentException("Activity is null");
 
     final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
     final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     final ViewGroup content = (ViewGroup) decor.findViewById(android.R.id.content);
-    final TapTargetView tapTargetView = new TapTargetView(activity, decor, content, target, listener);
+    final TapTargetView tapTargetView = new TapTargetView(activity, decor, content, target, listener,
+        skipText, nextText, doneText);
     decor.addView(tapTargetView, layoutParams);
 
     return tapTargetView;
@@ -174,6 +201,10 @@ public class TapTargetView extends View {
   }
 
   public static TapTargetView showFor(Dialog dialog, TapTarget target, Listener listener) {
+    return showFor(dialog, target, listener, null, null, null);
+  }
+
+  public static TapTargetView showFor(Dialog dialog, TapTarget target, Listener listener, @Nullable CharSequence skipText, @Nullable CharSequence nextText, @Nullable CharSequence doneText) {
     if (dialog == null) throw new IllegalArgumentException("Dialog is null");
 
     final Context context = dialog.getContext();
@@ -188,7 +219,8 @@ public class TapTargetView extends View {
     params.width = WindowManager.LayoutParams.MATCH_PARENT;
     params.height = WindowManager.LayoutParams.MATCH_PARENT;
 
-    final TapTargetView tapTargetView = new TapTargetView(context, windowManager, null, target, listener);
+    final TapTargetView tapTargetView = new TapTargetView(context, windowManager, null, target, listener,
+        skipText, nextText, doneText);
     windowManager.addView(tapTargetView, params);
 
     return tapTargetView;
@@ -370,7 +402,10 @@ public class TapTargetView extends View {
                        final ViewManager parent,
                        @Nullable final ViewGroup boundingParent,
                        final TapTarget target,
-                       @Nullable final Listener userListener) {
+                       @Nullable final Listener userListener,
+                       @Nullable CharSequence skipText,
+                       @Nullable CharSequence nextText,
+                       @Nullable CharSequence doneText) {
     super(context);
     if (target == null) throw new IllegalArgumentException("Target cannot be null");
 
@@ -380,6 +415,9 @@ public class TapTargetView extends View {
     this.listener = userListener != null ? userListener : new Listener();
     this.title = target.title;
     this.description = target.description;
+    this.skipText = skipText;
+    this.nextText = nextText;
+    this.doneText = doneText;
 
     TARGET_PADDING = UiUtil.dp(context, 20);
     CIRCLE_PADDING = UiUtil.dp(context, 40);
@@ -392,21 +430,32 @@ public class TapTargetView extends View {
     SHADOW_DIM = UiUtil.dp(context, 8);
     SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
     TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
+    BUTTON_PADDING = UiUtil.dp(context, 8);
+    BULLETS_MAX_NUMBERS = 5;
+    BULLETS_PADDING = UiUtil.dp(getContext(), 4);
+    BULLETS_SPACING = UiUtil.dp(getContext(), 12);
+    BULLETS_RADIUS = UiUtil.dp(getContext(), 4);
 
     outerCirclePath = new Path();
     targetBounds = new Rect();
     drawingBounds = new Rect();
+    skipTextXPosition = 0;
+    nextTextPosition = 0;
+    doneTextPosition = 0;
 
     titlePaint = new TextPaint();
     titlePaint.setTextSize(target.titleTextSizePx(context));
     titlePaint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     titlePaint.setAntiAlias(true);
+    paginationMainPaint = titlePaint;
+    paginationMainPaint.setTextSize(target.descriptionTextSizePx(context));
 
     descriptionPaint = new TextPaint();
     descriptionPaint.setTextSize(target.descriptionTextSizePx(context));
     descriptionPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
     descriptionPaint.setAntiAlias(true);
     descriptionPaint.setAlpha((int) (0.54f * 255.0f));
+    paginationSecondayPaint = descriptionPaint;
 
     outerCirclePaint = new Paint();
     outerCirclePaint.setAntiAlias(true);
@@ -486,6 +535,46 @@ public class TapTargetView extends View {
         final double distanceToOuterCircleCenter = distance(outerCircleCenter[0], outerCircleCenter[1],
             (int) lastTouchX, (int) lastTouchY);
         final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
+
+        if (target.showSequencePagination && clickedInsideOfOuterCircle) {
+          if (target.sequenceCurrentTargetIndex < target.sequenceTargetCount) {
+
+            int buttonHeight;
+            if (skipLayout != null && nextLayout != null) {
+              buttonHeight = Math.max(skipLayout.getHeight(), nextLayout.getHeight());
+            } else if (skipLayout != null) {
+              buttonHeight = skipLayout.getHeight();
+            } else {
+              buttonHeight = nextLayout.getHeight();
+            }
+
+            boolean clickedInSkipText = skipLayout != null &&
+                (lastTouchX > (skipTextXPosition - BUTTON_PADDING) && lastTouchX < (nextTextPosition + BUTTON_PADDING))
+                && (lastTouchY > (textBounds.bottom - buttonHeight - BUTTON_PADDING) && lastTouchY < (textBounds.bottom + BUTTON_PADDING));
+
+
+            boolean clickedInNextText = nextLayout != null &&
+                (lastTouchX > (nextTextPosition - BUTTON_PADDING) && lastTouchX < (textBounds.right + BUTTON_PADDING))
+                && (lastTouchY > (textBounds.bottom - buttonHeight - BUTTON_PADDING) && lastTouchY < (textBounds.bottom + BUTTON_PADDING));
+
+            if (clickedInNextText) {
+              isInteractable = false;
+              listener.onTargetClick(TapTargetView.this);
+            } else if (clickedInSkipText && cancelable) {
+              isInteractable = false;
+              listener.onTargetCancel(TapTargetView.this);
+            }
+          } else {
+            final boolean clickedInDoneText = doneLayout != null &&
+                (lastTouchX > (doneTextPosition - BUTTON_PADDING) && lastTouchX < (textBounds.right + BUTTON_PADDING))
+                && (lastTouchY > (textBounds.bottom - doneLayout.getHeight() - BUTTON_PADDING) && lastTouchY < (textBounds.bottom + BUTTON_PADDING));
+
+            if (clickedInDoneText) {
+              isInteractable = false;
+              listener.onTargetClick(TapTargetView.this);
+            }
+          }
+        }
 
         if (clickedInTarget) {
           isInteractable = false;
@@ -582,23 +671,29 @@ public class TapTargetView extends View {
     final Integer titleTextColor = target.titleTextColorInt(context);
     if (titleTextColor != null) {
       titlePaint.setColor(titleTextColor);
+      paginationMainPaint.setColor(titleTextColor);
     } else {
       titlePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
+      paginationMainPaint.setColor(isDark ? Color.BLACK : Color.WHITE);
     }
 
     final Integer descriptionTextColor = target.descriptionTextColorInt(context);
     if (descriptionTextColor != null) {
       descriptionPaint.setColor(descriptionTextColor);
+      paginationSecondayPaint.setColor(descriptionTextColor);
     } else {
       descriptionPaint.setColor(titlePaint.getColor());
+      paginationSecondayPaint.setColor(titlePaint.getColor());
     }
 
     if (target.titleTypeface != null) {
       titlePaint.setTypeface(target.titleTypeface);
+      paginationMainPaint.setTypeface(target.titleTypeface);
     }
 
     if (target.descriptionTypeface != null) {
       descriptionPaint.setTypeface(target.descriptionTypeface);
+      paginationSecondayPaint.setTypeface(target.descriptionTypeface);
     }
   }
 
@@ -664,6 +759,7 @@ public class TapTargetView extends View {
     {
       c.translate(textBounds.left, textBounds.top);
       titlePaint.setAlpha(textAlpha);
+      paginationMainPaint.setAlpha(textAlpha);
       if (titleLayout != null) {
         titleLayout.draw(c);
       }
@@ -671,7 +767,44 @@ public class TapTargetView extends View {
       if (descriptionLayout != null && titleLayout != null) {
         c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
         descriptionPaint.setAlpha((int) (target.descriptionTextAlpha * textAlpha));
+        paginationSecondayPaint.setAlpha((int) (target.descriptionTextAlpha * textAlpha));
         descriptionLayout.draw(c);
+      }
+
+      if (target.showSequencePagination) {
+        c.translate(UiUtil.dp(getContext(), 2), 0);
+        if (descriptionLayout != null) {
+          c.translate(0, descriptionLayout.getHeight() + (TEXT_SPACING * 2));
+        } else if (titleLayout != null) {
+          c.translate(0, titleLayout.getHeight() + (TEXT_SPACING * 2));
+        }
+
+        final boolean extensiveSequence = target.sequenceTargetCount > BULLETS_MAX_NUMBERS;
+        if (!extensiveSequence) drawDefaultBullets(c, 1, target.sequenceTargetCount);
+        else drawExtensivePaginationIndicatorBullets(c);
+
+        c.translate(0, -TEXT_SPACING);
+        final int spacingBulletsTexts = BULLETS_SPACING * Math.min(target.sequenceTargetCount, BULLETS_MAX_NUMBERS);
+
+        if (target.sequenceCurrentTargetIndex < target.sequenceTargetCount) {
+          c.translate(TEXT_PADDING, 0);
+
+          if (skipLayout != null && target.cancelable) {
+            skipLayout.draw(c);
+          }
+          skipTextXPosition = textBounds.left + spacingBulletsTexts + TEXT_PADDING;
+
+          if (nextLayout != null) {
+            c.translate(nextLayout.getWidth() + TEXT_SPACING, 0);
+            nextLayout.draw(c);
+            nextTextPosition = skipTextXPosition + nextLayout.getWidth() + TEXT_SPACING;
+          }
+
+        } else if (doneLayout != null) {
+          c.translate(doneLayout.getWidth(), 0);
+          doneLayout.draw(c);
+          doneTextPosition = textBounds.left + spacingBulletsTexts + TEXT_PADDING;
+        }
       }
     }
     c.restoreToCount(saveCount);
@@ -693,6 +826,42 @@ public class TapTargetView extends View {
 
     if (debug) {
       drawDebugInformation(c);
+    }
+  }
+
+  private void drawDefaultBullets(Canvas c, int initialBulletIndex, int bulletsNumber) {
+    for (int i = initialBulletIndex; i <= bulletsNumber; i++) {
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS,
+          (i == target.sequenceCurrentTargetIndex) ? paginationMainPaint : paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+    }
+  }
+
+  private void drawExtensivePaginationIndicatorBullets(Canvas c) {
+    if (target.sequenceCurrentTargetIndex < BULLETS_MAX_NUMBERS - 3) {
+      drawDefaultBullets(c, 1, 3);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 1, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+    } else if (target.sequenceCurrentTargetIndex > target.sequenceTargetCount - 3) {
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 1, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      drawDefaultBullets(c, target.sequenceTargetCount - 2, target.sequenceTargetCount);
+    } else {
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
+
+      drawDefaultBullets(c, target.sequenceCurrentTargetIndex - 1, target.sequenceCurrentTargetIndex + 1);
+
+      c.drawCircle(BULLETS_PADDING, BULLETS_PADDING, BULLETS_RADIUS - 2, paginationSecondayPaint);
+      c.translate(BULLETS_SPACING, 0);
     }
   }
 
@@ -860,6 +1029,31 @@ public class TapTargetView extends View {
     } else {
       descriptionLayout = null;
     }
+
+    if (target.showSequencePagination) {
+      if (skipText != null) {
+        skipLayout = new StaticLayout(this.skipText, paginationSecondayPaint, textWidth / 3,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+      } else {
+        skipLayout = null;
+      }
+
+      if (nextText != null) {
+        nextLayout = new StaticLayout(this.nextText, paginationMainPaint, textWidth / 3,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+      } else {
+        nextLayout = null;
+      }
+
+      if (doneText != null) {
+        doneLayout = new StaticLayout(this.doneText, paginationMainPaint, textWidth / 3,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+      } else {
+        doneLayout = null;
+      }
+    } else {
+      nextLayout = null;
+    }
   }
 
   float halfwayLerp(float lerp) {
@@ -959,7 +1153,25 @@ public class TapTargetView extends View {
       return titleLayout.getHeight() + TEXT_SPACING;
     }
 
-    return titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
+    if (target.sequenceTargetCount == 0) {
+      return titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
+    }
+
+
+    int sequenceMaxHeight = 0;
+    if (target.sequenceCurrentTargetIndex < target.sequenceTargetCount) {
+      if (skipLayout != null && nextLayout != null) {
+        sequenceMaxHeight = Math.max(skipLayout.getHeight(), nextLayout.getHeight());
+      } else if (skipLayout != null) {
+        sequenceMaxHeight = skipLayout.getHeight();
+      } else {
+        sequenceMaxHeight = nextLayout.getHeight();
+      }
+    } else {
+      if (doneLayout != null) sequenceMaxHeight = doneLayout.getHeight();
+    }
+
+    return titleLayout.getHeight() + descriptionLayout.getHeight() + sequenceMaxHeight + (TEXT_SPACING * 2);
   }
 
   int getTotalTextWidth() {

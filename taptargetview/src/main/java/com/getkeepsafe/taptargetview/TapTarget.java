@@ -82,6 +82,9 @@ public class TapTarget {
   boolean cancelable = true;
   boolean tintTarget = true;
   boolean transparentTarget = false;
+  boolean showSequencePagination = false;
+  int sequenceTargetCount = 0;
+  int sequenceCurrentTargetIndex = 0;
   float descriptionTextAlpha = 0.54f;
 
   /**

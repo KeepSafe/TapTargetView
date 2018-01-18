@@ -43,6 +43,15 @@ public class TapTargetSequence {
   Listener listener;
   boolean considerOuterCircleCanceled;
   boolean continueOnCancel;
+  boolean showSequencePagination = false;
+  int totalTargetsCount = 0;
+
+  @Nullable
+  CharSequence skipText = null;
+  @Nullable
+  CharSequence nextText = null;
+  @Nullable
+  CharSequence doneText = null;
 
   public interface Listener {
     /** Called when there are no more tap targets to display */
@@ -109,6 +118,26 @@ public class TapTargetSequence {
     return this;
   }
 
+  /** Adds bullets pagination and buttons to the sequence **/
+  public TapTargetSequence showPagination(@Nullable CharSequence skipText, @Nullable CharSequence nextText, @Nullable CharSequence doneText) {
+    this.skipText = skipText;
+    this.nextText = nextText;
+    this.doneText = doneText;
+    this.showSequencePagination = true;
+    if (!targets.isEmpty()) this.totalTargetsCount = targets.size();
+    return this;
+  }
+
+  /** Removes bullets pagination and buttons to the sequence **/
+  public TapTargetSequence hidePagination() {
+    this.skipText = null;
+    this.nextText = null;
+    this.doneText = null;
+    this.showSequencePagination = false;
+    this.totalTargetsCount = 0;
+    return this;
+  }
+
   /** Specify the listener for this sequence **/
   public TapTargetSequence listener(Listener listener) {
     this.listener = listener;
@@ -122,6 +151,7 @@ public class TapTargetSequence {
       return;
     }
 
+    if (showSequencePagination) totalTargetsCount = targets.size();
     active = true;
     showNext();
   }
@@ -192,10 +222,19 @@ public class TapTargetSequence {
   void showNext() {
     try {
       TapTarget tapTarget = targets.remove();
+
+      if (showSequencePagination) {
+        tapTarget.showSequencePagination = true;
+        tapTarget.sequenceCurrentTargetIndex = totalTargetsCount - targets.size();
+        tapTarget.sequenceTargetCount = totalTargetsCount;
+      }
+
       if (activity != null) {
-        currentView = TapTargetView.showFor(activity, tapTarget, tapTargetListener);
+        currentView = TapTargetView.showFor(activity, tapTarget, tapTargetListener,
+            this.skipText, this.nextText, this.doneText);
       } else {
-        currentView = TapTargetView.showFor(dialog, tapTarget, tapTargetListener);
+        currentView = TapTargetView.showFor(dialog, tapTarget, tapTargetListener,
+            this.skipText, this.nextText, this.doneText);
       }
     } catch (NoSuchElementException e) {
       // No more targets
