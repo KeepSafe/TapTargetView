@@ -8,18 +8,18 @@ version = '1.11.0'
 description = 'An implementation of tap targets from the Material Design guidelines for feature discovery'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
 
     defaultConfig {
         minSdkVersion 14
     }
 }
 
-def supportLibraryVersion = '25.3.0'
+def supportLibraryVersion = '27.0.2'
 dependencies {
-    compile "com.android.support:support-annotations:$supportLibraryVersion"
-    compile "com.android.support:support-compat:$supportLibraryVersion"
-    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:support-annotations:$supportLibraryVersion"
+    implementation "com.android.support:support-compat:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 }
 
 install {
