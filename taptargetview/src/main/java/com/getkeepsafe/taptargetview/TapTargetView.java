@@ -273,6 +273,7 @@ public class TapTargetView extends View {
         @Override
         public void onEnd() {
           pulseAnimation.start();
+          isInteractable = true;
         }
       })
       .build();
@@ -463,10 +464,8 @@ public class TapTargetView extends View {
             drawTintedTarget();
             requestFocus();
             calculateDimensions();
-            if (!visible) {
-              expandAnimation.start();
-              visible = true;
-            }
+
+            startExpandAnimation();
           }
         });
       }
@@ -512,6 +511,14 @@ public class TapTargetView extends View {
         return false;
       }
     });
+  }
+
+  private void startExpandAnimation() {
+    if (!visible) {
+      isInteractable = false;
+      expandAnimation.start();
+      visible = true;
+    }
   }
 
   protected void applyTargetOptions(Context context) {
