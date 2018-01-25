@@ -3,7 +3,12 @@ package com.getkeepsafe.taptargetview;
 import android.content.Context;
 import android.graphics.Rect;
 
-class BoundsTapTarget extends TapTarget {
+public class BoundsTapTarget extends TapTarget {
+  /** Returns a tap target builder for the specified bounds **/
+  public static TapTarget.Builder of(Context context, Rect bounds) {
+    return new BoundsTapTarget.Builder(context, bounds);
+  }
+
   BoundsTapTarget(Rect rect, Parameters parameters) {
     super(parameters);
     setBounds(rect);

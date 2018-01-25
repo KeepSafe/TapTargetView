@@ -17,9 +17,12 @@ import android.view.Display;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.BoundsTapTarget;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
+import com.getkeepsafe.taptargetview.ToolbarTapTarget;
+import com.getkeepsafe.taptargetview.ViewTapTarget;
 
 public class MainActivity extends AppCompatActivity {
   @Override
@@ -53,13 +56,13 @@ public class MainActivity extends AppCompatActivity {
             .targets(
                 // This tap target will target the back button, we just need to pass its containing
                 // toolbar
-                TapTarget.forToolbarNavigationIcon(toolbar)
+                ToolbarTapTarget.ofNavigationIcon(toolbar)
                     .titleText("This is the back button")
                     .descriptionText(sassyDesc)
                     .id("back")
                     .build(),
                 // Likewise, this tap target will target the search button
-                TapTarget.forToolbarMenuItem(toolbar, R.id.search)
+                ToolbarTapTarget.ofMenuItem(toolbar, R.id.search)
                     .titleText("This is a search icon")
                     .titleTextColorRes(android.R.color.black)
                     .descriptionText("As you can see, it has gotten pretty dark around here...")
@@ -71,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
                     .id("search")
                     .build(),
                 // You can also target the overflow button in your toolbar
-                TapTarget.forToolbarOverflow(toolbar)
+                ToolbarTapTarget.ofOverflow(toolbar)
                     .titleText("This will show more options")
                     .descriptionText("But they're not useful :(")
                     .id("more options")
                     .build(),
                 // This tap target will target our droid buddy at the given target rect
-                TapTarget.forBounds(this, droidTarget)
+                BoundsTapTarget.of(this, droidTarget)
                     .titleText("Oh look!")
                     .descriptionText(
                         "You can point to any part of the screen. You also can't cancel this one!")
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Oops", null).show();
             TapTargetView.showFor(
                 MainActivity.this,
-                TapTarget.forView(dialog.getButton(DialogInterface.BUTTON_POSITIVE))
+                ViewTapTarget.of(dialog.getButton(DialogInterface.BUTTON_POSITIVE))
                     .titleText("Uh oh!")
                     .descriptionText("You canceled the sequence at step " + lastTarget.id())
                     .cancelable(false)
@@ -131,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         new UnderlineSpan(), spannedLength - "TapTargetView".length(), spannedLength, 0);
     TapTargetView.showFor(
         this,
-        TapTarget.forView(findViewById(R.id.fab))
+        ViewTapTarget.of(findViewById(R.id.fab))
             .titleText("Hello, world!")
             .descriptionText(spannedDesc)
             .cancelable(false)

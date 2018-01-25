@@ -30,7 +30,43 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Stack;
 
-class ToolbarTapTarget extends ViewTapTarget {
+public final class ToolbarTapTarget extends ViewTapTarget {
+  /** Returns a tap target builder for the overflow button from the given toolbar */
+  public static ToolbarTapTarget.Builder ofOverflow(Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, false);
+  }
+
+  /** Returns a tap target builder for the overflow button from the given toolbar */
+  public static ToolbarTapTarget.Builder ofOverflow(android.widget.Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, false);
+  }
+
+  /**
+   * Returns a tap target builder for the navigation button (back, up, etc) from the given toolbar
+   */
+  public static ToolbarTapTarget.Builder ofNavigationIcon(Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, true);
+  }
+
+  /**
+   * Returns a tap target builder for the navigation button (back, up, etc) from the given toolbar
+   */
+  public static ToolbarTapTarget.Builder ofNavigationIcon(android.widget.Toolbar toolbar) {
+    return new ToolbarTapTarget.Builder(toolbar, true);
+  }
+
+  /** Returns a tap target builder for the menu item from the given toolbar **/
+  public static ToolbarTapTarget.Builder ofMenuItem(
+      Toolbar toolbar, @IdRes int menuItemId) {
+    return new ToolbarTapTarget.Builder(toolbar, menuItemId);
+  }
+
+  /** Returns a tap target builder for the menu item from the given toolbar **/
+  public static ToolbarTapTarget.Builder ofMenuItem(
+      android.widget.Toolbar toolbar, @IdRes int menuItemId) {
+    return new ToolbarTapTarget.Builder(toolbar, menuItemId);
+  }
+
   ToolbarTapTarget(View target, Parameters parameters) {
     super(target, parameters);
   }
@@ -121,7 +157,8 @@ class ToolbarTapTarget extends ViewTapTarget {
     // The "ActionMenuPresenter" then holds a reference to an "OverflowMenuButton" which is the
     // desired target
     try {
-      final Object actionMenuView = ReflectUtil.getPrivateField(toolbar.internalToolbar(), "mMenuView");
+      final Object actionMenuView =
+          ReflectUtil.getPrivateField(toolbar.internalToolbar(), "mMenuView");
       final Object actionMenuPresenter = ReflectUtil.getPrivateField(actionMenuView, "mPresenter");
       return (View) ReflectUtil.getPrivateField(actionMenuPresenter, "mOverflowButton");
     } catch (NoSuchFieldException e) {

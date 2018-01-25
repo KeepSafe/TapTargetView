@@ -21,7 +21,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 
-class ViewTapTarget extends TapTarget {
+public class ViewTapTarget extends TapTarget {
   private final int[] location = new int[2];
   private final View view;
   private final View.OnLayoutChangeListener layoutChangeListener =
@@ -54,6 +54,11 @@ class ViewTapTarget extends TapTarget {
           setBounds(bounds);
         }
       };
+
+  /** Returns a tap target builder for the specified view **/
+  public static ViewTapTarget.Builder of(View view) {
+    return new ViewTapTarget.Builder(view);
+  }
 
   ViewTapTarget(View view, Parameters parameters) {
     super(parameters);

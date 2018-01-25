@@ -53,52 +53,6 @@ public class TapTarget {
 
   private @Nullable TapTargetView parent;
 
-  /** Returns a tap target builder for the overflow button from the given toolbar */
-  public static ToolbarTapTarget.Builder forToolbarOverflow(Toolbar toolbar) {
-    return new ToolbarTapTarget.Builder(toolbar, false);
-  }
-
-  /** Returns a tap target builder for the overflow button from the given toolbar */
-  public static ToolbarTapTarget.Builder forToolbarOverflow(android.widget.Toolbar toolbar) {
-    return new ToolbarTapTarget.Builder(toolbar, false);
-  }
-
-  /**
-   * Returns a tap target builder for the navigation button (back, up, etc) from the given toolbar
-   */
-  public static ToolbarTapTarget.Builder forToolbarNavigationIcon(Toolbar toolbar) {
-    return new ToolbarTapTarget.Builder(toolbar, true);
-  }
-
-  /**
-   * Returns a tap target builder for the navigation button (back, up, etc) from the given toolbar
-   */
-  public static ToolbarTapTarget.Builder forToolbarNavigationIcon(android.widget.Toolbar toolbar) {
-    return new ToolbarTapTarget.Builder(toolbar, true);
-  }
-
-  /** Returns a tap target builder for the menu item from the given toolbar **/
-  public static ToolbarTapTarget.Builder forToolbarMenuItem(
-      Toolbar toolbar, @IdRes int menuItemId) {
-    return new ToolbarTapTarget.Builder(toolbar, menuItemId);
-  }
-
-  /** Returns a tap target builder for the menu item from the given toolbar **/
-  public static ToolbarTapTarget.Builder forToolbarMenuItem(
-      android.widget.Toolbar toolbar, @IdRes int menuItemId) {
-    return new ToolbarTapTarget.Builder(toolbar, menuItemId);
-  }
-
-  /** Returns a tap target builder for the specified view **/
-  public static ViewTapTarget.Builder forView(View view) {
-    return new ViewTapTarget.Builder(view);
-  }
-
-  /** Returns a tap target builder for the specified bounds **/
-  public static TapTarget.Builder forBounds(Context context, Rect bounds) {
-    return new BoundsTapTarget.Builder(context, bounds);
-  }
-
   TapTarget(Parameters parameters) {
     // TODO: Ensure required params
     this.param = parameters;
