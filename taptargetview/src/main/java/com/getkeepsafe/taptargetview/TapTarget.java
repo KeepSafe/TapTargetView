@@ -51,7 +51,7 @@ public class TapTarget {
   private @Nullable TapTargetView parent;
 
   TapTarget(Parameters parameters) {
-    // TODO: Ensure required params
+    parameters.ensureRequiredValues();
     this.param = parameters;
     this.bounds = new Rect();
   }
@@ -120,6 +120,12 @@ public class TapTarget {
     public boolean cancelable;
     public boolean tint;
     public boolean targetCircleTransparent;
+
+    public void ensureRequiredValues() {
+      if (title.text == null) {
+        throw new IllegalArgumentException("You must specify title text for your target");
+      }
+    }
   }
 
   public static class Builder {
