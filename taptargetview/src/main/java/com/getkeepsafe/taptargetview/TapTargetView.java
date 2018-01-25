@@ -474,14 +474,6 @@ public class TapTargetView extends View {
     });
   }
 
-  private void startExpandAnimation() {
-    if (!visible) {
-      isInteractable = false;
-      expandAnimation.start();
-      visible = true;
-    }
-  }
-
   protected void applyTargetOptions(Context context) {
     final boolean shouldDrawShadow = target.param.shadow;
     final boolean transparentTarget = target.param.targetCircleTransparent;
@@ -566,6 +558,7 @@ public class TapTargetView extends View {
     requestFocus();
     calculateDimensions();
     if (!visible) {
+      isInteractable = false;
       expandAnimation.start();
       visible = true;
     }
