@@ -262,6 +262,12 @@ public class TapTargetView extends View {
           expandContractUpdateListener.onUpdate(lerpTime);
         }
       })
+      .onStart(new FloatValueAnimatorBuilder.StartListener() {
+        @Override
+        public void onStart() {
+          isInteractable = false;
+        }
+      })
       .onEnd(new FloatValueAnimatorBuilder.EndListener() {
         @Override
         public void onEnd() {
@@ -558,7 +564,6 @@ public class TapTargetView extends View {
     requestFocus();
     calculateDimensions();
     if (!visible) {
-      isInteractable = false;
       expandAnimation.start();
       visible = true;
     }

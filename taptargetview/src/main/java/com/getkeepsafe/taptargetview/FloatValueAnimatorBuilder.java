@@ -23,8 +23,8 @@ import android.animation.ValueAnimator;
 /** A small wrapper around {@link ValueAnimator} to provide a builder-like interface */
 final class FloatValueAnimatorBuilder {
   final ValueAnimator animator;
-
   EndListener endListener;
+  StartListener startListener;
 
   interface UpdateListener {
     void onUpdate(float lerpTime);
@@ -32,6 +32,10 @@ final class FloatValueAnimatorBuilder {
 
   interface EndListener {
     void onEnd();
+  }
+
+  interface StartListener {
+    void onStart();
   }
 
   protected FloatValueAnimatorBuilder() {
@@ -76,7 +80,12 @@ final class FloatValueAnimatorBuilder {
     return this;
   }
 
-  public FloatValueAnimatorBuilder onEnd(final EndListener listener) {
+  public FloatValueAnimatorBuilder onStart(StartListener listener) {
+    this.startListener = listener;
+    return this;
+  }
+
+  public FloatValueAnimatorBuilder onEnd(EndListener listener) {
     this.endListener = listener;
     return this;
   }
@@ -85,8 +94,17 @@ final class FloatValueAnimatorBuilder {
     if (endListener != null) {
       animator.addListener(new AnimatorListenerAdapter() {
         @Override
+        public void onAnimationStart(Animator animator) {
+          if (startListener != null) {
+            startListener.onStart();
+          }
+        }
+
+        @Override
         public void onAnimationEnd(Animator animation) {
-          endListener.onEnd();
+          if (endListener != null) {
+            endListener.onEnd();
+          }
         }
       });
     }
