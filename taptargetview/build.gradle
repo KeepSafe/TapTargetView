@@ -17,9 +17,9 @@ android {
 
 def supportLibraryVersion = '27.0.2'
 dependencies {
-    implementation "com.android.support:support-annotations:$supportLibraryVersion"
+    api "com.android.support:support-annotations:$supportLibraryVersion"
+    api "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:support-compat:$supportLibraryVersion"
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 }
 
 install {
