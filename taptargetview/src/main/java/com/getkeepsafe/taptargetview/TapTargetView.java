@@ -420,7 +420,7 @@ public class TapTargetView extends View {
     targetCirclePulsePaint = new Paint();
     targetCirclePulsePaint.setAntiAlias(true);
 
-    applyTargetOptions(context);
+    applyTargetOptions(target);
 
     globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
       @Override
@@ -480,9 +480,9 @@ public class TapTargetView extends View {
     });
   }
 
-  protected void applyTargetOptions(Context context) {
-    final boolean shouldDrawShadow = target.param.shadow;
-    final boolean transparentTarget = target.param.targetCircleTransparent;
+  protected void applyTargetOptions(TapTarget newTarget) {
+    final boolean shouldDrawShadow = newTarget.param.shadow;
+    final boolean transparentTarget = newTarget.param.targetCircleTransparent;
 
     // We can't clip out portions of a view outline, so if the user specified a transparent
     // target, we need to fallback to drawing a jittered shadow approximation
@@ -514,22 +514,22 @@ public class TapTargetView extends View {
       setLayerType(LAYER_TYPE_HARDWARE, null);
     }
 
-    outerCirclePaint.setColor(target.param.outerCircle.color);
+    outerCirclePaint.setColor(newTarget.param.outerCircle.color);
 
-    targetCirclePaint.setColor(target.param.targetCircle.color);
+    targetCirclePaint.setColor(newTarget.param.targetCircle.color);
     if (transparentTarget) {
       targetCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
     targetCirclePulsePaint.setColor(targetCirclePaint.getColor());
 
-    titlePaint.setColor(target.param.title.color);
-    titlePaint.setTextSize(target.param.title.size);
-    titlePaint.setTypeface(target.param.title.typeface);
+    titlePaint.setColor(newTarget.param.title.color);
+    titlePaint.setTextSize(newTarget.param.title.size);
+    titlePaint.setTypeface(newTarget.param.title.typeface);
 
-    descriptionPaint.setColor(target.param.description.color);
-    descriptionPaint.setTextSize(target.param.description.size);
-    descriptionPaint.setTypeface(target.param.description.typeface);
+    descriptionPaint.setColor(newTarget.param.description.color);
+    descriptionPaint.setTextSize(newTarget.param.description.size);
+    descriptionPaint.setTypeface(newTarget.param.description.typeface);
   }
 
   @UiThread
