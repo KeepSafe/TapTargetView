@@ -50,7 +50,7 @@ public class TapTarget {
 
   private @Nullable TapTargetView parent;
 
-  TapTarget(Parameters parameters) {
+  protected TapTarget(Parameters parameters) {
     parameters.ensureRequiredValues();
     this.param = parameters;
     this.bounds = new Rect();
@@ -132,7 +132,7 @@ public class TapTarget {
     private final Context context;
     protected final Parameters parameters;
 
-    Builder(Context context) {
+    protected Builder(Context context) {
       if (context == null) {
         throw new IllegalArgumentException("Given null Context");
       }
