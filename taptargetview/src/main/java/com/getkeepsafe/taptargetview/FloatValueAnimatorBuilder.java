@@ -91,23 +91,21 @@ final class FloatValueAnimatorBuilder {
   }
 
   public ValueAnimator build() {
-    if (endListener != null) {
-      animator.addListener(new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationStart(Animator animator) {
-          if (startListener != null) {
-            startListener.onStart();
-          }
+    animator.addListener(new AnimatorListenerAdapter() {
+      @Override
+      public void onAnimationStart(Animator animator) {
+        if (startListener != null) {
+          startListener.onStart();
         }
+      }
 
-        @Override
-        public void onAnimationEnd(Animator animation) {
-          if (endListener != null) {
-            endListener.onEnd();
-          }
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        if (endListener != null) {
+          endListener.onEnd();
         }
-      });
-    }
+      }
+    });
 
     return animator;
   }
