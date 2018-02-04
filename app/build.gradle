@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion defCompileSdkVersion
+    buildToolsVersion defBuildToolsVersion
 
     defaultConfig {
         applicationId "com.getkeepsafe.taptargetviewsample"
@@ -21,7 +21,7 @@ android {
 
 dependencies {
     implementation project(':taptargetview')
-    implementation 'com.android.support:appcompat-v7:27.0.2'
-    implementation 'com.android.support:design:27.0.2'
+    implementation "com.android.support:appcompat-v7:$defSupportLibraryVersion"
+    implementation "com.android.support:design:$defSupportLibraryVersion"
     implementation 'com.facebook.stetho:stetho:1.5.0'
 }
