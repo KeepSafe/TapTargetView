@@ -51,6 +51,7 @@ class ToolbarTapTarget extends ViewTapTarget {
     super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
   }
 
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private static ToolbarProxy proxyOf(Object instance) {
     if (instance == null) {
       throw new IllegalArgumentException("Given null instance");
@@ -65,6 +66,7 @@ class ToolbarTapTarget extends ViewTapTarget {
     throw new IllegalStateException("Couldn't provide proper toolbar proxy instance");
   }
 
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private static View findNavView(Object instance) {
     final ToolbarProxy toolbar = proxyOf(instance);
 
@@ -105,6 +107,7 @@ class ToolbarTapTarget extends ViewTapTarget {
     throw new IllegalStateException("Could not find navigation view for Toolbar!");
   }
 
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private static View findOverflowView(Object instance) {
     final ToolbarProxy toolbar = proxyOf(instance);
 
