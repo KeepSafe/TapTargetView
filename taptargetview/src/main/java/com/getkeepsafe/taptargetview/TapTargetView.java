@@ -312,8 +312,7 @@ public class TapTargetView extends View {
       .onEnd(new FloatValueAnimatorBuilder.EndListener() {
         @Override
         public void onEnd() {
-          onDismiss(true);
-          ViewUtil.removeView(parent, TapTargetView.this);
+          finishDismiss(true);
         }
       })
       .build();
@@ -341,8 +340,7 @@ public class TapTargetView extends View {
       .onEnd(new FloatValueAnimatorBuilder.EndListener() {
         @Override
         public void onEnd() {
-          onDismiss(true);
-          ViewUtil.removeView(parent, TapTargetView.this);
+          finishDismiss(true);
         }
       })
       .build();
@@ -747,11 +745,20 @@ public class TapTargetView extends View {
     isDismissing = true;
     pulseAnimation.cancel();
     expandAnimation.cancel();
+    if (!visible) {
+      finishDismiss(tappedTarget);
+      return;
+    }
     if (tappedTarget) {
       dismissConfirmAnimation.start();
     } else {
       dismissAnimation.start();
     }
+  }
+
+  private void finishDismiss(boolean userInitiated) {
+    onDismiss(userInitiated);
+    ViewUtil.removeView(parent, TapTargetView.this);
   }
 
   /** Specify whether to draw a wireframe around the view, useful for debugging **/
