@@ -238,7 +238,9 @@ public class TapTargetView extends View {
       outerCircleRadius = newOuterCircleRadius;
       outerCircleAlpha = (int) Math.min(targetAlpha, (lerpTime * 1.5f * targetAlpha));
       outerCirclePath.reset();
-      outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
+      if (outerCircleCenter != null) {
+          outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
+      }
 
       targetCircleAlpha = (int) Math.min(255.0f, (lerpTime * 1.5f * 255.0f));
 
@@ -327,7 +329,9 @@ public class TapTargetView extends View {
           outerCircleRadius = calculatedOuterCircleRadius * (1.0f + (spedUpLerp * 0.2f));
           outerCircleAlpha = (int) ((1.0f - spedUpLerp) * target.outerCircleAlpha * 255.0f);
           outerCirclePath.reset();
-          outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
+          if (outerCircleCenter != null) {
+              outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
+          }
           targetCircleRadius = (1.0f - lerpTime) * TARGET_RADIUS;
           targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
           targetCirclePulseRadius = (1.0f + lerpTime) * TARGET_RADIUS;
@@ -778,13 +782,15 @@ public class TapTargetView extends View {
     final float baseAlpha = 0.20f * outerCircleAlpha;
     outerCircleShadowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     outerCircleShadowPaint.setAlpha((int) baseAlpha);
-    c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM, outerCircleRadius, outerCircleShadowPaint);
-    outerCircleShadowPaint.setStyle(Paint.Style.STROKE);
-    final int numJitters = 7;
-    for (int i = numJitters - 1; i > 0; --i) {
-      outerCircleShadowPaint.setAlpha((int) ((i / (float) numJitters) * baseAlpha));
-      c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM ,
-          outerCircleRadius + (numJitters - i) * SHADOW_JITTER_DIM , outerCircleShadowPaint);
+    if (outerCircleCenter != null) {
+        c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM, outerCircleRadius, outerCircleShadowPaint);
+        outerCircleShadowPaint.setStyle(Paint.Style.STROKE);
+        final int numJitters = 7;
+        for (int i = numJitters - 1; i > 0; --i) {
+          outerCircleShadowPaint.setAlpha((int) ((i / (float) numJitters) * baseAlpha));
+          c.drawCircle(outerCircleCenter[0], outerCircleCenter[1] + SHADOW_DIM ,
+              outerCircleRadius + (numJitters - i) * SHADOW_JITTER_DIM , outerCircleShadowPaint);
+        }
     }
   }
 
@@ -806,8 +812,10 @@ public class TapTargetView extends View {
     debugPaint.setStyle(Paint.Style.STROKE);
     c.drawRect(textBounds, debugPaint);
     c.drawRect(targetBounds, debugPaint);
-    c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], 10, debugPaint);
-    c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], calculatedOuterCircleRadius - CIRCLE_PADDING, debugPaint);
+    if (outerCircleCenter != null) {
+        c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], 10, debugPaint);
+        c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], calculatedOuterCircleRadius - CIRCLE_PADDING, debugPaint);
+    }
     c.drawCircle(targetBounds.centerX(), targetBounds.centerY(), TARGET_RADIUS + TARGET_PADDING, debugPaint);
 
     // Draw positions and dimensions
@@ -815,7 +823,7 @@ public class TapTargetView extends View {
     final String debugText =
             "Text bounds: " + textBounds.toShortString() + "\n" +
             "Target bounds: " + targetBounds.toShortString() + "\n" +
-            "Center: " + outerCircleCenter[0] + " " + outerCircleCenter[1] + "\n" +
+            "Center: " + (outerCircleCenter!=null?outerCircleCenter[0] + " " + outerCircleCenter[1]:"") + "\n" +
             "View size: " + getWidth() + " " + getHeight() + "\n" +
             "Target bounds: " + targetBounds.toShortString();
 
