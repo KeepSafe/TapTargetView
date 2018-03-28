@@ -91,6 +91,7 @@ public class TapTarget {
   boolean cancelable = true;
   boolean tintTarget = true;
   boolean transparentTarget = false;
+  boolean skipTextVisible = false;
   float descriptionTextAlpha = 0.54f;
   float skipTextAlpha = 0.54f;
 
@@ -217,6 +218,12 @@ public class TapTarget {
   /** Specify whether the target should be transparent **/
   public TapTarget transparentTarget(boolean transparent) {
     this.transparentTarget = transparent;
+    return this;
+  }
+
+  /**  Specify where the target should show skip text **/
+  public TapTarget skipTextVisible(boolean visible) {
+    this.skipTextVisible = visible;
     return this;
   }
 

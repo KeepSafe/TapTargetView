@@ -115,6 +115,7 @@ public class TapTargetView extends View {
   boolean shouldDrawShadow;
   boolean cancelable;
   boolean visible;
+  boolean skipTextVisible;
 
   // Debug related variables
   @Nullable
@@ -389,6 +390,7 @@ public class TapTargetView extends View {
     this.title = target.title;
     this.description = target.description;
     this.skipText = target.skipText;
+    this.skipTextVisible = target.skipTextVisible;
 
     TARGET_PADDING = UiUtil.dp(context, 20);
     CIRCLE_PADDING = UiUtil.dp(context, 40);
@@ -729,7 +731,7 @@ public class TapTargetView extends View {
         descriptionLayout.draw(c);
       }
 
-      if (skipLayout != null && titleLayout != null) {
+      if (skipLayout != null && titleLayout != null && skipTextVisible) {
         if (descriptionLayout != null) {
           c.translate(0, descriptionLayout.getHeight() + SKIP_TEXT_MARGIN);
         }
@@ -1044,7 +1046,7 @@ public class TapTargetView extends View {
       totalHeight += descriptionLayout.getHeight() + TEXT_SPACING;
     }
 
-    if (skipLayout != null) {
+    if (skipLayout != null && skipTextVisible) {
       totalHeight += skipLayout.getHeight() + TEXT_SPACING;
     }
 
@@ -1063,7 +1065,7 @@ public class TapTargetView extends View {
       totalWidth = Math.max(titleLayout.getWidth(), descriptionLayout.getWidth());
     }
 
-    if (skipLayout != null) {
+    if (skipLayout != null && skipTextVisible) {
       totalWidth = Math.max(totalWidth, skipLayout.getWidth());
     }
 
