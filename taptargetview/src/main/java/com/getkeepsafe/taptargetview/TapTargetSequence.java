@@ -236,5 +236,11 @@ public class TapTargetSequence {
         }
       }
     }
+
+    @Override
+    public  void onSkipTextClick(TapTargetView view) {
+      super.onSkipTextClick(view);
+      cancel();
+    }
   };
 }

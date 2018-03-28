@@ -82,6 +82,7 @@ public class TapTargetView extends View {
   final int GUTTER_DIM;
   final int SHADOW_DIM;
   final int SHADOW_JITTER_DIM;
+  final int SKIP_TEXT_MARGIN;
 
   @Nullable
   final ViewGroup boundingParent;
@@ -91,6 +92,7 @@ public class TapTargetView extends View {
 
   final TextPaint titlePaint;
   final TextPaint descriptionPaint;
+  final TextPaint skipPaint;
   final Paint outerCirclePaint;
   final Paint outerCircleShadowPaint;
   final Paint targetCirclePaint;
@@ -103,12 +105,17 @@ public class TapTargetView extends View {
   CharSequence description;
   @Nullable
   StaticLayout descriptionLayout;
+  @Nullable
+  CharSequence skipText;
+  @Nullable
+  StaticLayout skipLayout;
   boolean isDark;
   boolean debug;
   boolean shouldTintTarget;
   boolean shouldDrawShadow;
   boolean cancelable;
   boolean visible;
+  boolean skipTextVisible;
 
   // Debug related variables
   @Nullable
@@ -214,6 +221,9 @@ public class TapTargetView extends View {
     public void onOuterCircleClick(TapTargetView view) {
       // no-op as default
     }
+
+    /** Signals that the user clicked on the skip text **/
+    public void onSkipTextClick(TapTargetView view) {}
 
     /**
      * Signals that the tap target has been dismissed
@@ -379,6 +389,8 @@ public class TapTargetView extends View {
     this.listener = userListener != null ? userListener : new Listener();
     this.title = target.title;
     this.description = target.description;
+    this.skipText = target.skipText;
+    this.skipTextVisible = target.skipTextVisible;
 
     TARGET_PADDING = UiUtil.dp(context, 20);
     CIRCLE_PADDING = UiUtil.dp(context, 40);
@@ -391,6 +403,7 @@ public class TapTargetView extends View {
     SHADOW_DIM = UiUtil.dp(context, 8);
     SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
     TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
+    SKIP_TEXT_MARGIN = UiUtil.dp(context, 20);
 
     outerCirclePath = new Path();
     targetBounds = new Rect();
@@ -406,6 +419,14 @@ public class TapTargetView extends View {
     descriptionPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
     descriptionPaint.setAntiAlias(true);
     descriptionPaint.setAlpha((int) (0.54f * 255.0f));
+
+    skipPaint = new TextPaint();
+    skipPaint.setTextSize(target.skipTextSizePx(context));
+    skipPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
+    skipPaint.setAntiAlias(true);
+    skipPaint.setColor(Color.LTGRAY);
+//    skipPaint.setTextAlign(Paint.Align.CENTER);
+    skipPaint.setStyle(Paint.Style.STROKE);
 
     outerCirclePaint = new Paint();
     outerCirclePaint.setAntiAlias(true);
@@ -473,6 +494,7 @@ public class TapTargetView extends View {
 
     setFocusableInTouchMode(true);
     setClickable(true);
+
     setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -483,12 +505,31 @@ public class TapTargetView extends View {
         final double distanceToOuterCircleCenter = distance(outerCircleCenter[0], outerCircleCenter[1],
             (int) lastTouchX, (int) lastTouchY);
         final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
-
         if (clickedInTarget) {
           isInteractable = false;
           listener.onTargetClick(TapTargetView.this);
         } else if (clickedInsideOfOuterCircle) {
-          listener.onOuterCircleClick(TapTargetView.this);
+          Rect textRect = getTextBounds();
+          Rect skipRect = new Rect();
+          String strSkip = skipText.toString();
+          skipPaint.getTextBounds(strSkip, 0, strSkip.length(), skipRect);
+          int skipLayoutWidth = skipRect.width();
+          int skipLayoutHeight = skipRect.height();
+          int skipLayoutLeft = textRect.left;
+          int skipLayoutRight = textRect.left + skipLayoutWidth;
+          int skipLayoutBottom = textRect.bottom;
+          int skipLayoutTop = textRect.bottom - skipLayoutHeight;
+
+          if ((lastTouchX >= skipLayoutLeft)
+            && (lastTouchX <= skipLayoutRight)
+            && (lastTouchY >= skipLayoutTop)
+            && (lastTouchY <= skipLayoutBottom)
+          ) {
+            listener.onSkipTextClick(TapTargetView.this);
+          }
+          else {
+            listener.onOuterCircleClick(TapTargetView.this);
+          }
         } else if (cancelable) {
           isInteractable = false;
           listener.onTargetCancel(TapTargetView.this);
@@ -598,12 +639,23 @@ public class TapTargetView extends View {
       descriptionPaint.setColor(titlePaint.getColor());
     }
 
+    final Integer skipTextColor = target.skipTextColorInt(context);
+    if (skipTextColor != null) {
+      skipPaint.setColor(skipTextColor);
+    } else {
+      skipPaint.setColor(titlePaint.getColor());
+    }
+
     if (target.titleTypeface != null) {
       titlePaint.setTypeface(target.titleTypeface);
     }
 
     if (target.descriptionTypeface != null) {
       descriptionPaint.setTypeface(target.descriptionTypeface);
+    }
+
+    if (target.skipTypeface != null) {
+      skipPaint.setTypeface(target.skipTypeface);
     }
   }
 
@@ -677,6 +729,18 @@ public class TapTargetView extends View {
         c.translate(0, titleLayout.getHeight() + TEXT_SPACING);
         descriptionPaint.setAlpha((int) (target.descriptionTextAlpha * textAlpha));
         descriptionLayout.draw(c);
+      }
+
+      if (skipLayout != null && titleLayout != null && skipTextVisible) {
+        if (descriptionLayout != null) {
+          c.translate(0, descriptionLayout.getHeight() + SKIP_TEXT_MARGIN);
+        }
+        else {
+          c.translate(0, titleLayout.getHeight() + SKIP_TEXT_MARGIN);
+        }
+
+        skipPaint.setUnderlineText(true);
+        skipLayout.draw(c);
       }
     }
     c.restoreToCount(saveCount);
@@ -874,6 +938,12 @@ public class TapTargetView extends View {
     } else {
       descriptionLayout = null;
     }
+    if (skipText != null) {
+      skipLayout = new StaticLayout(skipText, skipPaint, textWidth,
+              Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+    } else {
+      skipLayout = null;
+    }
   }
 
   float halfwayLerp(float lerp) {
@@ -965,27 +1035,41 @@ public class TapTargetView extends View {
   }
 
   int getTotalTextHeight() {
+    int totalHeight = 0;
     if (titleLayout == null) {
       return 0;
     }
 
-    if (descriptionLayout == null) {
-      return titleLayout.getHeight() + TEXT_SPACING;
+    totalHeight += titleLayout.getHeight();
+
+    if (descriptionLayout != null) {
+      totalHeight += descriptionLayout.getHeight() + TEXT_SPACING;
     }
 
-    return titleLayout.getHeight() + descriptionLayout.getHeight() + TEXT_SPACING;
+    if (skipLayout != null && skipTextVisible) {
+      totalHeight += skipLayout.getHeight() + TEXT_SPACING;
+    }
+
+    return totalHeight;
   }
 
   int getTotalTextWidth() {
+    int totalWidth = 0;
     if (titleLayout == null) {
       return 0;
     }
 
-    if (descriptionLayout == null) {
-      return titleLayout.getWidth();
+    totalWidth = titleLayout.getWidth();
+
+    if (descriptionLayout != null) {
+      totalWidth = Math.max(titleLayout.getWidth(), descriptionLayout.getWidth());
     }
 
-    return Math.max(titleLayout.getWidth(), descriptionLayout.getWidth());
+    if (skipLayout != null && skipTextVisible) {
+      totalWidth = Math.max(totalWidth, skipLayout.getWidth());
+    }
+
+    return totalWidth;
   }
 
   boolean inGutter(int y) {
