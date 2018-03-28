@@ -43,12 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
     final SpannableString sassyDesc = new SpannableString("It allows you to go back, sometimes");
     sassyDesc.setSpan(new StyleSpan(Typeface.ITALIC), sassyDesc.length() - "sometimes".length(), sassyDesc.length(), 0);
-
     // We have a sequence of targets, so lets build it!
     final TapTargetSequence sequence = new TapTargetSequence(this)
         .targets(
             // This tap target will target the back button, we just need to pass its containing toolbar
-                TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc, "GOT IT").id(1),
+            TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc, "GOT IT").skipTextVisible(true).id(1),
             // Likewise, this tap target will target the search button
             TapTarget.forToolbarMenuItem(toolbar, R.id.search, "This is a search icon", "As you can see, it has gotten pretty dark around here...", "GOT IT")
                 .dimColor(android.R.color.black)
@@ -56,12 +55,14 @@ public class MainActivity extends AppCompatActivity {
                 .targetCircleColor(android.R.color.black)
                 .transparentTarget(true)
                 .textColor(android.R.color.black)
+                .skipTextVisible(true)
                 .id(2),
             // You can also target the overflow button in your toolbar
-            TapTarget.forToolbarOverflow(toolbar, "This will show more options", "But they're not useful :(", "GOT IT").id(3),
+            TapTarget.forToolbarOverflow(toolbar, "This will show more options", "But they're not useful :(", "GOT IT").skipTextVisible(true).id(3),
             // This tap target will target our droid buddy at the given target rect
             TapTarget.forBounds(droidTarget, "Oh look!", "You can point to any part of the screen. You also can't cancel this one!", "GOT IT")
                 .cancelable(false)
+                .skipTextVisible(true)
                 .icon(droid)
                 .id(4)
         )
