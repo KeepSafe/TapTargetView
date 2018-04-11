@@ -83,6 +83,7 @@ public class TapTarget {
   boolean tintTarget = true;
   boolean transparentTarget = false;
   float descriptionTextAlpha = 0.54f;
+  boolean pulseEnabled = true;
 
   /**
    * Return a tap target for the overflow button from the given toolbar
@@ -376,6 +377,13 @@ public class TapTarget {
     this.drawShadow = draw;
     return this;
   }
+
+  /** Specify whether or not the target circle should pulsate **/
+  public TapTarget pulse(boolean status) {
+    this.pulseEnabled = status;
+    return this;
+  }
+
 
   /** Specify whether or not the target should be cancelable **/
   public TapTarget cancelable(boolean status) {

@@ -272,7 +272,9 @@ public class TapTargetView extends View {
       .onEnd(new FloatValueAnimatorBuilder.EndListener() {
         @Override
         public void onEnd() {
-          pulseAnimation.start();
+          if(target.pulseEnabled) {
+            pulseAnimation.start();
+          }
           isInteractable = true;
         }
       })
