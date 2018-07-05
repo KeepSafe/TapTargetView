@@ -745,7 +745,7 @@ public class TapTargetView extends View {
     isDismissing = true;
     pulseAnimation.cancel();
     expandAnimation.cancel();
-    if (!visible) {
+    if (!visible || outerCircleCenter == null) {
       finishDismiss(tappedTarget);
       return;
     }
