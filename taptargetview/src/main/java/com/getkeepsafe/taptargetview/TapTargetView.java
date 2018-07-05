@@ -426,6 +426,18 @@ public class TapTargetView extends View {
 
     applyTargetOptions(context);
 
+    final boolean translucentStatusBar;
+    final boolean translucentNavigationBar;
+    if (Build.VERSION.SDK_INT >= 19 && context instanceof Activity) {
+      Activity activity = (Activity) context;
+      final int flags = activity.getWindow().getAttributes().flags;
+      translucentStatusBar = (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) != 0;
+      translucentNavigationBar = (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) != 0;
+    } else {
+      translucentStatusBar = false;
+      translucentNavigationBar = false;
+    }
+
     globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
       @Override
       public void onGlobalLayout() {
@@ -451,6 +463,15 @@ public class TapTargetView extends View {
 
               final Rect rect = new Rect();
               boundingParent.getWindowVisibleDisplayFrame(rect);
+              int[] parentLocation = new int[2];
+              boundingParent.getLocationInWindow(parentLocation);
+
+              if (translucentStatusBar) {
+                rect.top = parentLocation[1];
+              }
+              if (translucentNavigationBar) {
+                rect.bottom = parentLocation[1] + boundingParent.getHeight();
+              }
 
               // We bound the boundaries to be within the screen's coordinates to
               // handle the case where the layout bounds do not match
