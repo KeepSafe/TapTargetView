@@ -116,6 +116,17 @@ Thanks to @prscX, you may now use this library with [React Native](https://githu
 ### Xamarin
 Thanks to @btripp, you may now use this library via a Xamarin Binding located [here](https://www.nuget.org/packages/Xamarin.TapTargetView).
 
+## Contributors
+
+[![0](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/0)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/0)
+[![1](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/1)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/1)
+[![2](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/2)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/2)
+[![3](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/3)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/3)
+[![4](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/4)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/4)
+[![5](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/5)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/5)
+[![6](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/6)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/6)
+[![7](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/images/7)](https://sourcerer.io/fame/sergey48k/KeepSafe/TapTargetView/links/7)
+
 ## License
 
     Copyright 2016 Keepsafe Software Inc.
