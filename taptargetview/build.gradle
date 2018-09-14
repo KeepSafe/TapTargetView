@@ -12,7 +12,7 @@ android {
     buildToolsVersion defBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion defMinSdkVersion
     }
 }
 

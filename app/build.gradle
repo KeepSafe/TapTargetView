@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.getkeepsafe.taptargetviewsample"
-        minSdkVersion 14
-        targetSdkVersion 28
+        minSdkVersion defMinSdkVersion
+        targetSdkVersion defCompileSdkVersion
         versionCode 1
         versionName "1.0"
     }

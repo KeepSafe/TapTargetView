@@ -15,6 +15,7 @@ ext {
     defAndroidXVersion = '1.0.0'
     defMaterialVersion = '1.0.0'
     defCompileSdkVersion = 28
+    defMinSdkVersion = 14
 }
 
 allprojects {
