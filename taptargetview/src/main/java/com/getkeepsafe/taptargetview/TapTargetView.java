@@ -717,8 +717,7 @@ public class TapTargetView extends View {
       c.drawPath(targetCirclePulsePath, targetCirclePulsePaint);
     }
     if (!target.transparentTarget) {
-      c.drawCircle(targetBounds.centerX(), targetBounds.centerY(),
-              targetCircleRadius, targetCirclePaint);
+      c.drawPath(targetPath, targetCirclePaint);
     }
 
     saveCount = c.save();
