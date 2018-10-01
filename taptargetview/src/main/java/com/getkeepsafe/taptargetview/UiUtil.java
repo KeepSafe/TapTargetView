@@ -17,9 +17,9 @@ package com.getkeepsafe.taptargetview;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Build;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
 import android.util.TypedValue;
 
 class UiUtil {
