@@ -426,16 +426,21 @@ public class TapTargetView extends View {
 
     applyTargetOptions(context);
 
+    final boolean hasKitkat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     final boolean translucentStatusBar;
     final boolean translucentNavigationBar;
-    if (Build.VERSION.SDK_INT >= 19 && context instanceof Activity) {
+    final boolean layoutNoLimits;
+
+    if (context instanceof Activity) {
       Activity activity = (Activity) context;
       final int flags = activity.getWindow().getAttributes().flags;
-      translucentStatusBar = (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) != 0;
-      translucentNavigationBar = (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) != 0;
+      translucentStatusBar = hasKitkat && (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) != 0;
+      translucentNavigationBar = hasKitkat && (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) != 0;
+      layoutNoLimits = (flags & WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0;
     } else {
       translucentStatusBar = false;
       translucentNavigationBar = false;
+      layoutNoLimits = false;
     }
 
     globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -474,10 +479,14 @@ public class TapTargetView extends View {
               }
 
               // We bound the boundaries to be within the screen's coordinates to
-              // handle the case where the layout bounds do not match
-              // (like when FLAG_LAYOUT_NO_LIMITS is specified)
-              topBoundary = Math.max(0, rect.top);
-              bottomBoundary = Math.min(rect.bottom, displayMetrics.heightPixels);
+              // handle the case where the flag FLAG_LAYOUT_NO_LIMITS is set
+              if (layoutNoLimits) {
+                topBoundary = Math.max(0, rect.top);
+                bottomBoundary = Math.min(rect.bottom, displayMetrics.heightPixels);
+              } else {
+                topBoundary = rect.top;
+                bottomBoundary = rect.bottom;
+              }
             }
 
             drawTintedTarget();
