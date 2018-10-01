@@ -17,8 +17,8 @@ package com.getkeepsafe.taptargetview;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 
 import java.util.Collections;
 import java.util.LinkedList;
