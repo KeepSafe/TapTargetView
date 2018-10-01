@@ -31,7 +31,6 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
@@ -87,6 +86,7 @@ public class TapTargetView extends View {
   final ViewGroup boundingParent;
   final ViewManager parent;
   final TapTarget target;
+  Path targetPath;
   final Rect targetBounds;
 
   final TextPaint titlePaint;
@@ -130,6 +130,7 @@ public class TapTargetView extends View {
   int[] outerCircleCenter;
   int outerCircleAlpha;
 
+  Path targetCirclePulsePath;
   float targetCirclePulseRadius;
   int targetCirclePulseAlpha;
 
@@ -249,6 +250,12 @@ public class TapTargetView extends View {
         targetCirclePulseRadius *= lerpTime;
       }
 
+      targetPath.reset();
+      targetPath.addCircle(targetBounds.centerX(), targetBounds.centerY(), targetCircleRadius, Path.Direction.CW);
+
+      targetCirclePulsePath.reset();
+      targetCirclePulsePath.addCircle(targetBounds.centerX(), targetBounds.centerY(), targetCirclePulseRadius, Path.Direction.CW);
+
       textAlpha = (int) (delayedLerp(lerpTime, 0.7f) * 255);
 
       if (expanding) {
@@ -294,6 +301,15 @@ public class TapTargetView extends View {
             outerCircleRadius = calculatedOuterCircleRadius;
           }
 
+          targetPath.reset();
+          targetPath.addCircle(targetBounds.centerX(), targetBounds.centerY(), targetCircleRadius, Path.Direction.CW);
+
+          outerCirclePath.reset();
+          outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
+
+          targetCirclePulsePath.reset();
+          targetCirclePulsePath.addCircle(targetBounds.centerX(), targetBounds.centerY(), targetCirclePulseRadius, Path.Direction.CW);
+
           calculateDrawingBounds();
           invalidateViewAndOutline(drawingBounds);
         }
@@ -328,10 +344,17 @@ public class TapTargetView extends View {
           outerCircleAlpha = (int) ((1.0f - spedUpLerp) * target.outerCircleAlpha * 255.0f);
           outerCirclePath.reset();
           outerCirclePath.addCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, Path.Direction.CW);
+
           targetCircleRadius = (1.0f - lerpTime) * TARGET_RADIUS;
           targetCircleAlpha = (int) ((1.0f - lerpTime) * 255.0f);
+          targetPath.reset();
+          targetPath.addCircle(targetBounds.centerX(), targetBounds.centerY(), targetCircleRadius, Path.Direction.CW);
+
           targetCirclePulseRadius = (1.0f + lerpTime) * TARGET_RADIUS;
           targetCirclePulseAlpha = (int) ((1.0f - lerpTime) * targetCirclePulseAlpha);
+          targetCirclePulsePath.reset();
+          targetCirclePulsePath.addCircle(targetBounds.centerX(), targetBounds.centerY(), targetCirclePulseRadius, Path.Direction.CW);
+
           textAlpha = (int) ((1.0f - spedUpLerp) * 255.0f);
           calculateDrawingBounds();
           invalidateViewAndOutline(drawingBounds);
@@ -392,7 +415,9 @@ public class TapTargetView extends View {
     SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
     TARGET_PULSE_RADIUS = (int) (0.1f * TARGET_RADIUS);
 
+    targetPath = new Path();
     outerCirclePath = new Path();
+    targetCirclePulsePath = new Path();
     targetBounds = new Rect();
     drawingBounds = new Rect();
 
@@ -592,10 +617,6 @@ public class TapTargetView extends View {
       targetCirclePaint.setColor(isDark ? Color.BLACK : Color.WHITE);
     }
 
-    if (target.transparentTarget) {
-      targetCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-    }
-
     targetCirclePulsePaint.setColor(targetCirclePaint.getColor());
 
     final Integer targetDimColor = target.dimColorInt(context);
@@ -675,16 +696,29 @@ public class TapTargetView extends View {
       }
       c.restoreToCount(saveCount);
     }
-    c.drawCircle(outerCircleCenter[0], outerCircleCenter[1], outerCircleRadius, outerCirclePaint);
+    if (target.transparentTarget) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        outerCirclePath.op(targetPath, Path.Op.DIFFERENCE);
+      } else {
+        c.clipPath(targetPath, Region.Op.DIFFERENCE);
+        // Draw 1px stroke to fix antialias
+        c.drawCircle(targetBounds.centerX(), targetBounds.centerY(),
+                targetCircleRadius + 1, outerCirclePaint);
+      }
+    }
+    c.drawPath(outerCirclePath, outerCirclePaint);
 
     targetCirclePaint.setAlpha(targetCircleAlpha);
     if (targetCirclePulseAlpha > 0) {
       targetCirclePulsePaint.setAlpha(targetCirclePulseAlpha);
-      c.drawCircle(targetBounds.centerX(), targetBounds.centerY(),
-          targetCirclePulseRadius, targetCirclePulsePaint);
+      if (target.transparentTarget && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        targetCirclePulsePath.op(targetPath, Path.Op.DIFFERENCE);
+      }
+      c.drawPath(targetCirclePulsePath, targetCirclePulsePaint);
     }
-    c.drawCircle(targetBounds.centerX(), targetBounds.centerY(),
-        targetCircleRadius, targetCirclePaint);
+    if (!target.transparentTarget) {
+      c.drawPath(targetPath, targetCirclePaint);
+    }
 
     saveCount = c.save();
     {
