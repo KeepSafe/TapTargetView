@@ -541,7 +541,7 @@ public class TapTargetView extends View {
   }
 
   protected void applyTargetOptions(Context context) {
-    shouldTintTarget = target.tintTarget;
+    shouldTintTarget = !target.transparentTarget && target.tintTarget;
     shouldDrawShadow = target.drawShadow;
     cancelable = target.cancelable;
 
