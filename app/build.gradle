@@ -5,11 +5,11 @@ android {
     buildToolsVersion defBuildToolsVersion
 
     defaultConfig {
-        applicationId "com.getkeepsafe.taptargetviewsample"
-        minSdkVersion 14
-        targetSdkVersion 28
+        applicationId 'com.getkeepsafe.taptargetviewsample'
+        minSdkVersion defMinSdkVersion
+        targetSdkVersion defCompileSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
     }
     buildTypes {
         release {
