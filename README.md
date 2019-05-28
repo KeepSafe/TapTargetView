@@ -53,6 +53,7 @@ TapTargetView.showFor(this,                 // `this` is an Activity
         .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
         .icon(Drawable)                     // Specify a custom drawable to draw as the target
         .targetRadius(60),                  // Specify the target radius (in dp)
+        .pulseDuration(500),                // Specify the pulse duration (in ms)
     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
         @Override
         public void onTargetClick(TapTargetView view) {
