@@ -424,6 +424,8 @@ public class TapTargetView extends View {
     targetCirclePulsePaint = new Paint();
     targetCirclePulsePaint.setAntiAlias(true);
 
+    pulseAnimation.setDuration(target.pulseDuration);
+
     applyTargetOptions(context);
 
     final boolean hasKitkat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
