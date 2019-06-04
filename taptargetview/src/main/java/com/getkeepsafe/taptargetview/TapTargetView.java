@@ -892,17 +892,17 @@ public class TapTargetView extends View {
   }
 
   void updateTextLayouts() {
-    final int textWidth = Math.min(getWidth(), TEXT_MAX_WIDTH) - TEXT_PADDING * 2;
+    final int textWidth = getWidth() - TEXT_PADDING * 2;
     if (textWidth <= 0) {
       return;
     }
 
     titleLayout = new StaticLayout(title, titlePaint, textWidth,
-            Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+            Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
 
     if (description != null) {
       descriptionLayout = new StaticLayout(description, descriptionPaint, textWidth,
-              Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+              Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
     } else {
       descriptionLayout = null;
     }
@@ -1009,15 +1009,7 @@ public class TapTargetView extends View {
   }
 
   int getTotalTextWidth() {
-    if (titleLayout == null) {
-      return 0;
-    }
-
-    if (descriptionLayout == null) {
-      return titleLayout.getWidth();
-    }
-
-    return Math.max(titleLayout.getWidth(), descriptionLayout.getWidth());
+    return getWidth();
   }
 
   boolean inGutter(int y) {
