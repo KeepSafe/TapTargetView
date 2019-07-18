@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TapTargetViewSample</string>
+    <string name="success_educate_message">Congratulations! You\'re educated now!</string>
+    <string name="outer_circle_click_toast_message">You clicked the outer circle!</string>
+    <string name="fab_dismissed_message">You dismissed me :(</string>
+    <string name="hello_world_text">Hello, world!</string>
+    <string name="cancel_sequence_message">You canceled the sequence</string>
 </resources>
