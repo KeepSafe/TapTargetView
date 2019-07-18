@@ -4,18 +4,22 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.4.2'
+
+        // this plugin has been abandoned.
+        // Instead If you are using Kotlin 1.3.30+ and Gradle 5.x, please use https://github.com/sky-uk/gradle-maven-plugin instead.
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41"
     }
 }
 
 ext {
-    defBuildToolsVersion = '28.0.2'
-    defAndroidXVersion = '1.0.0'
+    defAndroidXVersion = '1.0.2'
     defMaterialVersion = '1.0.0'
     defCompileSdkVersion = 28
     defMinSdkVersion = 14
+    defKotlinVersion = '1.3.41'
 }
 
 allprojects {

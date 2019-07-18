@@ -9,7 +9,6 @@ description = 'An implementation of tap targets from the Material Design guideli
 
 android {
     compileSdkVersion defCompileSdkVersion
-    buildToolsVersion defBuildToolsVersion
 
     defaultConfig {
         minSdkVersion defMinSdkVersion
