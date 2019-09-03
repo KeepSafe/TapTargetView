@@ -113,6 +113,9 @@ For more examples of usage, please look at the included sample app.
 ### React Native
 Thanks to @prscX, you may now use this library with [React Native](https://github.com/facebook/react-native) via the module [here](https://github.com/prscX/react-native-taptargetview)
 
+### NativeScript
+Thanks to @hamdiwanis, you may now use this library with [NativeScript](https://nativescript.org) via the plugin [here](https://github.com/hamdiwanis/nativescript-app-tour)
+
 ### Xamarin
 Thanks to @btripp, you may now use this library via a Xamarin Binding located [here](https://www.nuget.org/packages/Xamarin.TapTargetView).
 
