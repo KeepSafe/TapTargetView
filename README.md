@@ -108,6 +108,9 @@ A sequence is started via a call to `start()` on the `TapTargetSequence` instanc
 
 For more examples of usage, please look at the included sample app.
 
+### Tutorials
+- [raywenderlich.com](https://www.raywenderlich.com/5194-taptargetview-for-android-tutorial)
+
 ## Third Party Bindings
 
 ### React Native
