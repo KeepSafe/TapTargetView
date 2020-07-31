@@ -76,8 +76,8 @@ public class TapTargetView extends View {
     private boolean isDismissing = false;
     private boolean isInteractable = true;
 
-    final int TARGET_PADDING;
     int TARGET_RADIUS;
+    final int TARGET_PADDING;
     final int TARGET_PULSE_RADIUS;
     final int TEXT_PADDING;
     final int TEXT_SPACING;
@@ -553,8 +553,25 @@ public class TapTargetView extends View {
             public void onClick(View v) {
                 if (listener == null || outerCircleCenter == null || !isInteractable) return;
 
-                final boolean clickedInTarget =
-                        distance(targetBounds.centerX(), targetBounds.centerY(), (int) lastTouchX, (int) lastTouchY) <= targetCircleRadius;
+                boolean clickedInTarget;
+
+                if (target.drawOval) {
+                    clickedInTarget = inOval(
+                            (int) lastTouchX,
+                            (int) lastTouchY,
+                            targetBounds.centerX(),
+                            targetBounds.centerY(),
+                            (int) (targetOvalRect.bottom - targetOvalRect.top),
+                            (int) (targetOvalRect.right - targetOvalRect.left)
+                    );
+                } else {
+                    clickedInTarget = distance(targetBounds.centerX(),
+                            targetBounds.centerY(),
+                            (int) lastTouchX,
+                            (int) lastTouchY
+                    ) <= targetCircleRadius;
+                }
+
                 final double distanceToOuterCircleCenter = distance(outerCircleCenter[0], outerCircleCenter[1],
                         (int) lastTouchX, (int) lastTouchY);
                 final boolean clickedInsideOfOuterCircle = distanceToOuterCircleCenter <= outerCircleRadius;
@@ -584,6 +601,30 @@ public class TapTargetView extends View {
                 return false;
             }
         });
+    }
+
+    private Boolean inOval(int x, int y, int h, int k, int b, int a) {
+
+        float checkpoint = checkpoint(h, k, x, y, a / 2f, b / 2f);
+
+        if (checkpoint > 1)
+            return false;
+        else if (checkpoint == 1)
+            return true;
+        else
+            return true;
+
+    }
+
+    private float checkpoint(float h, float k, float x, float y, float a, float b) {
+
+        // checking the equation of
+        // ellipse with the given point
+        double p = (Math.pow((x - h), 2.0) / Math.pow(a, 2.0))
+                + (Math.pow((y - k), 2.0) / Math.pow(b, 2.0));
+
+        return (float) p;
+
     }
 
     private void startExpandAnimation() {
