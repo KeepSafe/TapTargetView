@@ -53,7 +53,13 @@ public class TapTarget {
     Drawable icon;
     Typeface titleTypeface;
     Typeface descriptionTypeface;
-
+    int id = -1;
+    boolean drawShadow = false;
+    boolean cancelable = true;
+    boolean tintTarget = true;
+    boolean drawOval = false;
+    boolean transparentTarget = false;
+    float descriptionTextAlpha = 0.54f;
     @ColorRes
     private int outerCircleColorRes = -1;
     @ColorRes
@@ -64,28 +70,35 @@ public class TapTarget {
     private int titleTextColorRes = -1;
     @ColorRes
     private int descriptionTextColorRes = -1;
-
     private Integer outerCircleColor = null;
     private Integer targetCircleColor = null;
     private Integer dimColor = null;
     private Integer titleTextColor = null;
     private Integer descriptionTextColor = null;
-
     @DimenRes
     private int titleTextDimen = -1;
     @DimenRes
     private int descriptionTextDimen = -1;
-
     private int titleTextSize = 20;
     private int descriptionTextSize = 18;
-    int id = -1;
 
-    boolean drawShadow = false;
-    boolean cancelable = true;
-    boolean tintTarget = true;
-    boolean drawOval = false;
-    boolean transparentTarget = false;
-    float descriptionTextAlpha = 0.54f;
+    protected TapTarget(Rect bounds, CharSequence title, @Nullable CharSequence description) {
+        this(title, description);
+        if (bounds == null) {
+            throw new IllegalArgumentException("Cannot pass null bounds or title");
+        }
+
+        this.bounds = bounds;
+    }
+
+    protected TapTarget(CharSequence title, @Nullable CharSequence description) {
+        if (title == null) {
+            throw new IllegalArgumentException("Cannot pass null title");
+        }
+
+        this.title = title;
+        this.description = description;
+    }
 
     /**
      * Return a tap target for the overflow button from the given toolbar
@@ -213,24 +226,6 @@ public class TapTarget {
      **/
     public static TapTarget forBounds(Rect bounds, CharSequence title, @Nullable CharSequence description) {
         return new TapTarget(bounds, title, description);
-    }
-
-    protected TapTarget(Rect bounds, CharSequence title, @Nullable CharSequence description) {
-        this(title, description);
-        if (bounds == null) {
-            throw new IllegalArgumentException("Cannot pass null bounds or title");
-        }
-
-        this.bounds = bounds;
-    }
-
-    protected TapTarget(CharSequence title, @Nullable CharSequence description) {
-        if (title == null) {
-            throw new IllegalArgumentException("Cannot pass null title");
-        }
-
-        this.title = title;
-        this.description = description;
     }
 
     /**

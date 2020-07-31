@@ -17,28 +17,31 @@ package com.getkeepsafe.taptargetview;
 
 import android.content.Context;
 import android.content.res.Resources;
-
-import androidx.annotation.ColorRes;
-import androidx.annotation.DimenRes;
 import android.util.TypedValue;
 
 class UiUtil {
   UiUtil() {
   }
 
-  /** Returns the given pixel value in dp **/
+  /**
+   * Returns the given pixel value in dp
+   **/
   static int dp(Context context, int val) {
     return (int) TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, val, context.getResources().getDisplayMetrics());
+            TypedValue.COMPLEX_UNIT_DIP, val, context.getResources().getDisplayMetrics());
   }
 
-  /** Returns the given pixel value in sp **/
+  /**
+   * Returns the given pixel value in sp
+   **/
   static int sp(Context context, int val) {
     return (int) TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP, val, context.getResources().getDisplayMetrics());
+            TypedValue.COMPLEX_UNIT_SP, val, context.getResources().getDisplayMetrics());
   }
 
-  /** Returns the value of the desired theme integer attribute, or -1 if not found **/
+  /**
+   * Returns the value of the desired theme integer attribute, or -1 if not found
+   **/
   static int themeIntAttr(Context context, String attr) {
     final Resources.Theme theme = context.getTheme();
     if (theme == null) {
@@ -57,7 +60,9 @@ class UiUtil {
     return value.data;
   }
 
-  /** Modifies the alpha value of the given ARGB color **/
+  /**
+   * Modifies the alpha value of the given ARGB color
+   **/
   static int setAlpha(int argb, float alpha) {
     if (alpha > 1.0f) {
       alpha = 1.0f;
