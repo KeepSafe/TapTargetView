@@ -63,6 +63,8 @@ public class TapTarget {
     @ColorRes
     private int outerCircleColorRes = -1;
     @ColorRes
+    private int targetTintColorRes = -1;
+    @ColorRes
     private int targetCircleColorRes = -1;
     @ColorRes
     private int dimColorRes = -1;
@@ -71,6 +73,7 @@ public class TapTarget {
     @ColorRes
     private int descriptionTextColorRes = -1;
     private Integer outerCircleColor = null;
+    private Integer targetTintColor = null;
     private Integer targetCircleColor = null;
     private Integer dimColor = null;
     private Integer titleTextColor = null;
@@ -250,6 +253,22 @@ public class TapTarget {
     // TODO(Hilal): In v2, this API should be cleaned up / torched
     public TapTarget outerCircleColorInt(@ColorInt int color) {
         this.outerCircleColor = color;
+        return this;
+    }
+
+    /**
+     * Specify the color resource for the target
+     **/
+    public TapTarget targetTintColor(@ColorRes int color) {
+        this.targetTintColorRes = color;
+        return this;
+    }
+
+    /**
+     * Specify the color value for the target
+     **/
+    public TapTarget targetTintColorInt(@ColorInt int color) {
+        this.targetTintColor = color;
         return this;
     }
 
@@ -555,6 +574,11 @@ public class TapTarget {
     @Nullable
     Integer outerCircleColorInt(Context context) {
         return colorResOrInt(context, outerCircleColor, outerCircleColorRes);
+    }
+
+    @Nullable
+    Integer targetTintColorInt(Context context) {
+        return colorResOrInt(context, targetTintColor, targetTintColorRes);
     }
 
     @Nullable

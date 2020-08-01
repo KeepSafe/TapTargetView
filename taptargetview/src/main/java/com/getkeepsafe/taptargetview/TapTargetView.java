@@ -1006,8 +1006,13 @@ public class TapTargetView extends View {
         tintedTarget = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(),
                 Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(tintedTarget);
+
+        Integer targetTintColor = target.targetTintColorInt(getContext());
+        if (targetTintColor == null)
+            targetTintColor = outerCirclePaint.getColor();
+
         icon.setColorFilter(new PorterDuffColorFilter(
-                outerCirclePaint.getColor(), PorterDuff.Mode.SRC_ATOP));
+                targetTintColor, PorterDuff.Mode.SRC_ATOP));
         icon.draw(canvas);
         icon.setColorFilter(null);
     }
