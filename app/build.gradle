@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion defCompileSdkVersion
@@ -24,4 +25,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$defAndroidXVersion"
     implementation "com.google.android.material:material:$defMaterialVersion"
     implementation 'com.facebook.stetho:stetho:1.5.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
