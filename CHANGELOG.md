@@ -10,4 +10,4 @@ Prepend the changelog with this template on every release.
 -->
 
 ## [Unreleased]
-- Moved artifact publishing from JCenter to Maven Central
+- Moved artifact publishing from JCenter to Maven Central (#385)
