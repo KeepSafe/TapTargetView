@@ -93,8 +93,8 @@ new TapTargetSequence(this)
         }
         
         @Override
-        public void onSequenceStep(TapTarget lastTarget) {
-           // Perfom action for the current target
+        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+            // Perform action for the current target
         }
 
         @Override
