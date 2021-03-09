@@ -28,14 +28,6 @@ class FloatValueAnimatorBuilder {
 
   EndListener endListener;
 
-  interface UpdateListener {
-    void onUpdate(float lerpTime);
-  }
-
-  interface EndListener {
-    void onEnd();
-  }
-
   protected FloatValueAnimatorBuilder() {
     this(false);
   }
@@ -94,5 +86,13 @@ class FloatValueAnimatorBuilder {
     }
 
     return animator;
+  }
+
+  interface UpdateListener {
+    void onUpdate(float lerpTime);
+  }
+
+  interface EndListener {
+    void onEnd();
   }
 }

@@ -19,8 +19,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import androidx.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 class ViewTapTarget extends TapTarget {
   final View view;
@@ -42,7 +43,7 @@ class ViewTapTarget extends TapTarget {
         final int[] location = new int[2];
         view.getLocationOnScreen(location);
         bounds = new Rect(location[0], location[1],
-            location[0] + view.getWidth(), location[1] + view.getHeight());
+                location[0] + view.getWidth(), location[1] + view.getHeight());
 
         if (icon == null && view.getWidth() > 0 && view.getHeight() > 0) {
           final Bitmap viewBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
