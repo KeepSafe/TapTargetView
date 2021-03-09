@@ -18,9 +18,6 @@ package com.getkeepsafe.taptargetview;
 import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.annotation.IdRes;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +26,10 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Stack;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
 class ToolbarTapTarget extends ViewTapTarget {
   ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
@@ -58,7 +59,8 @@ class ToolbarTapTarget extends ViewTapTarget {
 
     if (instance instanceof Toolbar) {
       return new SupportToolbarProxy((Toolbar) instance);
-    } else if (instance instanceof android.widget.Toolbar) {
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+            && instance instanceof android.widget.Toolbar) {
       return new StandardToolbarProxy((android.widget.Toolbar) instance);
     }
 

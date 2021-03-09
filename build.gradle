@@ -1,12 +1,13 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
     }
 }
 
@@ -20,8 +21,12 @@ ext {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
+        // TODO: Remove this repository when Android build tools no longer transitively pulls
+        //  `trove4j` or if it's properly published in Maven Central when JCenter goes away.
+        //  See: https://github.com/KeepSafe/ReLinker/pull/81#issuecomment-787525670
+        gradlePluginPortal()
     }
 }
 
