@@ -6,28 +6,32 @@
     TapTargetView
 </h1>
 
-[![Download](https://api.bintray.com/packages/keepsafesoftware/Android/TapTargetView/images/download.svg) ](https://bintray.com/keepsafesoftware/Android/TapTargetView/_latestVersion)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.getkeepsafe.taptargetview/taptargetview/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.getkeepsafe.taptargetview/taptargetview)
+[![Release](https://img.shields.io/github/tag/KeepSafe/TapTargetView.svg?label=jitpack)](https://jitpack.io/#KeepSafe/TapTargetView)
 
 
 An implementation of tap targets from [Google's Material Design guidelines on feature discovery](https://material.io/archive/guidelines/growth-communications/feature-discovery.html).
 
-**Min SDK:** 14
+ **Min SDK:** 14
+
+ [JavaDoc](https://javadoc.jitpack.io/com/github/KeepSafe/TapTargetView/latest/javadoc/)
 
 ## Installation
 
-TapTargetView is distributed using [jcenter](https://bintray.com/keepsafesoftware/Android/TapTargetView/view).
+TapTargetView is distributed using [MavenCentral](https://search.maven.org/artifact/com.getkeepsafe.taptargetview/taptargetview).
 
 ```groovy
    repositories { 
-        jcenter()
+        mavenCentral()
    }
    
    dependencies {
-         implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
+         implementation 'com.getkeepsafe.taptargetview:taptargetview:x.x.x'
    }
 ```
 
-If you wish to use a snapshot, please follow the instructions [here](https://jitpack.io/#KeepSafe/TapTargetView/-SNAPSHOT)
+If you wish, you may also use TapTargetView with [jitpack](https://jitpack.io/#KeepSafe/TapTargetView).
+For snapshots, please follow the instructions [here](https://jitpack.io/#KeepSafe/TapTargetView/-SNAPSHOT).
 
 ## Usage
 
