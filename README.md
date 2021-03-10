@@ -26,7 +26,7 @@ TapTargetView is distributed using [MavenCentral](https://search.maven.org/artif
    }
    
    dependencies {
-         implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
+         implementation 'com.getkeepsafe.taptargetview:taptargetview:x.x.x'
    }
 ```
 

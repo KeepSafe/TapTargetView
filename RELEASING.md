@@ -40,7 +40,6 @@ We currently deploy to Maven Central (via Sonatype's OSS Nexus instance).
 ### Pushing a build
 
 1. Edit gradle.properties, update the VERSION property for the new version release
-1. Edit readme so that Gradle examples point to the new version
 1. Edit changelog, add relevant changes, note the date and new version (follow the existing pattern)
 1. Add new `## [Unreleased]` header for next release
 1. Verify that the everything works:
