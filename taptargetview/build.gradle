@@ -1,20 +1,19 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.vanniktech.maven.publish'
 
 android {
     compileSdkVersion defCompileSdkVersion
-    buildToolsVersion defBuildToolsVersion
 
     defaultConfig {
         minSdkVersion defMinSdkVersion
+        targetSdkVersion defCompileSdkVersion
     }
 }
 
 dependencies {
-    api "androidx.annotation:annotation:$defAndroidXVersion"
-    api "androidx.appcompat:appcompat:$defAndroidXVersion"
-    implementation "androidx.core:core:$defAndroidXVersion"
+    api "androidx.annotation:annotation:$defAndroidAnnotationVersion"
+    api "androidx.appcompat:appcompat:$defAppCompatVersion"
+    implementation "androidx.core:core:$defAndroidXCoreVersion"
 }
 
 // build a jar with source files

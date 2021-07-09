@@ -26,8 +26,8 @@ We currently deploy to Maven Central (via Sonatype's OSS Nexus instance).
    ```
 1. Configure your Sonatype credentials in ~/.gradle/gradle.properties:
    ```gradle
-   SONATYPE_NEXUS_USERNAME=<nexus username>
-   SONATYPE_NEXUS_PASSWORD=<nexus password>
+   mavenCentralUsername=<nexus username>
+   mavenCentralPassword=<nexus password>
    SONATYPE_STAGING_PROFILE=com.getkeepsafe
    ```
 1. Configure git with your codesigning key; make sure it's the same as the one
