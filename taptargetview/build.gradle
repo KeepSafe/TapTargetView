@@ -1,78 +1,19 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-def libname = 'TapTargetView'
-group = 'com.getkeepsafe.taptargetview'
-version = '1.13.0'
-description = 'An implementation of tap targets from the Material Design guidelines for feature discovery'
+apply plugin: 'com.vanniktech.maven.publish'
 
 android {
     compileSdkVersion defCompileSdkVersion
-    buildToolsVersion defBuildToolsVersion
 
     defaultConfig {
         minSdkVersion defMinSdkVersion
+        targetSdkVersion defCompileSdkVersion
     }
 }
 
 dependencies {
-    api "androidx.annotation:annotation:$defAndroidXVersion"
-    api "androidx.appcompat:appcompat:$defAndroidXVersion"
-    implementation "androidx.core:core:$defAndroidXVersion"
-}
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            name libname
-            description project.description
-            url "https://github.com/KeepSafe/$libname"
-            inceptionYear 2016
-
-            packaging 'aar'
-            groupId project.group
-            artifactId 'taptargetview'
-            version project.version
-
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                connection "https://github.com/KeepSafe/${libname}.git"
-                url "https://github.com/KeepSafe/$libname"
-            }
-            developers {
-                developer {
-                    name 'Keepsafe'
-                }
-            }
-        }
-    }
-}
-
-bintray {
-    user = project.hasProperty('bintray.user') ? project.property('bintray.user') : ''
-    key = project.hasProperty('bintray.apikey') ? project.property('bintray.apikey') : ''
-    configurations = ['archives']
-    pkg {
-        repo = 'Android'
-        name = libname
-        userOrg = 'keepsafesoftware'
-        licenses = ['Apache-2.0']
-        vcsUrl = "https://github.com/KeepSafe/${libname}.git"
-
-        version {
-            name = project.version
-            desc = project.description
-            released = new Date()
-            vcsTag = project.version
-        }
-    }
+    api "androidx.annotation:annotation:$defAndroidAnnotationVersion"
+    api "androidx.appcompat:appcompat:$defAppCompatVersion"
+    implementation "androidx.core:core:$defAndroidXCoreVersion"
 }
 
 // build a jar with source files
