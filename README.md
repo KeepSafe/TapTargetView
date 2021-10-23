@@ -42,7 +42,7 @@ TapTargetView.showFor(this,                 // `this` is an Activity
     TapTarget.forView(findViewById(R.id.target), "This is a target", "We have the best targets, believe me")
         // All options below are optional
         .outerCircleColor(R.color.red)      // Specify a color for the outer circle
-	.outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
+        .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
         .targetCircleColor(R.color.white)   // Specify a color for the target circle
         .titleTextSize(20)                  // Specify the size (in sp) of the title text
         .titleTextColor(R.color.white)      // Specify the color of the title text
@@ -50,7 +50,8 @@ TapTargetView.showFor(this,                 // `this` is an Activity
         .descriptionTextColor(R.color.red)  // Specify the color of the description text
         .textColor(R.color.blue)            // Specify a color for both the title and description text
         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
-        .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
+        .dimColor(R.color.black)            // If set, will dim behind the view with the given color
+        .dimColorOpacity(0.75f)             // Specify the dim opacity for given color, 30% opacity if not set.
         .drawShadow(true)                   // Whether to draw a drop shadow or not
         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
         .tintTarget(true)                   // Whether to tint the target view's color
