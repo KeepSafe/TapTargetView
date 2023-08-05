@@ -1,8 +1,8 @@
 <h1 align="center">
 <img src="/.github/video.gif" width="280" height="498" alt="Video 1"/>
 <img src="/.github/screenshot1.png" width="280" height="498" alt="Screenshot 1"/>
-<img src="/.github/screenshot2.png" width="280" height="498" alt="Screenshot 2"/>
-<img src="/.github/screenshot3.jpg" width="280" height="498" alt="Screenshot 2"/><br/>
+<img src="/.github/screenshot2.png" width="280" height="615" alt="Screenshot 2"/>
+<img src="/.github/screenshot3.jpg" width="280" height="615" alt="Screenshot 2"/><br/>
 
     TapTargetView
 </h1>
@@ -13,7 +13,7 @@
 
 An implementation of tap targets from [Google's Material Design guidelines on feature discovery](https://material.io/archive/guidelines/growth-communications/feature-discovery.html).
 
- **Min SDK:** 14
+ **Min SDK:** 21
 
  [JavaDoc](https://javadoc.jitpack.io/com/github/KeepSafe/TapTargetView/latest/javadoc/)
 
@@ -21,15 +21,7 @@ An implementation of tap targets from [Google's Material Design guidelines on fe
 
 TapTargetView is distributed using [MavenCentral](https://search.maven.org/artifact/com.getkeepsafe.taptargetview/taptargetview).
 
-```groovy
-   repositories { 
-        mavenCentral()
-   }
-   
-   dependencies {
-         implementation 'com.getkeepsafe.taptargetview:taptargetview:x.x.x'
-   }
-```
+## No Publish
 
 If you wish, you may also use TapTargetView with [jitpack](https://jitpack.io/#KeepSafe/TapTargetView).
 For snapshots, please follow the instructions [here](https://jitpack.io/#KeepSafe/TapTargetView/-SNAPSHOT).
@@ -60,7 +52,6 @@ For snapshots, please follow the instructions [here](https://jitpack.io/#KeepSaf
                     .setTargetShapeType(TapTargetShapeType.RectAngle(16)),
             null
     );
-  }
 ```
 
 You may also choose to target your own custom `Rect` with `TapTarget.forBounds(Rect, ...)`
