@@ -1,25 +1,67 @@
 @file:Suppress("unused")
-package com.getkeepsafe.taptargetview
+package com.getkeepsafe.taptargetview.target
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
-import androidx.annotation.IdRes
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnLayout
+import androidx.core.view.drawToBitmap
+import com.getkeepsafe.taptargetview.sp
 
-open class TapTarget protected constructor(title: CharSequence?, description: CharSequence?) {
-    val title: CharSequence
+open class TapTarget {
+
+    private var view: View? = null
+
+    val title: CharSequence?
     val description: CharSequence?
-    var outerCircleAlpha = 0.96f
-    var targetRadius = 44
-    var bounds: Rect? = null
+    private var bounds: Rect?
     var icon: Drawable? = null
+
+    internal var tapTargetType: TapTargetShapeType = CircleShapeTapTarget
+
+    @JvmOverloads
+    constructor(
+        view: View,
+        title: CharSequence?,
+        description: CharSequence?,
+        bounds: Rect? = null
+    ) {
+        this.view = view
+        this.title = title
+        this.description = description
+        this.bounds = bounds
+    }
+
+    @JvmOverloads
+    constructor(
+        icon: Drawable,
+        title: CharSequence?,
+        description: CharSequence?,
+        bounds: Rect? = null,
+        iconBounds: Rect? = null
+    ) {
+        this.icon = icon
+        if (iconBounds == null) {
+            icon.bounds = Rect(0, 0, icon.intrinsicWidth, icon.intrinsicHeight)
+        } else {
+            icon.bounds = iconBounds
+        }
+        this.title = title
+        this.description = description
+        this.bounds = bounds
+    }
+
+    var outerCircleAlpha = 0.96f
+        private set
+
     var titleTypeface: Typeface? = null
     var descriptionTypeface: Typeface? = null
 
@@ -27,7 +69,7 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
     private var outerCircleColorRes = -1
 
     @ColorRes
-    private var targetCircleColorRes = -1
+    private var targetIconColorRes = -1
 
     @ColorRes
     private var dimColorRes = -1
@@ -38,7 +80,7 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
     @ColorRes
     private var descriptionTextColorRes = -1
     private var outerCircleColor: Int? = null
-    private var targetCircleColor: Int? = null
+    private var targetIconColor: Int? = null
     private var dimColor: Int? = null
     private var titleTextColor: Int? = null
     private var descriptionTextColor: Int? = null
@@ -56,21 +98,6 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
     var tintTarget = true
     var transparentTarget = false
     var descriptionTextAlpha = 0.54f
-
-    protected constructor(
-        bounds: Rect?,
-        title: CharSequence?,
-        description: CharSequence?
-    ): this(title, description) {
-        requireNotNull(bounds) { "Cannot pass null bounds or title" }
-        this.bounds = bounds
-    }
-
-    init {
-        requireNotNull(title) { "Cannot pass null title" }
-        this.title = title
-        this.description = description
-    }
 
     /** Specify whether the target should be transparent  */
     fun transparentTarget(transparent: Boolean): TapTarget {
@@ -98,14 +125,14 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
     }
 
     /** Specify the color resource for the target circle  */
-    fun targetCircleColor(@ColorRes color: Int): TapTarget {
-        targetCircleColorRes = color
+    fun targetIconColor(@ColorRes color: Int): TapTarget {
+        targetIconColorRes = color
         return this
     }
 
     /** Specify the color value for the target circle  */
-    fun targetCircleColorInt(@ColorInt color: Int): TapTarget {
-        targetCircleColor = color
+    fun targetIconColorInt(@ColorInt color: Int): TapTarget {
+        targetIconColor = color
         return this
     }
 
@@ -251,32 +278,10 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
         tintTarget = tint
         return this
     }
-    /**
-     * Specify the icon that will be drawn in the center of the target bounds
-     * @param hasSetBounds Whether the drawable already has its bounds correctly set. If the
-     * drawable does not have its bounds set, then the following bounds will
-     * be applied: <br></br>
-     * `(0, 0, intrinsic-width, intrinsic-height)`
-     */
-    @JvmOverloads
-    fun icon(icon: Drawable?, hasSetBounds: Boolean = false): TapTarget {
-        requireNotNull(icon) { "Cannot use null drawable" }
-        this.icon = icon
-        if (!hasSetBounds) {
-            icon.bounds = Rect(0, 0, icon.intrinsicWidth, icon.intrinsicHeight)
-        }
-        return this
-    }
 
     /** Specify a unique identifier for this target.  */
     fun id(id: Int): TapTarget {
         this.id = id
-        return this
-    }
-
-    /** Specify the target radius in dp.  */
-    fun targetRadius(targetRadius: Int): TapTarget {
-        this.targetRadius = targetRadius
         return this
     }
 
@@ -290,7 +295,31 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
      * runnable passed here will be invoked when the target is ready.
      */
     open fun onReady(runnable: Runnable?) {
-        runnable?.run()
+        val view = this.view ?: kotlin.run {
+            runnable?.run()
+            tapTargetType.onReadyTarget(bounds)
+            return
+        }
+        view.doOnLayout {
+            val location = IntArray(2)
+            view.getLocationOnScreen(location)
+            bounds = Rect(
+                location[0],
+                location[1],
+                location[0] + view.width,
+                location[1] + view.height
+            )
+            if (icon == null && view.width > 0 && view.height > 0) {
+                val viewBitmap = view.drawToBitmap()
+                val canvas = Canvas(viewBitmap)
+                view.draw(canvas)
+                val icon = BitmapDrawable(view.context.resources, viewBitmap)
+                icon.setBounds(0, 0, view.width, view.height)
+                this.icon = icon
+            }
+            tapTargetType.onReadyTarget(bounds)
+            runnable?.run()
+        }
     }
 
     /**
@@ -310,7 +339,7 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
     }
 
     fun targetCircleColorInt(context: Context): Int? {
-        return colorResOrInt(context, targetCircleColor, targetCircleColorRes)
+        return colorResOrInt(context, targetIconColor, targetIconColorRes)
     }
 
     fun dimColorInt(context: Context): Int? {
@@ -345,97 +374,9 @@ open class TapTarget protected constructor(title: CharSequence?, description: Ch
         } else size.sp
     }
 
-    companion object {
-        /** Return a tap target for the overflow button from the given toolbar
-         *
-         *
-         * **Note:** This is currently experimental, use at your own risk
-         */
-        /**
-         * Return a tap target for the overflow button from the given toolbar
-         *
-         *
-         * **Note:** This is currently experimental, use at your own risk
-         */
-        @JvmOverloads
-        fun forToolbarOverflow(
-            toolbar: Toolbar?, title: CharSequence?,
-            description: CharSequence? = null
-        ): TapTarget {
-            return ToolbarTapTarget(toolbar, false, title, description)
-        }
-        /** Return a tap target for the overflow button from the given toolbar
-         *
-         *
-         * **Note:** This is currently experimental, use at your own risk
-         */
-        /** Return a tap target for the overflow button from the given toolbar
-         *
-         *
-         * **Note:** This is currently experimental, use at your own risk
-         */
-        @JvmOverloads
-        fun forToolbarOverflow(
-            toolbar: android.widget.Toolbar?, title: CharSequence?,
-            description: CharSequence? = null
-        ): TapTarget {
-            return ToolbarTapTarget(toolbar, false, title, description)
-        }
-        /** Return a tap target for the navigation button (back, up, etc) from the given toolbar  */
-        /** Return a tap target for the navigation button (back, up, etc) from the given toolbar  */
-        @JvmOverloads
-        fun forToolbarNavigationIcon(
-            toolbar: Toolbar?, title: CharSequence?,
-            description: CharSequence? = null
-        ): TapTarget {
-            return ToolbarTapTarget(toolbar, true, title, description)
-        }
-        /** Return a tap target for the navigation button (back, up, etc) from the given toolbar  */
-        /** Return a tap target for the navigation button (back, up, etc) from the given toolbar  */
-        @JvmOverloads
-        fun forToolbarNavigationIcon(
-            toolbar: android.widget.Toolbar?, title: CharSequence?,
-            description: CharSequence? = null
-        ): TapTarget {
-            return ToolbarTapTarget(toolbar, true, title, description)
-        }
-        /** Return a tap target for the menu item from the given toolbar  */
-        /** Return a tap target for the menu item from the given toolbar  */
-        @JvmOverloads
-        fun forToolbarMenuItem(
-            toolbar: Toolbar?, @IdRes menuItemId: Int,
-            title: CharSequence?, description: CharSequence? = null
-        ): TapTarget {
-            return ToolbarTapTarget(toolbar, menuItemId, title, description)
-        }
-        /** Return a tap target for the menu item from the given toolbar  */
-        /** Return a tap target for the menu item from the given toolbar  */
-        @JvmOverloads
-        fun forToolbarMenuItem(
-            toolbar: android.widget.Toolbar?, @IdRes menuItemId: Int,
-            title: CharSequence?, description: CharSequence? = null
-        ): TapTarget {
-            return ToolbarTapTarget(toolbar, menuItemId, title, description)
-        }
-        /** Return a tap target for the specified view  */
-        /** Return a tap target for the specified view  */
-        @JvmOverloads
-        fun forView(
-            view: View,
-            title: CharSequence,
-            description: CharSequence? = null
-        ): TapTarget {
-            return ViewTapTarget(view, title, description)
-        }
-        /** Return a tap target for the specified bounds  */
-        /** Return a tap target for the specified bounds  */
-        @JvmOverloads
-        fun forBounds(
-            bounds: Rect?,
-            title: CharSequence?,
-            description: CharSequence? = null
-        ): TapTarget {
-            return TapTarget(bounds, title, description)
-        }
+    fun setTargetShapeType(type: TapTargetShapeType): TapTarget {
+        this.tapTargetType = type
+        return this
     }
+
 }

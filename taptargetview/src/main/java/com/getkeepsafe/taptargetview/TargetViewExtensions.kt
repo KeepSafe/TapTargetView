@@ -8,6 +8,7 @@ import android.graphics.PixelFormat
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.getkeepsafe.taptargetview.target.TapTarget
 
 @JvmName("showGuideView")
 fun Activity?.showGuideView(

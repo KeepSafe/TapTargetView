@@ -30,23 +30,25 @@ import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
-class ToolbarTapTarget extends ViewTapTarget {
-  ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
+import com.getkeepsafe.taptargetview.target.TapTarget;
+
+public class ToolbarTapTarget extends TapTarget {
+  public ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
                    CharSequence title, @Nullable CharSequence description) {
     super(toolbar.findViewById(menuItemId), title, description);
   }
 
-  ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
+  public ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
                    CharSequence title, @Nullable CharSequence description) {
     super(toolbar.findViewById(menuItemId), title, description);
   }
 
-  ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
+  public ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
                    CharSequence title, @Nullable CharSequence description) {
     super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
   }
 
-  ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
+  public ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
                    CharSequence title, @Nullable CharSequence description) {
     super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
   }

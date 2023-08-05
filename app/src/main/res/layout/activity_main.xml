@@ -62,4 +62,14 @@
         android:layout_height="wrap_content"
         android:padding="16dp"/>
 
+    <EditText
+        android:id="@+id/ed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:padding="16dp"
+        android:background="@color/colorPrimary"
+        style="@style/ThemeOverlay.Material3.TextInputEditText"
+        android:hint="Please input some thing"/>
+
 </LinearLayout>

@@ -9,16 +9,22 @@ import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.target.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.getkeepsafe.taptargetview.TapTargetView
+import com.getkeepsafe.taptargetview.createNavigationIcon
+import com.getkeepsafe.taptargetview.createOverflow
+import com.getkeepsafe.taptargetview.createTarget
+import com.getkeepsafe.taptargetview.forToolbarMenuItem
 import com.getkeepsafe.taptargetview.showGuideView
+import com.getkeepsafe.taptargetview.target.TapTargetShapeType
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,32 +55,29 @@ class MainActivity : AppCompatActivity() {
         // We have a sequence of targets, so lets build it!
         val sequence = TapTargetSequence(this)
             .addTarget( // This tap target will target the back button, we just need to pass its containing toolbar
-                TapTarget.forToolbarNavigationIcon(toolbar, "This is the back button", sassyDesc)
+                toolbar.createNavigationIcon("This is the back button", sassyDesc)
                     .id(1),  // Likewise, this tap target will target the search button
-                TapTarget.forToolbarMenuItem(
-                    toolbar,
+                toolbar.forToolbarMenuItem(
                     R.id.search,
                     "This is a search icon",
                     "As you can see, it has gotten pretty dark around here..."
                 )
                     .dimColor(android.R.color.black)
                     .outerCircleColor(R.color.colorAccent)
-                    .targetCircleColor(android.R.color.black)
+                    .targetIconColor(android.R.color.black)
                     .transparentTarget(true)
                     .textColor(android.R.color.black)
                     .id(2),  // You can also target the overflow button in your toolbar
-                TapTarget.forToolbarOverflow(
-                    toolbar,
+                toolbar.createOverflow(
                     "This will show more options",
                     "But they're not useful :("
                 ).id(3),  // This tap target will target our droid buddy at the given target rect
-                TapTarget.forBounds(
+                droid.createTarget(
                     droidTarget,
                     "Oh look!",
                     "You can point to any part of the screen. You also can't cancel this one!"
                 )
                     .cancelable(false)
-                    .icon(droid)
                     .id(4)
             )
             .listener(object : TapTargetSequence.Listener {
@@ -94,18 +97,18 @@ class MainActivity : AppCompatActivity() {
                         .setTitle("Uh oh")
                         .setMessage("You canceled the sequence")
                         .setPositiveButton("Oops", null).show()
-                    dialog.showGuideView(TapTarget.forView(
-                        dialog.getButton(DialogInterface.BUTTON_POSITIVE),
-                        "Uh oh!",
-                        "You canceled the sequence at step " + lastTarget?.id()
-                    )
-                        .cancelable(false)
-                        .tintTarget(false), object : TapTargetView.Listener() {
-                        override fun onTargetClick(view: TapTargetView) {
-                            super.onTargetClick(view)
-                            dialog.dismiss()
-                        }
-                    })
+                    dialog.showGuideView(
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).createTarget(
+                            "Uh oh!",
+                            "You canceled the sequence at step " + lastTarget?.id()
+                        )
+                            .cancelable(false)
+                            .tintTarget(false), object : TapTargetView.Listener() {
+                            override fun onTargetClick(view: TapTargetView) {
+                                super.onTargetClick(view)
+                                dialog.dismiss()
+                            }
+                        })
                 }
             })
 
@@ -117,29 +120,53 @@ class MainActivity : AppCompatActivity() {
             spannedDesc.length,
             0
         )
-        this.showGuideView(TapTarget.forView(findViewById(R.id.fab), "Hello, world!", spannedDesc)
-            .cancelable(false)
-            .drawShadow(true)
-            .titleTextDimen(R.dimen.title_text_size)
-            .tintTarget(false), object : TapTargetView.Listener() {
-            override fun onTargetClick(view: TapTargetView) {
-                super.onTargetClick(view)
-                // .. which evidently starts the sequence we defined earlier
-                sequence.start()
-            }
+        this.showGuideView(
+            findViewById<View>(R.id.fab).createTarget("Hello, world!", spannedDesc)
+                .cancelable(false)
+                .drawShadow(true)
+                .titleTextDimen(R.dimen.title_text_size)
+                .tintTarget(false), object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView) {
+                    super.onTargetClick(view)
+                    // .. which evidently starts the sequence we defined earlier
+                    sequence.start()
+                }
 
-            override fun onOuterCircleClick(view: TapTargetView) {
-                super.onOuterCircleClick(view)
-                Toast.makeText(
-                    view.context,
-                    "You clicked the outer circle!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+                override fun onOuterCircleClick(view: TapTargetView) {
+                    super.onOuterCircleClick(view)
+                    Toast.makeText(
+                        view.context,
+                        "You clicked the outer circle!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
-            override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
-                Log.d("TapTargetViewSample", "You dismissed me :(")
-            }
-        })
+                override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
+                    Log.d("TapTargetViewSample", "You dismissed me :(")
+                }
+            })
+
+        val ed = findViewById<EditText>(R.id.ed)
+        ed.setOnClickListener {
+            showGuideView(
+                ed.createTarget("Please Input Some Thing")
+                    .outerCircleColor(R.color.colorAccent)
+                    .targetIconColor(android.R.color.holo_blue_dark)
+                    .transparentTarget(true)
+                    .textColor(android.R.color.black)
+                    .setTargetShapeType(TapTargetShapeType.RectAngle(16)),
+                object : TapTargetView.Listener() {
+                    override fun onTargetClick(view: TapTargetView) {
+                        Toast.makeText(
+                            view.context,
+                            "You clicked the target!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        super.onTargetClick(view)
+                    }
+                }
+            )
+        }
     }
+
 }

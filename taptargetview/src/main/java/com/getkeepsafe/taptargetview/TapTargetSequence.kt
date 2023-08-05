@@ -4,6 +4,7 @@ package com.getkeepsafe.taptargetview
 import android.app.Activity
 import android.app.Dialog
 import androidx.annotation.UiThread
+import com.getkeepsafe.taptargetview.target.TapTarget
 import java.util.LinkedList
 import java.util.Queue
 
