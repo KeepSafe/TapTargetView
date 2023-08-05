@@ -1,6 +1,7 @@
 plugins {
     id 'com.vanniktech.maven.publish'
     id 'com.android.library'
+    id 'kotlin-android'
 }
 
 android {
@@ -21,7 +22,7 @@ dependencies {
     api("androidx.appcompat:appcompat:$defAppCompatVersion") {
         exclude group: 'androidx.core', module: 'core-ktx'
     }
-    implementation ("androidx.core:core:$defAndroidXCoreVersion") {
+    implementation ("androidx.core:core-ktx:$defAndroidXCoreVersion") {
         exclude group: 'androidx.core', module: 'core-ktx'
     }
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22") {

@@ -15,7 +15,6 @@
  */
 package com.getkeepsafe.taptargetview;
 
-import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
@@ -59,8 +58,7 @@ class ToolbarTapTarget extends ViewTapTarget {
 
     if (instance instanceof Toolbar) {
       return new SupportToolbarProxy((Toolbar) instance);
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-            && instance instanceof android.widget.Toolbar) {
+    } else if (instance instanceof android.widget.Toolbar) {
       return new StandardToolbarProxy((android.widget.Toolbar) instance);
     }
 
@@ -139,9 +137,9 @@ class ToolbarTapTarget extends ViewTapTarget {
     // The "ActionMenuPresenter" then holds a reference to an "OverflowMenuButton" which is the
     // desired target
     try {
-      final Object actionMenuView = ReflectUtil.getPrivateField(toolbar.internalToolbar(), "mMenuView");
-      final Object actionMenuPresenter = ReflectUtil.getPrivateField(actionMenuView, "mPresenter");
-      return (View) ReflectUtil.getPrivateField(actionMenuPresenter, "mOverflowButton");
+      final Object actionMenuView = ReflectExtensions.getPrivateField(toolbar.internalToolbar(), "mMenuView");
+      final Object actionMenuPresenter = ReflectExtensions.getPrivateField(actionMenuView, "mPresenter");
+      return (View) ReflectExtensions.getPrivateField(actionMenuPresenter, "mOverflowButton");
     } catch (NoSuchFieldException e) {
       throw new IllegalStateException("Could not find overflow view for Toolbar!", e);
     } catch (IllegalAccessException e) {
@@ -216,7 +214,6 @@ class ToolbarTapTarget extends ViewTapTarget {
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private static class StandardToolbarProxy implements ToolbarProxy {
     private final android.widget.Toolbar toolbar;
 
