@@ -1,35 +1,49 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.vanniktech.maven.publish'
+plugins {
+    id 'com.vanniktech.maven.publish'
+    id 'com.android.library'
+}
 
 android {
-    compileSdkVersion defCompileSdkVersion
 
     defaultConfig {
+        compileSdk defCompileSdkVersion
         minSdkVersion defMinSdkVersion
         targetSdkVersion defCompileSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    api "androidx.annotation:annotation:$defAndroidAnnotationVersion"
-    api "androidx.appcompat:appcompat:$defAppCompatVersion"
-    implementation "androidx.core:core:$defAndroidXCoreVersion"
+    api("androidx.appcompat:appcompat:$defAppCompatVersion") {
+        exclude group: 'androidx.core', module: 'core-ktx'
+    }
+    implementation ("androidx.core:core:$defAndroidXCoreVersion") {
+        exclude group: 'androidx.core', module: 'core-ktx'
+    }
+    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
 }
 
 // build a jar with source files
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
-    failOnError  false
+tasks.register('javadoc', Javadoc) {
+    failOnError false
     source = android.sourceSets.main.java.sourceFiles
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
 // build a jar with javadoc
-task javadocJar(type: Jar, dependsOn: javadoc) {
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
@@ -37,4 +51,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+publishing {
+    publications {
+        myMaven(MavenPublication) {
+            groupId 'com.getkeepsafe'
+            artifactId 'taptargetview'
+            version '1.13.3'
+            artifact("$buildDir/outputs/aar/taptargetview-release.aar")
+        }
+    }
+
 }
