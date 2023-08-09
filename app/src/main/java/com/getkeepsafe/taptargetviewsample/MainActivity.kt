@@ -146,10 +146,10 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-        val ed = findViewById<EditText>(R.id.ed)
+        val ed = findViewById<View>(R.id.ed)
         ed.setOnClickListener {
             showGuideView(
-                ed.createTarget("Please Input Some Thing")
+                ed.createTarget("Please Input Some Thing", "Hello Some One")
                     .outerCircleColor(R.color.colorAccent)
                     .targetIconColor(android.R.color.holo_blue_dark)
                     .transparentTarget(true)
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onTargetClick(view: TapTargetView) {
                         Toast.makeText(
                             view.context,
-                            "You clicked the target!",
+                            "You clicked the target! yes!!!!!",
                             Toast.LENGTH_SHORT
                         ).show()
                         super.onTargetClick(view)

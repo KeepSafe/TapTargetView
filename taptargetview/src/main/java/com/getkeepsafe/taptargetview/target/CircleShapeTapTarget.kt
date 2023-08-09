@@ -10,7 +10,7 @@ import com.getkeepsafe.taptargetview.halfwayLerp
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
-object CircleShapeTapTarget: TapTargetShapeType {
+class CircleShapeTapTarget: TapTargetShapeType() {
 
     private var targetRadius = 44
 

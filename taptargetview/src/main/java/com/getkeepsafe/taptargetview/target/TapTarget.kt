@@ -25,7 +25,7 @@ open class TapTarget {
     private var bounds: Rect?
     var icon: Drawable? = null
 
-    internal var tapTargetType: TapTargetShapeType = CircleShapeTapTarget
+    internal var tapTargetType: TapTargetShapeType = TapTargetShapeType.Circle
 
     @JvmOverloads
     constructor(

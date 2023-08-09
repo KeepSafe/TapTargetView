@@ -9,7 +9,7 @@ import com.getkeepsafe.taptargetview.dp
 import com.getkeepsafe.taptargetview.getDelayLerp
 import com.getkeepsafe.taptargetview.halfwayLerp
 
-object RectAngleShapeType : TapTargetShapeType {
+class RectAngleShapeType : TapTargetShapeType() {
 
     private var width = 0
 
@@ -104,6 +104,20 @@ object RectAngleShapeType : TapTargetShapeType {
             roundRadius.toFloat(),
             paint
         )
+    }
+
+    override fun getTextVertical(
+        targetBounds: Rect,
+        totalTextHeight: Int,
+        topBoundary: Int
+    ): Pair<Int, Int> {
+        val possibleTop = targetBounds.top - edgeLength - totalTextHeight - textPadding
+        val top = if (possibleTop > topBoundary) {
+            possibleTop
+        } else {
+            targetBounds.centerY() + edgeLength + targetPadding
+        }
+        return top to top + totalTextHeight
     }
 
     override fun clickInTarget(targetBounds: Rect, lastTouchX: Int, lastTouchY: Int): Boolean {

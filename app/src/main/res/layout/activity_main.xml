@@ -62,14 +62,13 @@
         android:layout_height="wrap_content"
         android:padding="16dp"/>
 
-    <EditText
+    <View
         android:id="@+id/ed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
+        android:layout_width="200dp"
+        android:layout_height="102dp"
         android:padding="16dp"
+        android:layout_gravity="bottom|start"
         android:background="@color/colorPrimary"
-        style="@style/ThemeOverlay.Material3.TextInputEditText"
         android:hint="Please input some thing"/>
 
 </LinearLayout>

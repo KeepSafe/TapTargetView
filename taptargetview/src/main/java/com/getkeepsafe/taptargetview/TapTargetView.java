@@ -304,12 +304,12 @@ public class TapTargetView extends View {
     this.title = target.getTitle();
     this.description = target.getDescription();
 
-    TARGET_PADDING = UiUtils.getDp( 20);
-    CIRCLE_PADDING = UiUtils.getDp( 40);
-    TEXT_PADDING = UiUtils.getDp( 40);
-    TEXT_SPACING = UiUtils.getDp( 8);
-    TEXT_MAX_WIDTH = UiUtils.getDp( 360);
-    TEXT_POSITIONING_BIAS = UiUtils.getDp( 20);
+    TARGET_PADDING = getTapType().getTargetPadding();
+    CIRCLE_PADDING = getTapType().getCirclePadding();
+    TEXT_PADDING = getTapType().getTextPadding();
+    TEXT_SPACING = getTapType().getTextSpacing();
+    TEXT_MAX_WIDTH = getTapType().getTextMaxWidth();
+    TEXT_POSITIONING_BIAS = getTapType().getTextPositionBias();
     GUTTER_DIM = UiUtils.getDp( 88);
     SHADOW_DIM = UiUtils.getDp( 8);
     SHADOW_JITTER_DIM = UiUtils.getDp( 1);
@@ -845,23 +845,9 @@ public class TapTargetView extends View {
   }
 
   Rect getTextBounds() {
-    int targetLength = getTapType().getEdgeLength();
     final int totalTextHeight = getTotalTextHeight();
     final int totalTextWidth = getTotalTextWidth();
-
-    final int possibleTop = targetBounds.centerY() - targetLength - TARGET_PADDING - totalTextHeight;
-    final int top;
-    if (possibleTop > topBoundary) {
-      top = possibleTop;
-    } else {
-      top = targetBounds.centerY() + targetLength + TARGET_PADDING;
-    }
-
-    final int relativeCenterDistance = (getWidth() / 2) - targetBounds.centerX();
-    final int bias = relativeCenterDistance < 0 ? -TEXT_POSITIONING_BIAS : TEXT_POSITIONING_BIAS;
-    final int left = Math.max(TEXT_PADDING, targetBounds.centerX() - bias - totalTextWidth);
-    final int right = Math.min(getWidth() - TEXT_PADDING, left + totalTextWidth);
-    return new Rect(left, top, right, top + totalTextHeight);
+    return getTapType().getTextBounds(totalTextHeight, totalTextWidth, targetBounds, topBoundary, getWidth());
   }
 
   int[] getOuterCircleCenterPoint() {
