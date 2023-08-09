@@ -15,7 +15,6 @@
  */
 package com.getkeepsafe.taptargetview;
 
-import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
@@ -31,23 +30,25 @@ import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
-class ToolbarTapTarget extends ViewTapTarget {
-  ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
+import com.getkeepsafe.taptargetview.target.TapTarget;
+
+public class ToolbarTapTarget extends TapTarget {
+  public ToolbarTapTarget(Toolbar toolbar, @IdRes int menuItemId,
                    CharSequence title, @Nullable CharSequence description) {
     super(toolbar.findViewById(menuItemId), title, description);
   }
 
-  ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
+  public ToolbarTapTarget(android.widget.Toolbar toolbar, @IdRes int menuItemId,
                    CharSequence title, @Nullable CharSequence description) {
     super(toolbar.findViewById(menuItemId), title, description);
   }
 
-  ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
+  public ToolbarTapTarget(Toolbar toolbar, boolean findNavView,
                    CharSequence title, @Nullable CharSequence description) {
     super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
   }
 
-  ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
+  public ToolbarTapTarget(android.widget.Toolbar toolbar, boolean findNavView,
                    CharSequence title, @Nullable CharSequence description) {
     super(findNavView ? findNavView(toolbar) : findOverflowView(toolbar), title, description);
   }
@@ -59,8 +60,7 @@ class ToolbarTapTarget extends ViewTapTarget {
 
     if (instance instanceof Toolbar) {
       return new SupportToolbarProxy((Toolbar) instance);
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-            && instance instanceof android.widget.Toolbar) {
+    } else if (instance instanceof android.widget.Toolbar) {
       return new StandardToolbarProxy((android.widget.Toolbar) instance);
     }
 
@@ -139,9 +139,9 @@ class ToolbarTapTarget extends ViewTapTarget {
     // The "ActionMenuPresenter" then holds a reference to an "OverflowMenuButton" which is the
     // desired target
     try {
-      final Object actionMenuView = ReflectUtil.getPrivateField(toolbar.internalToolbar(), "mMenuView");
-      final Object actionMenuPresenter = ReflectUtil.getPrivateField(actionMenuView, "mPresenter");
-      return (View) ReflectUtil.getPrivateField(actionMenuPresenter, "mOverflowButton");
+      final Object actionMenuView = ReflectExtensions.getPrivateField(toolbar.internalToolbar(), "mMenuView");
+      final Object actionMenuPresenter = ReflectExtensions.getPrivateField(actionMenuView, "mPresenter");
+      return (View) ReflectExtensions.getPrivateField(actionMenuPresenter, "mOverflowButton");
     } catch (NoSuchFieldException e) {
       throw new IllegalStateException("Could not find overflow view for Toolbar!", e);
     } catch (IllegalAccessException e) {
@@ -216,7 +216,6 @@ class ToolbarTapTarget extends ViewTapTarget {
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private static class StandardToolbarProxy implements ToolbarProxy {
     private final android.widget.Toolbar toolbar;
 

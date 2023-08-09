@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion defCompileSdkVersion
@@ -16,11 +17,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation project(':taptargetview')
-    implementation "androidx.appcompat:appcompat:$defAppCompatVersion"
     implementation "com.google.android.material:material:$defMaterialVersion"
-    implementation 'com.facebook.stetho:stetho:1.5.0'
 }

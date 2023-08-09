@@ -69,12 +69,7 @@ class FloatValueAnimatorBuilder {
   }
 
   public FloatValueAnimatorBuilder onUpdate(final UpdateListener listener) {
-    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator animation) {
-        listener.onUpdate((float) animation.getAnimatedValue());
-      }
-    });
+    animator.addUpdateListener(animation -> listener.onUpdate((float) animation.getAnimatedValue()));
     return this;
   }
 
