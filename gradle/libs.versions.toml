@@ -1,0 +1,23 @@
+[versions]
+compileSdk = "30"
+minSdk = "14"
+
+androidGradlePlugin = "8.5.1"
+androidxAnnotation = "1.2.0"
+androidxAppcompat = "1.3.0"
+androidxCore = "1.6.0"
+material = "1.4.0"
+mavenpublish = "0.29.0"
+stetho = "1.5.0"
+
+[libraries]
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidxAnnotation" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "androidxCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+stetho = { group = "com.facebook.stetho", name = "stetho", version.ref = "stetho" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+mavenpublish = { id = "com.vanniktech.maven.publish", version.ref = "mavenpublish" }
