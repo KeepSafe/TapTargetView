@@ -84,6 +84,9 @@ public class TapTarget {
   boolean transparentTarget = false;
   float descriptionTextAlpha = 0.54f;
 
+  boolean drawBehindStatusBar = true;
+  boolean drawBehindNavigationBar = true;
+
   /**
    * Return a tap target for the overflow button from the given toolbar
    * <p>
@@ -201,6 +204,18 @@ public class TapTarget {
 
     this.title = title;
     this.description = description;
+  }
+
+  /** Specify whether the target should draw behind the status bar. */
+  public TapTarget setDrawBehindStatusBar(boolean drawBehindStatusBar) {
+    this.drawBehindStatusBar = drawBehindStatusBar;
+    return this;
+  }
+
+  /** Specify whether the target should draw behind the navigation bar. */
+  public TapTarget setDrawBehindNavigationBar(boolean drawBehindNavigationBar) {
+    this.drawBehindNavigationBar = drawBehindNavigationBar;
+    return this;
   }
 
   /** Specify whether the target should be transparent **/
