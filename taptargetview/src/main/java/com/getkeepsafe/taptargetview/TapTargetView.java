@@ -78,6 +78,7 @@ public class TapTargetView extends View {
   final int TEXT_SPACING;
   final int TEXT_MAX_WIDTH;
   final int TEXT_POSITIONING_BIAS;
+  final int TEXT_SAFE_AREA_PADDING;
   final int CIRCLE_PADDING;
   final int GUTTER_DIM;
   final int SHADOW_DIM;
@@ -387,6 +388,7 @@ public class TapTargetView extends View {
     TEXT_SPACING = UiUtil.dp(context, 8);
     TEXT_MAX_WIDTH = UiUtil.dp(context, 360);
     TEXT_POSITIONING_BIAS = UiUtil.dp(context, 20);
+    TEXT_SAFE_AREA_PADDING = UiUtil.dp(getContext(), 10);
     GUTTER_DIM = UiUtil.dp(context, 88);
     SHADOW_DIM = UiUtil.dp(context, 8);
     SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
@@ -953,6 +955,7 @@ public class TapTargetView extends View {
 
     Rect textSafeArea = new Rect();
     getWindowVisibleDisplayFrame(textSafeArea);
+    textSafeArea.inset(0, TEXT_SAFE_AREA_PADDING);
 
     final int possibleTop = targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight;
     final int top;
