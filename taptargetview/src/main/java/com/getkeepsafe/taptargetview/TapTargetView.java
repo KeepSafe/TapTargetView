@@ -463,10 +463,11 @@ public class TapTargetView extends View {
               int[] parentLocation = new int[2];
               boundingParent.getLocationInWindow(parentLocation);
 
-              if (target.drawBehindStatusBar) {
+              final boolean canDrawBehindSystemBars = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+              if (target.drawBehindStatusBar && canDrawBehindSystemBars) {
                 rect.top = parentLocation[1];
               }
-              if (target.drawBehindNavigationBar) {
+              if (target.drawBehindNavigationBar && canDrawBehindSystemBars) {
                 rect.bottom = parentLocation[1] + boundingParent.getHeight();
               }
 
