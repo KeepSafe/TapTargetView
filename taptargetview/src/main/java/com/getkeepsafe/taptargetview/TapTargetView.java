@@ -953,13 +953,12 @@ public class TapTargetView extends View {
     final int totalTextHeight = getTotalTextHeight();
     final int totalTextWidth = getTotalTextWidth();
 
-    Rect textSafeArea = new Rect();
-    getWindowVisibleDisplayFrame(textSafeArea);
-    textSafeArea.inset(0, TEXT_SAFE_AREA_PADDING);
-
     final int possibleTop = targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight;
     final int top;
     if (possibleTop > topBoundary) {
+      Rect textSafeArea = new Rect();
+      getWindowVisibleDisplayFrame(textSafeArea);
+      textSafeArea.inset(0, TEXT_SAFE_AREA_PADDING);
       top = Math.max(possibleTop, textSafeArea.top);
     } else {
       top = targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING;
