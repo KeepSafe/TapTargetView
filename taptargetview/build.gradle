@@ -1,36 +1,39 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.vanniktech.maven.publish'
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.mavenpublish)
+}
 
 android {
-    compileSdkVersion defCompileSdkVersion
+    namespace 'com.getkeepsafe.taptargetview'
+    compileSdk libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
-        minSdkVersion defMinSdkVersion
-        targetSdkVersion defCompileSdkVersion
+        minSdkVersion libs.versions.minSdk.get().toInteger()
     }
 }
 
 dependencies {
-    api "androidx.annotation:annotation:$defAndroidAnnotationVersion"
-    api "androidx.appcompat:appcompat:$defAppCompatVersion"
-    implementation "androidx.core:core:$defAndroidXCoreVersion"
+    api libs.androidx.annotation
+    api libs.androidx.appcompat
+    implementation libs.androidx.core
 }
 
 // build a jar with source files
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
-    failOnError  false
+tasks.register('javadoc', Javadoc) {
+    failOnError false
     source = android.sourceSets.main.java.sourceFiles
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
 // build a jar with javadoc
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 

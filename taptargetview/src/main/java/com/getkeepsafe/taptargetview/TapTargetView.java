@@ -78,6 +78,7 @@ public class TapTargetView extends View {
   final int TEXT_SPACING;
   final int TEXT_MAX_WIDTH;
   final int TEXT_POSITIONING_BIAS;
+  final int TEXT_SAFE_AREA_PADDING;
   final int CIRCLE_PADDING;
   final int GUTTER_DIM;
   final int SHADOW_DIM;
@@ -387,6 +388,7 @@ public class TapTargetView extends View {
     TEXT_SPACING = UiUtil.dp(context, 8);
     TEXT_MAX_WIDTH = UiUtil.dp(context, 360);
     TEXT_POSITIONING_BIAS = UiUtil.dp(context, 20);
+    TEXT_SAFE_AREA_PADDING = UiUtil.dp(getContext(), 10);
     GUTTER_DIM = UiUtil.dp(context, 88);
     SHADOW_DIM = UiUtil.dp(context, 8);
     SHADOW_JITTER_DIM = UiUtil.dp(context, 1);
@@ -426,20 +428,12 @@ public class TapTargetView extends View {
 
     applyTargetOptions(context);
 
-    final boolean hasKitkat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    final boolean translucentStatusBar;
-    final boolean translucentNavigationBar;
     final boolean layoutNoLimits;
-
     if (context instanceof Activity) {
       Activity activity = (Activity) context;
       final int flags = activity.getWindow().getAttributes().flags;
-      translucentStatusBar = hasKitkat && (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) != 0;
-      translucentNavigationBar = hasKitkat && (flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) != 0;
       layoutNoLimits = (flags & WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0;
     } else {
-      translucentStatusBar = false;
-      translucentNavigationBar = false;
       layoutNoLimits = false;
     }
 
@@ -471,10 +465,11 @@ public class TapTargetView extends View {
               int[] parentLocation = new int[2];
               boundingParent.getLocationInWindow(parentLocation);
 
-              if (translucentStatusBar) {
+              final boolean canDrawBehindSystemBars = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+              if (target.drawBehindStatusBar && canDrawBehindSystemBars) {
                 rect.top = parentLocation[1];
               }
-              if (translucentNavigationBar) {
+              if (target.drawBehindNavigationBar && canDrawBehindSystemBars) {
                 rect.bottom = parentLocation[1] + boundingParent.getHeight();
               }
 
@@ -961,7 +956,10 @@ public class TapTargetView extends View {
     final int possibleTop = targetBounds.centerY() - TARGET_RADIUS - TARGET_PADDING - totalTextHeight;
     final int top;
     if (possibleTop > topBoundary) {
-      top = possibleTop;
+      Rect textSafeArea = new Rect();
+      getWindowVisibleDisplayFrame(textSafeArea);
+      textSafeArea.inset(0, TEXT_SAFE_AREA_PADDING);
+      top = Math.max(possibleTop, textSafeArea.top);
     } else {
       top = targetBounds.centerY() + TARGET_RADIUS + TARGET_PADDING;
     }
