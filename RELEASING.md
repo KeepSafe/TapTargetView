@@ -24,6 +24,13 @@ We currently deploy to Maven Central (via Sonatype's OSS Nexus instance).
    signing.password=<your key's passphrase>
    signing.secretKeyRingFile=/path/to/your/secring.gpg
    ```
+1. Create a token for your Sonatype credentials. [Source](https://community.sonatype.com/t/401-content-access-is-protected-by-token-authentication-failure-while-performing-maven-release/12741/4)
+   ```
+   1. Go to https://oss.sonatype.org/ and login
+   2. Go to profile
+   3. Change the pulldown from “Summary” to “User Token”
+   4. Click on “Access User Token”
+   ```
 1. Configure your Sonatype credentials in ~/.gradle/gradle.properties:
    ```gradle
    mavenCentralUsername=<nexus username>
@@ -37,6 +44,7 @@ We currently deploy to Maven Central (via Sonatype's OSS Nexus instance).
    git config user.email "your@email.com"
    git config user.signingKey "your-key-id"
    ```
+1. Add your GPG key to `~/.gnupg`
 
 ### Pushing a build
 
@@ -55,17 +63,13 @@ We currently deploy to Maven Central (via Sonatype's OSS Nexus instance).
    ```bash
    git tag -s -a X.Y.Z
    ```
-1. Upload binaries to Staging:
-   ```bash
-   ./gradlew publish
-   ```
 1. Publish to Release:
    ```bash
-   ./gradlew closeAndReleaseRepository
+   ./gradlew :taptargetview:publishAndReleaseToMavenCentral --no-configuration-cache
    ```
 1. Wait until that's done. It takes a while to publish and be available in [MavenCentral](https://repo.maven.apache.org/maven2/com/getkeepsafe/). Monitor until the latest published version is visible.
 1. Hooray, we're in Maven Central now!
-1. Push all of our work to Github to make it official. Check previous [releases](https://github.com/KeepSafe/Cashier/releases) and edit tag release changes:
+1. Push all of our work to Github to make it official. Check previous [releases](https://github.com/KeepSafe/TapTargetView/releases) and edit tag release changes:
    ```bash
    git push --tags origin master
    ```
