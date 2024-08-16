@@ -41,3 +41,12 @@ artifacts {
     archives sourcesJar
     archives javadocJar
 }
+
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.SonatypeHost
+
+mavenPublishing {
+    configure(new AndroidSingleVariantLibrary("release", true, true))
+    publishToMavenCentral(SonatypeHost.DEFAULT, true)
+    signAllPublications()
+}
