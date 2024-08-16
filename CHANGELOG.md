@@ -9,7 +9,9 @@ Prepend the changelog with this template on every release.
 
 -->
 
-## [Unreleased]
+# [Unreleased]
+
+## [1.14.0] - Released August 16, 2024
 - Modernize project build files (#407)
 - Enable edge to edge on sample app (#407)
 - Add setDrawBehindStatusBar and setDrawBehindNavigationBar (#407)
