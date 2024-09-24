@@ -44,6 +44,7 @@ public class TapTarget {
   @Nullable
   final CharSequence description;
 
+  float dimColorOpacity = 0.3f;
   float outerCircleAlpha = 0.96f;
   int targetRadius = 44;
 
@@ -383,6 +384,16 @@ public class TapTarget {
   // TODO(Hilal): In v2, this API should be cleaned up / torched
   public TapTarget dimColorInt(@ColorInt int color) {
     this.dimColor = color;
+    return this;
+  }
+
+  /**  **/  /**
+   * Specify the opacity for the dim color
+   * <p>
+   * <b>Note:</b> The specified opacity will range between 0 and 1 been the second 100% opacity
+   */
+  public TapTarget dimColorOpacity(float opacity){
+    this.dimColorOpacity = opacity;
     return this;
   }
 
