@@ -972,7 +972,7 @@ public class TapTargetView extends View {
   }
 
   int[] getOuterCircleCenterPoint() {
-    if (inGutter(targetBounds.centerY())) {
+    if (inGutter(targetBounds.centerY()) || target.forceCenteredTarget) {
       return new int[]{targetBounds.centerX(), targetBounds.centerY()};
     }
 

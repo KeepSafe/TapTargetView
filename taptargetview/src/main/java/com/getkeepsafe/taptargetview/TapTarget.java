@@ -87,6 +87,8 @@ public class TapTarget {
   boolean drawBehindStatusBar = true;
   boolean drawBehindNavigationBar = true;
 
+  boolean forceCenteredTarget = false;
+
   /**
    * Return a tap target for the overflow button from the given toolbar
    * <p>
@@ -215,6 +217,12 @@ public class TapTarget {
   /** Specify whether the target should draw behind the navigation bar. */
   public TapTarget setDrawBehindNavigationBar(boolean drawBehindNavigationBar) {
     this.drawBehindNavigationBar = drawBehindNavigationBar;
+    return this;
+  }
+
+  /** Specify whether the target should be forced to center on the target view.  */
+  public TapTarget setForceCenteredTarget(boolean forceCenteredTarget) {
+    this.forceCenteredTarget = forceCenteredTarget;
     return this;
   }
 
