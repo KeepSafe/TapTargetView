@@ -8,8 +8,9 @@ Prepend the changelog with this template on every release.
 - Changes (<PR #>)
 
 -->
+## [Unreleased]
 
-# [Unreleased]
+## [1.15.0] - Released October 8, 2024
 - Added attribute for force centering tap targets (#409)
 
 ## [1.14.0] - Released August 16, 2024
