@@ -10,6 +10,7 @@ Prepend the changelog with this template on every release.
 -->
 
 # [Unreleased]
+- Added attribute for force centering tap targets (#409)
 
 ## [1.14.0] - Released August 16, 2024
 - Modernize project build files (#407)
