@@ -4,7 +4,7 @@
 <img src="/.github/screenshot2.png" width="280" height="498" alt="Screenshot 2"/><br/>
 
     TapTargetView
-</h1>
+</h1> 
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.getkeepsafe.taptargetview/taptargetview/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.getkeepsafe.taptargetview/taptargetview)
 [![Release](https://img.shields.io/github/tag/KeepSafe/TapTargetView.svg?label=jitpack)](https://jitpack.io/#KeepSafe/TapTargetView)
