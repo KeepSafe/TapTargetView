@@ -110,6 +110,22 @@ new TapTargetSequence(this)
 
 A sequence is started via a call to `start()` on the `TapTargetSequence` instance
 
+#### Skip button
+
+To let users skip the entire sequence, add a skip button. It stays on top of the tap targets
+while the sequence runs, and tapping it ends the sequence even if the current target was built
+with `.cancelable(false)`. The listener's `onSequenceCanceled()` is called when it is tapped.
+
+```java
+new TapTargetSequence(this)
+    .targets(...)
+    .skipButton("Skip")                              // Or pass your own styled View
+    .skipButtonGravity(Gravity.BOTTOM | Gravity.END) // Optional, this is the default
+    .start();
+```
+
+You can also end the sequence yourself with `skip()`.
+
 For more examples of usage, please look at the included sample app.
 
 ### Tutorials

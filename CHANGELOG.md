@@ -9,6 +9,7 @@ Prepend the changelog with this template on every release.
 
 -->
 ## [Unreleased]
+- Added an optional skip button and `skip()` to `TapTargetSequence` to end the whole sequence
 
 ## [1.15.0] - Released October 8, 2024
 - Added attribute for force centering tap targets (#409)
