@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 .icon(droid)
                 .id(4)
         )
+        // Shows a button that ends the whole sequence, even on targets that can't be canceled
+        .skipButton("Skip")
         .listener(new TapTargetSequence.Listener() {
           // This listener will tell us when interesting(tm) events happen in regards
           // to the sequence
